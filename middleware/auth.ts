@@ -1,14 +1,11 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const { loggedIn, fetch } = useUserSession();
+  const { loggedIn } = useUserSession();
 
-  //решить проблему с редиректом при входе через github
-  // await fetch();
-  
-  if (!loggedIn.value && to.path !== "/auth") {
+  if (!loggedIn.value && to.fullPath !== "/auth") {
     return navigateTo("/auth");
   }
 
-  if (loggedIn.value && to.path === "/auth") {
+  if (loggedIn.value && to.fullPath === "/auth") {
     return navigateTo("/");
   }
 });

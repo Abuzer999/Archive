@@ -1,7 +1,6 @@
 <template>
   <div>main</div>
-  <pre>{{ user }}</pre>
-
+  <NuxtLink to="/public">Public</NuxtLink>
   <button @click="signOut">Выйти</button>
 </template>
 
@@ -14,10 +13,12 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-const { clear, user } = useUserSession();
+const { clear } = useUserSession();
 
-const signOut = async () => {
+const signOut = async() => {
   await clear();
-  navigateTo("/auth");
+  await navigateTo("/auth");
 }
+
+
 </script>
