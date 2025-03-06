@@ -7,11 +7,14 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxt/fonts",
     "@vee-validate/nuxt",
-    "@nuxtjs/tailwindcss",
     "dayjs-nuxt",
     "@prisma/nuxt",
     "nuxt-typed-router",
     "nuxt-auth-utils",
+    "@nuxt/ui",
+    ["@pinia/nuxt", { autoImports: ["defineStore"] }],
+    "pinia-plugin-persistedstate/nuxt",
+    "@pinia/nuxt",
   ],
   runtimeConfig: {
     AUTH_SECRET: process.env.AUTH_SECRET,
@@ -23,7 +26,7 @@ export default defineNuxtConfig({
       google: {
         clientId: process.env.NUXT_OAUTH_GOOGLE_CLIENT_ID,
         clientSecret: process.env.NUXT_OAUTH_GOOGLE_CLIENT_SECRET,
-      }
+      },
     },
   },
   prisma: {
@@ -35,6 +38,14 @@ export default defineNuxtConfig({
     viewer: true,
     exposeConfig: false,
   },
+  colorMode: {
+    classSuffix: "",
+    storage: "localStorage",
+    storageKey: "nuxt-color-mode",
+  },
+  pinia: {
+    storesDirs: ['./stores/**', './custom-folder/stores/**'],
+  },  
   veeValidate: {
     autoImports: true,
     componentNames: {
@@ -44,4 +55,5 @@ export default defineNuxtConfig({
       ErrorMessage: "VeeErrorMessage",
     },
   },
+  
 });

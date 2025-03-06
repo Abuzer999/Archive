@@ -2,6 +2,7 @@
   <div>main</div>
   <NuxtLink to="/public">Public</NuxtLink>
   <button @click="signOut">Выйти</button>
+
 </template>
 
 <script setup lang="ts">

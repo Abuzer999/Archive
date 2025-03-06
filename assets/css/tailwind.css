@@ -1,7 +1,12 @@
+@import "../global/global.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply bg-[#f1f5f9]  dark:bg-[#15191f];
+}
 
 .wrapper {
   display: flex;
