@@ -3,6 +3,8 @@
   <NuxtLink to="/public">Public</NuxtLink>
   <button @click="signOut">Выйти</button>
 
+
+  <buttonColorMode />
 </template>
 
 <script setup lang="ts">

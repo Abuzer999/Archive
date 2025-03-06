@@ -40,7 +40,7 @@ export default defineNuxtConfig({
   },
   colorMode: {
     classSuffix: "",
-    storage: "localStorage",
+    storage: "cookie",
     storageKey: "nuxt-color-mode",
   },
   pinia: {

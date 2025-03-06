@@ -20,7 +20,7 @@
 const colorMode = useColorMode();
 const isDark = ref<boolean>(false);
 
-onMounted(() => {
+watchEffect(() => {
   isDark.value = colorMode.value === "dark";
 });
 
