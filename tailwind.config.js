@@ -1,12 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: 'class',
+  darkMode: "class",
   theme: {
-    extend: {
-      mixBlendMode: {
-        difference: 'difference',
-      },
-    },
+    extend: {},
     content: [
       "./components/**/*.{js,vue,ts}",
       "./layouts/**/*.vue",

@@ -1,15 +1,13 @@
 <template>
-  <ColorScheme>
-    <div class="wrapper">
-      <header>{{ loggedIn }}</header>
+  <div class="wrapper">
+    <header>{{ loggedIn }}</header>
 
-      <main>
-        <slot />
-      </main>
+    <main>
+      <slot />
+    </main>
 
-      <footer></footer>
-    </div>
-  </ColorScheme>
+    <footer></footer>
+  </div>
 </template>
 
 <script setup lang="ts">

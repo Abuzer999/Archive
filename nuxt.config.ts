@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
@@ -14,8 +13,15 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     ["@pinia/nuxt", { autoImports: ["defineStore"] }],
     "pinia-plugin-persistedstate/nuxt",
-    "@pinia/nuxt",
   ],
+  app: {
+    head: {
+      link: [{
+        rel: "shortcut icon",
+        href: "/archive_icon.svg",
+      }],
+    },
+  },
   runtimeConfig: {
     AUTH_SECRET: process.env.AUTH_SECRET,
     oauth: {
@@ -44,8 +50,8 @@ export default defineNuxtConfig({
     storageKey: "nuxt-color-mode",
   },
   pinia: {
-    storesDirs: ['./stores/**', './custom-folder/stores/**'],
-  },  
+    storesDirs: ["./stores/**", "./custom-folder/stores/**"],
+  },
   veeValidate: {
     autoImports: true,
     componentNames: {
@@ -55,5 +61,4 @@ export default defineNuxtConfig({
       ErrorMessage: "VeeErrorMessage",
     },
   },
-  
 });

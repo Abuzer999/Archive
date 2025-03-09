@@ -1,5 +1,6 @@
 <template>
   <provider />
+  <logoMain />
 </template>
 
 <script setup lang="ts">
