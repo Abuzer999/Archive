@@ -1,21 +1,27 @@
-export default defineOAuthGitHubEventHandler({
-    config: {
-        emailRequired: true
-    },
+import { User, Token } from "~/types/auth";
+import { H3Event } from "h3";
 
-    async onSuccess(event, {user, tokens}) {
-        await setUserSession(event, {
-            user: {
-                id: user.id,
-                email: user.email
-            },
-            tokens,
-            loggedInAt: new Date()
-        })
-        return sendRedirect(event, '/')
-    },
-    onError(event, error) {
-        console.error(error)
-        return sendRedirect(event, '/auth')
-    }
-})
+export default defineOAuthGitHubEventHandler({
+  config: {
+    emailRequired: true,
+  },
+
+  async onSuccess(
+    event: H3Event,
+    { user, tokens }: { user: User, tokens: Token }
+  ) {
+    await setUserSession(event, {
+      user: {
+        id: user.id,
+        email: user.email,
+      },
+      tokens,
+      loggedInAt: new Date(),
+    });
+    return sendRedirect(event, "/");
+  },
+  onError(event: H3Event, error: unknown) {
+    console.error(error);
+    return sendRedirect(event, "/auth");
+  },
+});

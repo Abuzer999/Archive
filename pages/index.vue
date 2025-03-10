@@ -3,6 +3,7 @@
   <NuxtLink to="/public">Public</NuxtLink>
   <button @click="signOut">Выйти</button>
 
+  <button @click="send">Dark</button>
 
   <buttonColorMode />
 </template>
@@ -23,5 +24,10 @@ const signOut = async() => {
   await navigateTo("/auth");
 }
 
+const send = async() => {
+  const response = await $fetch("/api/auth/register", {
+    method: "POST",
+  })
+}
 
 </script>

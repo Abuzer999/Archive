@@ -1,13 +1,22 @@
 declare module "#auth-utils" {
   interface User {
     id: string;
+    role: string;
     email: string;
+  }
+
+  interface Token {
+    accessToken: string;
+    refreshToken: string;
   }
 
   interface UserSession {
     user: User | null;
   }
 
+  interface SecureSessionData {
+    tokens: Token | null;
+  }
 }
 
-export { UserSession };
+export { UserSession, SecureSessionData, User, Token };

@@ -13,17 +13,29 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     ["@pinia/nuxt", { autoImports: ["defineStore"] }],
     "pinia-plugin-persistedstate/nuxt",
+    "nuxt-nodemailer",
   ],
   app: {
     head: {
-      link: [{
-        rel: "shortcut icon",
-        href: "/archive_icon.svg",
-      }],
+      link: [
+        {
+          rel: "shortcut icon",
+          href: "/archive_icon.svg",
+        },
+      ],
+    },
+  },
+  vite: {
+    resolve: {
+      alias: {
+        ".prisma/client/index-browser":
+          "./node_modules/.prisma/client/index-browser.js",
+      },
     },
   },
   runtimeConfig: {
     AUTH_SECRET: process.env.AUTH_SECRET,
+
     oauth: {
       github: {
         clientId: process.env.NUXT_OAUTH_GITHUB_CLIENT_ID,
@@ -37,6 +49,17 @@ export default defineNuxtConfig({
   },
   prisma: {
     autoSetupPrisma: true,
+  },
+  nodemailer: {
+    service: "gmail",
+    from: process.env.NUXT_NODEMAILER_FROM,
+    host: "smtp.gmail.com",
+    port: 456,
+    secure: true,
+    auth: {
+      user: process.env.NUXT_NODEMAILER_USER,
+      pass: process.env.NUXT_NODEMAILER_PASS,
+    },
   },
   tailwindcss: {
     cssPath: "~/assets/css/tailwind.css",
