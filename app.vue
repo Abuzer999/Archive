@@ -1,7 +1,9 @@
 <template>
   <ColorScheme>
     <NuxtLayout>
-      <NuxtPage />
+      <UApp>
+        <NuxtPage />
+      </UApp>
     </NuxtLayout>
   </ColorScheme>
 </template>

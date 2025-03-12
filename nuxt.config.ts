@@ -51,22 +51,17 @@ export default defineNuxtConfig({
     autoSetupPrisma: true,
   },
   nodemailer: {
-    service: "gmail",
     from: process.env.NUXT_NODEMAILER_FROM,
-    host: "smtp.gmail.com",
-    port: 456,
-    secure: true,
+    service: "gmail",
+    host: process.env.NUXT_NODEMAILER_HOST,
+    port: 587,
+    secure: false,
     auth: {
       user: process.env.NUXT_NODEMAILER_USER,
       pass: process.env.NUXT_NODEMAILER_PASS,
     },
   },
-  tailwindcss: {
-    cssPath: "~/assets/css/tailwind.css",
-    config: {},
-    viewer: true,
-    exposeConfig: false,
-  },
+  css: ['~/assets/css/main.css'],
   colorMode: {
     classSuffix: "",
     storage: "cookie",
