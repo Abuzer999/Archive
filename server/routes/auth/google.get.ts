@@ -1,4 +1,4 @@
-import { User, Token } from "~/types/auth";
+import { User, Token } from "~/lib/auth";
 import { H3Event } from "h3";
 
 export default defineOAuthGoogleEventHandler({

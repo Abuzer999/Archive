@@ -33,6 +33,9 @@ export default defineNuxtConfig({
       },
     },
   },
+  ui: {
+    colorMode: true
+  },
   runtimeConfig: {
     AUTH_SECRET: process.env.AUTH_SECRET,
 

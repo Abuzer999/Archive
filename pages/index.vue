@@ -9,6 +9,7 @@
 </template>
 
 <script setup lang="ts">
+
 useHead({
   title: "Archive",
 })
@@ -16,6 +17,7 @@ definePageMeta({
   layout: "default",
   middleware: ["auth"],
 });
+
 
 const { clear } = useUserSession();
 

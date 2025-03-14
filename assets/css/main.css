@@ -1,6 +1,6 @@
-@import '../global/global.css';
-@import 'tailwindcss' theme(static);
-@import '@nuxt/ui';
+@import "tailwindcss" theme(static);
+@import "@nuxt/ui";
+@import "../global/global.css";
 
 @config '../../tailwind.config.js';
 
@@ -20,12 +20,16 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
+
+  @media (max-height: 600px) {
+    .max-h-600px\:justify-center {
+      justify-content: center;
+    }
+  }
 }
 
-
-
 body {
-  @apply bg-[#f1f5f9] dark:bg-[#15191f];
+  @apply bg-gradient-to-b from-[#6788f314] via-[#fff0] to-[#fbfbfc] dark:bg-[#15191f];
 }
 
 .wrapper {

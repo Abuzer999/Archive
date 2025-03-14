@@ -1,15 +1,18 @@
 <template>
-  <provider />
-  <logoMain />
+  <AuthMain />
 </template>
 
 <script setup lang="ts">
+
 useHead({
   title: "Authentication",
 });
 definePageMeta({
-  layout: "default",
+  layout: "auth",
   middleware: ["auth"],
   colorMode: "light",
 });
+
+
+
 </script>

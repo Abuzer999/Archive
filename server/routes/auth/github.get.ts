@@ -1,4 +1,4 @@
-import { User, Token } from "~/types/auth";
+import { User, Token } from "~/lib/auth";
 import { H3Event } from "h3";
 
 export default defineOAuthGitHubEventHandler({
@@ -8,7 +8,7 @@ export default defineOAuthGitHubEventHandler({
 
   async onSuccess(
     event: H3Event,
-    { user, tokens }: { user: User, tokens: Token }
+    { user, tokens }: { user: User; tokens: Token }
   ) {
     await setUserSession(event, {
       user: {
@@ -18,6 +18,7 @@ export default defineOAuthGitHubEventHandler({
       tokens,
       loggedInAt: new Date(),
     });
+
     return sendRedirect(event, "/");
   },
   onError(event: H3Event, error: unknown) {
