@@ -3,11 +3,13 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   await refreshSession();
 
-  if (!loggedIn.value && to.fullPath !== "/auth") {
-    return navigateTo("/auth", { replace: true });
-  }
-
-  if (loggedIn.value && to.fullPath === "/auth") {
-    return navigateTo("/", { replace: true });
+  if (loggedIn.value) {
+    if (to.fullPath === "/auth" || to.fullPath === "/reset-password") {
+      return navigateTo("/", { replace: true });
+    }
+  } else {
+    if (to.fullPath !== "/auth" && to.fullPath !== "/reset-password") {
+      return navigateTo("/auth", { replace: true });
+    }
   }
 });

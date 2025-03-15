@@ -1,11 +1,13 @@
 <script setup lang="ts">
 const isLoading = ref<boolean>(false);
 const formState = reactive({
+  name: "",
   email: "",
   password: "",
+  confirmPassword: "",
 });
 
-const submitForm = async() => {
+const submitForm = async () => {
   try {
     isLoading.value = true;
     await new Promise<void>((res) => setTimeout(res, 6000));
@@ -22,6 +24,22 @@ const submitForm = async() => {
     @submit="submitForm"
     class="max-w-[340px] w-full flex flex-col items-center gap-[20px] bg-[#f4f4f6] rounded-[20px] p-[20px] shadow-sm"
   >
+    <inputForm
+      v-model="formState.name"
+      :errorMsg="formState.name ? '' : 'name is required'"
+      icon="i-lucide-user"
+      placeholder="Имя"
+      type="text"
+      variant="soft"
+      size="xl"
+      :ui="{
+        root: 'bg-[#FFFFFF] rounded-lg',
+        base: 'pl-[12px] py-[13px] w-[300px] font-monserrat placeholder:text-[15px]',
+        trailingIcon: 'w-[20px] h-[20px]',
+      }"
+      class="w-[300px]"
+    />
+
     <inputForm
       v-model="formState.email"
       :errorMsg="formState.email ? '' : 'Email is required'"
@@ -53,6 +71,22 @@ const submitForm = async() => {
       class="w-[300px]"
     />
 
+    <inputForm
+      v-model="formState.confirmPassword"
+      :errorMsg="formState.confirmPassword ? '' : 'Password is required'"
+      icon="i-line-md:confirm"
+      placeholder="Подтвердите пароль"
+      type="password"
+      variant="soft"
+      size="xl"
+      :ui="{
+        root: 'bg-[#FFFFFF] rounded-lg',
+        base: 'pl-[12px] py-[13px] w-[300px] font-monserrat placeholder:text-[15px]',
+        trailingIcon: 'w-[20px] h-[20px]',
+      }"
+      class="w-[300px]"
+    />
+
     <UButton
       :ui="{
         base: ' w-full min-h-[40px] flex items-center justify-center bg-[#6788f3] hover:bg-[none] hover:brightness-110 text-white rounded-lg transition duration-300 ease-in-out',
@@ -62,7 +96,7 @@ const submitForm = async() => {
       loading-icon="i-lucide-repeat-2"
       loading-auto
     >
-      {{ !isLoading ? "Вход" : "" }}</UButton
+      {{ !isLoading ? "Создать аккаунт" : "" }}</UButton
     >
   </UForm>
 </template>

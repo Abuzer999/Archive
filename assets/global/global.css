@@ -49,10 +49,6 @@ a:not([class]) {
   text-decoration-skip-ink: auto;
 }
 
-a {
-  text-decoration: none;
-}
-
 button {
   padding: 0;
   cursor: pointer;
@@ -73,8 +69,6 @@ h5,
 h6,
 p {
   margin: 0;
-  font-size: inherit;
-  font-weight: inherit;
 }
 
 input::-webkit-outer-spin-button,

@@ -1,5 +1,13 @@
 <template>
-  <UFormField :label="label" size="xl" :error="errorMsg">
+  <UFormField
+    :label="label"
+    size="xl"
+    :error="errorMsg"
+    class="font-monserrat text-[15px]"
+    :ui="{
+      error: '!mt-[6px]',
+    }"
+  >
     <UInput
       :model-value="modelValue"
       @update:model-value="(value) => emit('update:modelValue', value)"

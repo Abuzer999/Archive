@@ -6,7 +6,7 @@
     >
       <UIcon
         name="i-logos:github-icon"
-        class="w-[30px] h-[30px] transition group-hover:opacity-75"
+        class="w-[30px] h-[30px] transition duration-300 ease-in-out group-hover:opacity-75 "
       />
     </a>
     <a
@@ -15,7 +15,7 @@
     >
       <UIcon
         name="i-logos:google-gmail"
-        class="w-[30px] h-[30px] transition group-hover:opacity-75"
+        class="w-[30px] h-[30px] transition duration-300 ease-in-out group-hover:opacity-75"
       />
     </a>
   </div>

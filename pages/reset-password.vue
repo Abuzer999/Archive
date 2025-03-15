@@ -1,18 +1,14 @@
 <template>
-  <AuthMain />
+    <ResetPassword />
 </template>
 
 <script setup lang="ts">
-
 useHead({
-  title: "Авторизация - Archive",
+  title: "Cброс пароля - Archive",
 });
 definePageMeta({
   layout: "auth",
   middleware: ["auth"],
   colorMode: "light",
-});
-
-
-
+})
 </script>
