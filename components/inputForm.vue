@@ -2,8 +2,8 @@
   <UFormField
     :label="label"
     size="xl"
-    :error="errorMsg"
-    class="font-monserrat text-[15px]"
+    :name="inputName"
+    class="font-monserrat text-[13px]"
     :ui="{
       error: '!mt-[6px]',
     }"
@@ -24,7 +24,7 @@
 <script setup lang="ts">
 interface Props {
   label?: string;
-  errorMsg: string;
+  inputName: string;
   modelValue: string;
   icon?: string;
   placeholder?: string;

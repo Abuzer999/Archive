@@ -14,7 +14,7 @@ const toggleState = () => {
     <logoMain />
 
     <div
-      class="mb-[10px] mt-[20px] px-[5px] max-w-[340px] w-full flex justify-between min-h-[25px]"
+      class="mb-[10px] mt-[20px] px-[5px] max-w-[340px] w-full flex justify-between min-h-[25px] "
     >
       <span class="text-[16px] font-[700] leading-[100%]">{{
         isPageLogin ? "Вход" : "Создайте аккаунт"
@@ -29,13 +29,14 @@ const toggleState = () => {
       <UIcon
         v-else
         name="i-line-md:star-pulsating-loop"
-        class="w-[25px] h-[25px] cursor-pointer"
+        class="w-[25px] h-[25px]"
       />
     </div>
 
-    <Login v-if="isPageLogin" />
-
-    <Register v-else />
+    <Transition name="fade-slide" mode="out-in">
+      <Login v-if="isPageLogin" key="login" />
+      <Register v-else key="register" />
+    </Transition>
 
     <div class="mt-[20px] max-w-[340px] w-full">
       <span
@@ -72,5 +73,22 @@ const toggleState = () => {
   @media (max-height: 750px) {
     justify-content: start;
   }
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition:
+    opacity 0.1s ease,
+    transform 0.1s ease;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>

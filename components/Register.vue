@@ -1,13 +1,19 @@
 <script setup lang="ts">
+import type { FormSubmitEvent } from "@nuxt/ui";
+import type { registerShemaType } from "~/validation/registerSchema";
+import { registerSchema } from "~/validation/registerSchema";
+
+
+
 const isLoading = ref<boolean>(false);
-const formState = reactive({
+const formState = reactive<registerShemaType>({
   name: "",
   email: "",
   password: "",
   confirmPassword: "",
 });
 
-const submitForm = async () => {
+const submitForm = async (event: FormSubmitEvent<registerShemaType>) => {
   try {
     isLoading.value = true;
     await new Promise<void>((res) => setTimeout(res, 6000));
@@ -21,12 +27,13 @@ const submitForm = async () => {
 <template>
   <UForm
     :state="formState"
+    :schema="registerSchema"
     @submit="submitForm"
     class="max-w-[340px] w-full flex flex-col items-center gap-[20px] bg-[#f4f4f6] rounded-[20px] p-[20px] shadow-sm"
   >
     <inputForm
       v-model="formState.name"
-      :errorMsg="formState.name ? '' : 'name is required'"
+      inputName="name"
       icon="i-lucide-user"
       placeholder="Имя"
       type="text"
@@ -42,7 +49,7 @@ const submitForm = async () => {
 
     <inputForm
       v-model="formState.email"
-      :errorMsg="formState.email ? '' : 'Email is required'"
+      inputName="email"
       icon="i-lucide-mail"
       placeholder="Электронная почта"
       type="email"
@@ -57,7 +64,7 @@ const submitForm = async () => {
     />
     <inputForm
       v-model="formState.password"
-      :errorMsg="formState.password ? '' : 'Password is required'"
+      inputName="password"
       icon="i-lucide-lock"
       placeholder="Пароль"
       type="password"
@@ -73,7 +80,7 @@ const submitForm = async () => {
 
     <inputForm
       v-model="formState.confirmPassword"
-      :errorMsg="formState.confirmPassword ? '' : 'Password is required'"
+      inputName="confirmPassword"
       icon="i-line-md:confirm"
       placeholder="Подтвердите пароль"
       type="password"

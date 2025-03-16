@@ -1,6 +1,7 @@
 <template>
   <ColorScheme>
     <NuxtLayout>
+      <loaderPage />
       <UApp>
         <NuxtPage />
       </UApp>
@@ -8,4 +9,4 @@
   </ColorScheme>
 </template>
 
-<script setup lang="ts"></script>
+

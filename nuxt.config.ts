@@ -5,7 +5,6 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@nuxt/image",
     "@nuxt/fonts",
-    "@vee-validate/nuxt",
     "dayjs-nuxt",
     "@prisma/nuxt",
     "nuxt-typed-router",
@@ -72,14 +71,5 @@ export default defineNuxtConfig({
   },
   pinia: {
     storesDirs: ["./stores/**", "./custom-folder/stores/**"],
-  },
-  veeValidate: {
-    autoImports: true,
-    componentNames: {
-      Form: "VeeForm",
-      Field: "VeeField",
-      FieldArray: "VeeFieldArray",
-      ErrorMessage: "VeeErrorMessage",
-    },
   },
 });

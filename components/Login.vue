@@ -1,11 +1,16 @@
 <script setup lang="ts">
+import type { FormSubmitEvent } from "@nuxt/ui";
+import { loginSchema } from "~/validation/loginSchema";
+import type { loginShemaType } from "~/validation/loginSchema";
+
 const isLoading = ref<boolean>(false);
-const formState = reactive({
+
+const formState = reactive<loginShemaType>({
   email: "",
   password: "",
 });
 
-const submitForm = async() => {
+const submitForm = async(event: FormSubmitEvent<loginShemaType>) => {
   try {
     isLoading.value = true;
     await new Promise<void>((res) => setTimeout(res, 6000));
@@ -19,12 +24,13 @@ const submitForm = async() => {
 <template>
   <UForm
     :state="formState"
+    :schema="loginSchema"
     @submit="submitForm"
     class="max-w-[340px] w-full flex flex-col items-center gap-[20px] bg-[#f4f4f6] rounded-[20px] p-[20px] shadow-sm"
   >
     <inputForm
       v-model="formState.email"
-      :errorMsg="formState.email ? '' : 'Email is required'"
+      inputName="email"
       icon="i-lucide-mail"
       placeholder="Электронная почта"
       type="email"
@@ -39,7 +45,7 @@ const submitForm = async() => {
     />
     <inputForm
       v-model="formState.password"
-      :errorMsg="formState.password ? '' : 'Password is required'"
+      inputName="password"
       icon="i-lucide-lock"
       placeholder="Пароль"
       type="password"

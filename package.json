@@ -34,7 +34,8 @@
     "prettier": "^3.5.3",
     "tailwindcss": "^4.0.14",
     "vue": "latest",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@iconify-json/ic": "^1.2.2",
