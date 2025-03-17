@@ -37,6 +37,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     AUTH_SECRET: process.env.AUTH_SECRET,
+    BASE_URL: process.env.BASE_URL,
+    JWT_SECRET: process.env.JWT_SECRET,
 
     oauth: {
       github: {

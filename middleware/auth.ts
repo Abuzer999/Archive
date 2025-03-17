@@ -3,6 +3,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   await refreshSession();
 
+
   if (loggedIn.value) {
     if (to.fullPath === "/auth" || to.fullPath === "/reset-password") {
       return navigateTo("/", { replace: true });

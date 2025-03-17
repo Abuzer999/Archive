@@ -1,22 +1,39 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from "@nuxt/ui";
 import type { registerShemaType } from "~/validation/registerSchema";
+import type { Register } from "~/types/register";
 import { registerSchema } from "~/validation/registerSchema";
 
-
-
 const isLoading = ref<boolean>(false);
-const formState = reactive<registerShemaType>({
+const formState = reactive<Register>({
   name: "",
   email: "",
   password: "",
   confirmPassword: "",
 });
 
-const submitForm = async (event: FormSubmitEvent<registerShemaType>) => {
+const submitForm = async (
+  event: FormSubmitEvent<registerShemaType>
+): Promise<void> => {
   try {
     isLoading.value = true;
-    await new Promise<void>((res) => setTimeout(res, 6000));
+    const data = await $fetch("/api/auth/register", {
+      method: "POST",
+      body: {
+        name: formState.name,
+        email: formState.email,
+        password: formState.password,
+      },
+    });
+
+    if (data) {
+      formState.name = "";
+      formState.email = "";
+      formState.password = "";
+      formState.confirmPassword = "";
+
+      console.log(data);
+    }
   } catch (error) {
   } finally {
     isLoading.value = false;
@@ -46,7 +63,6 @@ const submitForm = async (event: FormSubmitEvent<registerShemaType>) => {
       }"
       class="w-[300px]"
     />
-
     <inputForm
       v-model="formState.email"
       inputName="email"
@@ -77,7 +93,6 @@ const submitForm = async (event: FormSubmitEvent<registerShemaType>) => {
       }"
       class="w-[300px]"
     />
-
     <inputForm
       v-model="formState.confirmPassword"
       inputName="confirmPassword"
@@ -102,6 +117,7 @@ const submitForm = async (event: FormSubmitEvent<registerShemaType>) => {
       type="submit"
       loading-icon="i-lucide-repeat-2"
       loading-auto
+      :disabled="isLoading"
     >
       {{ !isLoading ? "Создать аккаунт" : "" }}</UButton
     >

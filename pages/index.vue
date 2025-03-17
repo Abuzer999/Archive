@@ -27,7 +27,7 @@ const signOut = async() => {
 }
 
 const send = async() => {
-  const response = await $fetch("/api/auth/register", {
+  const response = await $fetch("/api/testredis", {
     method: "POST",
   })
 }

@@ -1,5 +1,6 @@
 import { User, Token } from "~/lib/auth";
 import { H3Event } from "h3";
+import { useOAuth } from "~/composables/useOAuth";
 
 export default defineOAuthGitHubEventHandler({
   config: {
@@ -10,12 +11,17 @@ export default defineOAuthGitHubEventHandler({
     event: H3Event,
     { user, tokens }: { user: User; tokens: Token }
   ) {
+    
+    await useOAuth(user, "github", String(user.id));
+
     await setUserSession(event, {
       user: {
         id: user.id,
         email: user.email,
       },
-      tokens,
+      tokens: {
+        accessToken: tokens,
+      },
       loggedInAt: new Date(),
     });
 

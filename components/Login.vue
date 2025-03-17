@@ -2,19 +2,32 @@
 import type { FormSubmitEvent } from "@nuxt/ui";
 import { loginSchema } from "~/validation/loginSchema";
 import type { loginShemaType } from "~/validation/loginSchema";
+import type { Login } from "~/types/login";
 
 const isLoading = ref<boolean>(false);
+const router = useRouter();
 
-const formState = reactive<loginShemaType>({
+const formState = reactive<Login>({
   email: "",
   password: "",
 });
 
-const submitForm = async(event: FormSubmitEvent<loginShemaType>) => {
+const submitForm = async (event: FormSubmitEvent<loginShemaType>) => {
   try {
     isLoading.value = true;
-    await new Promise<void>((res) => setTimeout(res, 6000));
-  } catch (error) {
+    const data = await $fetch("/api/auth/login", {
+      method: "POST",
+      body: {
+        email: formState.email,
+        password: formState.password,
+      },
+    });
+
+    if (data) {
+      router.push("/");
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) console.error(error.message);
   } finally {
     isLoading.value = false;
   }
@@ -67,6 +80,7 @@ const submitForm = async(event: FormSubmitEvent<loginShemaType>) => {
       type="submit"
       loading-icon="i-lucide-repeat-2"
       loading-auto
+      :disabled="isLoading"
     >
       {{ !isLoading ? "Вход" : "" }}</UButton
     >
