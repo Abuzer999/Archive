@@ -9,15 +9,16 @@ const formState = reactive<resetPasswordSchemaType>({
 
 const { step, saveEmail } = useStep();
 
-
 const isLoading = ref<boolean>(false);
 const sendAgain = ref<boolean>(false);
 const sendEmail = ref<boolean>(false);
 
 const { start, remaining } = useTimer(60, {
   onComplete: () => {
-    sendAgain.value = true;
-    sendEmail.value = false;
+    if (step.value === "email" || step.value === "code") {
+      sendAgain.value = true;
+      sendEmail.value = false;
+    }
   },
 });
 

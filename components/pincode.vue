@@ -45,27 +45,27 @@ import type { pincodeSchemaType } from "~/validation/pincodeSchema";
 const pinCode = ref<{ pincode: string[] }>({ pincode: [] });
 const isLoading = ref<boolean>(false);
 
-const { step } = useStep()
+const { step, code } = useStep();
 
 const sendCode = async (event: FormSubmitEvent<pincodeSchemaType>) => {
   try {
     isLoading.value = true;
-    console.log(pinCode.value.pincode.join(""));
-    
-    const { success }: { success: boolean } = await $fetch("/api/auth/pincode", {
-      method: "POST",
-      body: {
-        code: pinCode.value.pincode.join(""),
-      }
-    });
 
-    if(success) {
+    const { success }: { success: boolean } = await $fetch(
+      "/api/auth/pincode",
+      {
+        method: "POST",
+        body: {
+          code: pinCode.value.pincode.join(""),
+        },
+      }
+    );
+
+    if (success) {
+      code.value = pinCode.value.pincode.join("");
       pinCode.value.pincode = [];
       step.value = "password";
-      console.log(success)
-      console.log(step.value)
     }
-
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);
   } finally {

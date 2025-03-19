@@ -1,22 +1,34 @@
 <script setup lang="ts">
+import type { FormSubmitEvent } from "@nuxt/ui";
+import { resetSchema } from "~/validation/resetSchema";
+import type { resetSchemaType } from "~/validation/resetSchema";
+
 const formState = reactive({
   password: "",
   confirmPassword: "",
 });
 
-const { saveEmail } = useStep();
+const { saveEmail, code } = useStep();
 
-const createPassword = async (): Promise<void> => {
+const createPassword = async (
+  event: FormSubmitEvent<resetSchemaType>
+): Promise<void> => {
   try {
     isLoading.value = true;
 
     const { success }: { success: boolean } = await $fetch("/api/auth/reset", {
-      method: "POST",
+      method: "PUT",
       body: {
-        password: formState.password,
+        newPassword: formState.password,
         email: saveEmail.value,
+        code: code.value,
       },
     });
+
+    if (success) {
+      formState.password = "";
+      formState.confirmPassword = "";
+    }
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);
   } finally {
@@ -28,7 +40,12 @@ const isLoading = ref<boolean>(false);
 </script>
 
 <template>
-  <UForm :state="formState" class="flex flex-col gap-[20px]">
+  <UForm
+    :state="formState"
+    :schema="resetSchema"
+    @submit="createPassword"
+    class="flex flex-col gap-[20px]"
+  >
     <inputForm
       v-model="formState.password"
       inputName="password"

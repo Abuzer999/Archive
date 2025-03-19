@@ -1,10 +1,24 @@
 import prisma from "~/lib/prisma";
+import { redis } from "~/lib/redis";
 import bcrypt from "bcrypt";
 
 export default defineEventHandler(async (event) => {
   try {
-    const { newPassword, email }: { newPassword: string; email: string } =
+    const {
+      newPassword,
+      email,
+      code,
+    }: { newPassword: string; email: string; code: string } =
       await readBody(event);
+
+    if (!newPassword || !email || !code) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "New password, email, and code are required",
+      });
+    }
+
+    const storedEmail = await redis.get(`reset:${code}`);
 
     if (!newPassword) {
       throw createError({
@@ -12,6 +26,8 @@ export default defineEventHandler(async (event) => {
         statusMessage: "New password is required",
       });
     }
+
+    await redis.del(`reset:${code}`);
 
     const user = await prisma.user.findUnique({
       where: {
@@ -23,13 +39,6 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 404,
         statusMessage: "User not found",
-      });
-    }
-
-    if (!user.password || user.password === "") {
-      throw createError({
-        statusCode: 401,
-        statusMessage: "Invalid email or password.",
       });
     }
 
