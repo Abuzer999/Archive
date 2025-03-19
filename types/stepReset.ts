@@ -1,0 +1,1 @@
+export type StepResetPassword = "email" | "code" | "password";

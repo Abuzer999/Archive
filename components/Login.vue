@@ -15,7 +15,7 @@ const formState = reactive<Login>({
 const submitForm = async (event: FormSubmitEvent<loginShemaType>) => {
   try {
     isLoading.value = true;
-    const data = await $fetch("/api/auth/login", {
+    const data: string = await $fetch("/api/auth/login", {
       method: "POST",
       body: {
         email: formState.email,

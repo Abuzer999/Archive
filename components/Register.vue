@@ -17,7 +17,7 @@ const submitForm = async (
 ): Promise<void> => {
   try {
     isLoading.value = true;
-    const data = await $fetch("/api/auth/register", {
+    const data: string = await $fetch("/api/auth/register", {
       method: "POST",
       body: {
         name: formState.name,
