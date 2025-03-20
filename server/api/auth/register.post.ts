@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
 
     if (userExists) {
       throw createError({
-        statusCode: 400,
+        statusCode: 401,
         statusMessage: "User already exists",
       });
     }
@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
 
     await sendVerificationEmail(email, verificationToken);
 
-    return { message: "User registered successfully" };
+    return { message: "User send verification email" };
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,
