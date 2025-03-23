@@ -88,7 +88,7 @@ onUnmounted(() => {
       class="max-w-[340px] w-full flex flex-col items-center gap-[20px] bg-[#f4f4f6] rounded-[20px] p-[20px] shadow-sm my-[20px]"
     >
       <div class="w-full flex justify-between items-center">
-        <h1 class="text-[18px] font-[700] leading-[100%]">
+        <h1 class="text-[18px] font-[700] leading-[100%] text-[#000000]">
           {{ step === "password" ? "Восстановление пароля" : "Забыли пароль?" }}
         </h1>
 

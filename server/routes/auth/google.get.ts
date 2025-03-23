@@ -13,6 +13,7 @@ export default defineOAuthGoogleEventHandler({
     await setUserSession(event, {
       user: {
         id: user.sub,
+        name: user.name,
         email: user.email,
       },
       tokens: {

@@ -23,7 +23,7 @@ watch(
 const submitForm = async (event: FormSubmitEvent<loginShemaType>) => {
   try {
     isLoading.value = true;
-    const data: string = await $fetch("/api/auth/login", {
+    const data: { isFirstLogin: boolean } = await $fetch("/api/auth/login", {
       method: "POST",
       body: {
         email: formState.email,
@@ -32,12 +32,17 @@ const submitForm = async (event: FormSubmitEvent<loginShemaType>) => {
     });
 
     if (data) {
-      router.push("/");
+      if (data.isFirstLogin === true) {
+        router.push("/welcome");
+      } else {
+        router.push("/");
+      }
     }
   } catch (error: any) {
     if (
-      (error.statusCode === 401 || error.statusCode === 400,
-      error.statusCode === 404)
+      error.statusCode === 401 ||
+      error.statusCode === 400 ||
+      error.statusCode === 404
     ) {
       errorMessage.value = "Неправильный логин или пароль";
     } else {

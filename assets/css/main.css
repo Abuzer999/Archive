@@ -2,9 +2,6 @@
 @import "tailwindcss" theme(static);
 @import "@nuxt/ui";
 
-
-@config '../../tailwind.config.js';
-
 @layer base {
   *,
   ::after,
@@ -13,6 +10,16 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    margin: 0;
+  }
+
 }
 
 @theme {
@@ -24,10 +31,10 @@ body {
   @apply bg-[#fbfbfc] dark:bg-[#15191f] font-manrope;
 }
 
+
 .wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   overflow: hidden;
 }
-

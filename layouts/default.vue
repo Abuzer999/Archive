@@ -1,7 +1,7 @@
 <template>
   
   <div class="wrapper">
-    <header>{{ loggedIn }}</header>
+    <header></header>
 
     <main>
       <slot />
@@ -14,3 +14,7 @@
 <script setup lang="ts">
 const { loggedIn, user, session, fetch, clear, openInPopup } = useUserSession();
 </script>
+
+<style>
+
+</style>

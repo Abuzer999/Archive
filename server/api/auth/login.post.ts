@@ -1,4 +1,3 @@
-
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import prisma from "~/lib/prisma";
@@ -51,6 +50,7 @@ export default defineEventHandler(async (event) => {
     const session = await setUserSession(event, {
       user: {
         id: user.id,
+        name: user.name,
         email: user.email,
       },
       tokens: {
@@ -59,7 +59,8 @@ export default defineEventHandler(async (event) => {
       loggedInAt: new Date(),
     });
 
-    return { message: "Login successful" };
+    
+    return { isFirstLogin: user.isFirstLogin };
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,

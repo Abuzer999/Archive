@@ -16,7 +16,7 @@ const toggleState = () => {
     <div
       class="mb-[10px] mt-[20px] px-[5px] max-w-[340px] w-full flex justify-between min-h-[25px] "
     >
-      <span class="text-[16px] font-[700] leading-[100%]">{{
+      <span class="text-[16px] font-[700] leading-[100%] text-[#000000]">{{
         isPageLogin ? "Вход" : "Создайте аккаунт"
       }}</span>
       <NuxtLink

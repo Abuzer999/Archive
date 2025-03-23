@@ -9,6 +9,3 @@
   </ColorScheme>
 </template>
 
-<style>
-
-</style>

@@ -8,12 +8,13 @@ datasource db {
 }
 
 model User {
-  id         String     @id @default(auto()) @map("_id") @db.ObjectId
-  email      String     @unique
-  name       String
-  password   String
-  isVerified Boolean    @default(false)
-  providers  Provider[]
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  email        String     @unique
+  name         String
+  password     String
+  isVerified   Boolean    @default(false)
+  isFirstLogin Boolean    @default(true)
+  providers    Provider[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

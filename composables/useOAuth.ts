@@ -12,20 +12,33 @@ export const useOAuth = async (
   });
 
   if (existingUser) {
-    return prisma.user.update({
-      where: { email: user.email },
-      data: {
-        isVerified: true,
-        providers: {
-          create: {
-            provider,
-            providerId: String(providerId),
+    const hasProvider = existingUser.providers.some(
+      (p) => p.provider === provider && p.providerId === providerId
+    );
+
+    if (!hasProvider) {
+      await prisma.user.update({
+        where: { email: user.email },
+        data: {
+          isVerified: true,
+          providers: {
+            create: {
+              provider,
+              providerId: String(providerId),
+            },
           },
         },
-      },
-    });
+      });
+    } else {
+      await prisma.user.update({
+        where: { email: user.email },
+        data: {
+          isVerified: true,
+        },
+      });
+    }
   } else {
-    return prisma.user.create({
+    await prisma.user.create({
       data: {
         email: user.email,
         name: user.name,
