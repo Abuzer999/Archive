@@ -13,19 +13,6 @@ const formState = reactive<Register>({
   confirmPassword: "",
 });
 
-watch(
-  () => [
-    formState.name,
-    formState.email,
-    formState.password,
-    formState.confirmPassword,
-  ],
-  () => {
-    errorMessage.value = null;
-    successMessage.value = null;
-  }
-);
-
 const submitForm = async (
   event: FormSubmitEvent<registerShemaType>
 ): Promise<void> => {
@@ -45,13 +32,15 @@ const submitForm = async (
       formState.password = "";
       formState.confirmPassword = "";
       await nextTick();
-      successMessage.value = "Код отправлен на почту";
+      successMessage.value = "Письмо отправлен на почту";
     }
-  } catch (error: any) {
-    if (error.statusCode === 401) {
-      errorMessage.value = "почта уже используется";
-    } else {
-      errorMessage.value = "Что-то пошло не так";
+  } catch (error: unknown) {
+    if (error instanceof Error && "statusCode" in error) {
+      if (error.statusCode === 401) {
+        errorMessage.value = "почта уже используется";
+      } else {
+        errorMessage.value = "Что-то пошло не так";
+      }
     }
   } finally {
     isLoading.value = false;

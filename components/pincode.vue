@@ -12,6 +12,7 @@
       }"
     >
       <UPinInput
+        @input="errorMessage = null"
         otp
         v-model="pinCode.pincode"
         color="info"
@@ -22,6 +23,8 @@
         :ui="{ base: 'w-[42px] h-[42px]}' }"
       />
     </UFormField>
+
+    <errorForm v-if="errorMessage" :text="errorMessage" />
 
     <UButton
       :ui="{
@@ -46,6 +49,7 @@ const pinCode = ref<{ pincode: string[] }>({ pincode: [] });
 const isLoading = ref<boolean>(false);
 
 const { step, code } = useStep();
+const { errorMessage } = useErrorMessage();
 
 const sendCode = async (event: FormSubmitEvent<pincodeSchemaType>) => {
   try {
@@ -67,9 +71,18 @@ const sendCode = async (event: FormSubmitEvent<pincodeSchemaType>) => {
       step.value = "password";
     }
   } catch (error: unknown) {
-    if (error instanceof Error) console.error(error.message);
+    if (error instanceof Error && "statusCode" in error) {
+      if (error.statusCode === 401) {
+        errorMessage.value = "Неверный код";
+      }
+    }
   } finally {
     isLoading.value = false;
   }
 };
+
+
+onUnmounted(() => {
+  errorMessage.value = null;
+})
 </script>

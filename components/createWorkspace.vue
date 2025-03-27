@@ -17,7 +17,12 @@
       задачи и документы.
     </p>
 
-    <UForm :state="stateSpace" :schema="workSpaceSchema" @submit="createWorkSpace" class="flex flex-col items-center justify-center mt-[20px]">
+    <UForm
+      :state="stateSpace"
+      :schema="workSpaceSchema"
+      @submit="createWorkSpace"
+      class="flex flex-col items-center justify-center mt-[20px]"
+    >
       <h2 class="text-xl mt-[20px] font-[700] leading-[100%] text-[#000000]">
         Название рабочего пространства
       </h2>
@@ -64,16 +69,17 @@ const stateSpace = reactive({
   workspace: "",
 });
 
-
-const createWorkSpace = async (event: FormSubmitEvent<workSpaceSchemaType>): Promise<void> => {
+const createWorkSpace = async (
+  event: FormSubmitEvent<workSpaceSchemaType>
+): Promise<void> => {
   try {
     isLoading.value = true;
     return new Promise<void>((res) => setTimeout(res, 4000));
-
   } catch (error) {
     console.log(error);
   } finally {
     isLoading.value = false;
   }
 };
+
 </script>

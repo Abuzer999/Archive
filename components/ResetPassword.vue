@@ -6,7 +6,7 @@ import type { resetPasswordSchemaType } from "~/validation/resetPasswordSchema";
 const formState = reactive<resetPasswordSchemaType>({
   email: "",
 });
-
+const { errorMessage } = useErrorMessage();
 const { step, saveEmail } = useStep();
 
 const isLoading = ref<boolean>(false);
@@ -40,7 +40,11 @@ const resendMail = async (): Promise<void> => {
       start();
     }
   } catch (error: unknown) {
-    if (error instanceof Error) console.error(error.message);
+    if (error instanceof Error && "statusCode" in error) {
+      if (error.statusCode === 404 || error.statusCode === 400) {
+        errorMessage.value = "Пользователь не найден";
+      }
+    }
   }
 };
 
@@ -67,7 +71,11 @@ const submitForm = async (
       start();
     }
   } catch (error: unknown) {
-    if (error instanceof Error) console.error(error.message);
+    if (error instanceof Error && "statusCode" in error) {
+      if (error.statusCode === 404 || error.statusCode === 400) {
+        errorMessage.value = "Пользователь не найден";
+      }
+    }
   } finally {
     isLoading.value = false;
   }
@@ -75,6 +83,7 @@ const submitForm = async (
 
 onUnmounted(() => {
   step.value = "email";
+  errorMessage.value = null;
 });
 </script>
 
@@ -110,6 +119,7 @@ onUnmounted(() => {
         :schema="resetPasswordSchema"
         :state="formState"
         @submit="submitForm"
+        class="flex flex-col items-center"
       >
         <inputForm
           v-model="formState.email"
@@ -126,6 +136,8 @@ onUnmounted(() => {
           }"
           class="w-[300px]"
         />
+
+        <errorForm v-if="errorMessage" :text="errorMessage" />
 
         <UButton
           :ui="{

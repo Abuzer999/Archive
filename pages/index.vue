@@ -6,8 +6,9 @@
   <button @click="send" class="texts">Dark</button>
 
   <buttonColorMode />
+  
+  <TaskList />
 
-  <NuxtLink to="/welcome" class="text-black dark:text-white transition-colors duration-300 ease-in-out">Public</NuxtLink>
 </template>
 
 <script setup lang="ts">
@@ -25,12 +26,6 @@ const { clear } = useUserSession();
 const signOut = async() => {
   await clear();
   await navigateTo("/auth");
-}
-
-const send = async() => {
-  const response = await $fetch("/api/testredis", {
-    method: "POST",
-  })
 }
 
 </script>

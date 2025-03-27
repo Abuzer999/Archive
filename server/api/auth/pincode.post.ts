@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
 
     if (!email) {
       throw createError({
-        statusCode: 400,
+        statusCode: 401,
         statusMessage: "Invalid or expired code",
       });
     }

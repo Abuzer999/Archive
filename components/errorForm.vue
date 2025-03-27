@@ -1,5 +1,5 @@
 <template>
-    <span class="font-monserrat text-error-600 mt-[9px]">{{ text }}</span>
+    <span class="block font-monserrat text-error-600 mt-[9px]">{{ text }}</span>
 </template>
 
 <script setup lang="ts">

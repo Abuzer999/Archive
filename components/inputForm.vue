@@ -9,6 +9,7 @@
     }"
   >
     <UInput
+      @input="inputCheck"
       :model-value="modelValue"
       @update:model-value="(value) => emit('update:modelValue', value)"
       :trailing-icon="icon"
@@ -22,6 +23,12 @@
 </template>
 
 <script setup lang="ts">
+const { errorMessage } = useErrorMessage();
+
+const inputCheck = () => {
+  errorMessage.value = null
+}
+
 interface Props {
   label?: string;
   inputName: string;

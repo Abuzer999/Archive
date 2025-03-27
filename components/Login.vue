@@ -13,13 +13,6 @@ const formState = reactive<Login>({
   password: "",
 });
 
-watch(
-  () => [formState.email, formState.password],
-  () => {
-    errorMessage.value = null;
-  }
-);
-
 const submitForm = async (event: FormSubmitEvent<loginShemaType>) => {
   try {
     isLoading.value = true;
@@ -38,20 +31,26 @@ const submitForm = async (event: FormSubmitEvent<loginShemaType>) => {
         router.push("/");
       }
     }
-  } catch (error: any) {
-    if (
-      error.statusCode === 401 ||
-      error.statusCode === 400 ||
-      error.statusCode === 404
-    ) {
-      errorMessage.value = "Неправильный логин или пароль";
-    } else {
-      errorMessage.value = "Что-то пошло не так";
+  } catch (error: unknown) {
+    if (error instanceof Error && "statusCode" in error) {
+      if (
+        error.statusCode === 401 ||
+        error.statusCode === 400 ||
+        error.statusCode === 404
+      ) {
+        errorMessage.value = "Неправильный логин или пароль";
+      } else {
+        errorMessage.value = "Что-то пошло не так";
+      }
     }
   } finally {
     isLoading.value = false;
   }
 };
+
+onUnmounted(() => {
+  errorMessage.value = null;
+})
 </script>
 
 <template>
