@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLoading" class="loading fixed top-0 left-0 w-full h-full bg-[#ffffff] dark:bg-[#15191f] z-50">
+  <div v-if="isLoading" class="loading fixed top-0 left-0 w-full h-full bg-[#fbfbfc] dark:bg-[#15191f] z-50">
     <svg class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" width="128px" height="96px">
       <polyline
         points="0.314 47.908, 28 47.908, 43.686 96, 86 0, 100 48, 128 48"

@@ -8,13 +8,13 @@ datasource db {
 }
 
 model User {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
-  email        String     @unique
-  name         String
-  password     String
-  isVerified   Boolean    @default(false)
-  isFirstLogin Boolean    @default(true)
-  providers    Provider[]
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  email      String      @unique
+  name       String
+  password   String
+  isVerified Boolean     @default(false)
+  workspace  Workspace[]
+  providers  Provider[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -26,4 +26,48 @@ model Provider {
   providerId String
   userId     String @db.ObjectId
   user       User   @relation(fields: [userId], references: [id])
+}
+
+model Workspace {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  ownerId  String    @unique @db.ObjectId
+  owner    User      @relation(fields: [ownerId], references: [id])
+  projects Project[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  workspaceId String    @db.ObjectId 
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  folders     Folder[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Folder {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  projectId String  @db.ObjectId
+  project   Project @relation(fields: [projectId], references: [id])
+  tasks     Task[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  title    String
+  status   String  @default("todo") // Можно сделать Enum
+  folderId String? @db.ObjectId
+  folder   Folder? @relation(fields: [folderId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

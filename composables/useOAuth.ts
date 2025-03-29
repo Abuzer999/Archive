@@ -11,13 +11,15 @@ export const useOAuth = async (
     include: { providers: true },
   });
 
+  let dbUser;
+
   if (existingUser) {
     const hasProvider = existingUser.providers.some(
       (p) => p.provider === provider && p.providerId === providerId
     );
 
     if (!hasProvider) {
-      await prisma.user.update({
+      dbUser = await prisma.user.update({
         where: { email: user.email },
         data: {
           isVerified: true,
@@ -30,7 +32,7 @@ export const useOAuth = async (
         },
       });
     } else {
-      await prisma.user.update({
+      dbUser = await prisma.user.update({
         where: { email: user.email },
         data: {
           isVerified: true,
@@ -38,11 +40,11 @@ export const useOAuth = async (
       });
     }
   } else {
-    await prisma.user.create({
+    dbUser = await prisma.user.create({
       data: {
         email: user.email,
         name: user.name,
-        password: "",
+        password: "", 
         isVerified: true,
         providers: {
           create: {
@@ -53,4 +55,6 @@ export const useOAuth = async (
       },
     });
   }
+
+  return dbUser; 
 };

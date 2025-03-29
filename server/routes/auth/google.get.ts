@@ -8,11 +8,11 @@ export default defineOAuthGoogleEventHandler({
     { user, tokens }: { user: User; tokens: Token }
   ) {
 
-    await useOAuth(user, "google", String(user.sub));
+    const dbUser = await useOAuth(user, "google", String(user.sub));
 
     await setUserSession(event, {
       user: {
-        id: user.sub,
+        id: dbUser.id,
         name: user.name,
         email: user.email,
       },

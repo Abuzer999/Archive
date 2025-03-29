@@ -7,17 +7,21 @@
     </h1>
     <UProgress
       class="max-w-[500px] w-full mt-[30px] text-[#000000]"
-      v-model="value"
+      v-model="progress"
       color="info"
       :max="2"
     />
 
     <p class="w-full mt-[20px] text-[16px] font-[500] leading-[120%]">
-      Создай первое рабочее пространство — место, где соберёшь все свои проекты,
-      задачи и документы.
+      {{
+        !isCreated
+          ? "Создай первое рабочее пространство — место, где соберёшь все свои проекты, задачи и документы."
+          : "Пригласи команду в рабочее пространство и вместе протестируйте Archive"
+      }}
     </p>
 
     <UForm
+      v-if="!isCreated"
       :state="stateSpace"
       :schema="workSpaceSchema"
       @submit="createWorkSpace"
@@ -55,6 +59,8 @@
         {{ isLoading ? "" : "Создать рабочее пространство" }}</UButton
       >
     </UForm>
+
+    <sendEmail v-else />
   </div>
 </template>
 
@@ -64,7 +70,8 @@ import { workSpaceSchema } from "~/validation/workSpaceSchema";
 import type { workSpaceSchemaType } from "~/validation/workSpaceSchema";
 
 const isLoading = ref<boolean>(false);
-const value = ref<number>(1);
+const isCreated = ref<boolean>(true);
+const progress = ref<number>(0);
 const stateSpace = reactive({
   workspace: "",
 });
@@ -74,12 +81,22 @@ const createWorkSpace = async (
 ): Promise<void> => {
   try {
     isLoading.value = true;
-    return new Promise<void>((res) => setTimeout(res, 4000));
+
+    const { success }: { success: boolean } = await $fetch("/api/workspace/create", {
+      method: "POST",
+      body: {
+        workspace: stateSpace.workspace,
+      },
+    });
+
+    if (success === true) {
+      isCreated.value = true;
+      progress.value = 1;
+    }
   } catch (error) {
     console.log(error);
   } finally {
     isLoading.value = false;
   }
 };
-
 </script>

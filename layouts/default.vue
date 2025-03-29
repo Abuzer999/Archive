@@ -1,7 +1,9 @@
 <template>
   
   <div class="wrapper">
-    <header></header>
+    <header>
+      <addTaskInput />
+    </header>
 
     <main>
       <slot />

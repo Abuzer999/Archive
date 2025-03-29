@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const resetPasswordSchema = z.object({
-    email: z.string().nonempty("Необходимо заполнить email").email("email введен некорректно").default(""),
+    email: z.string().trim().nonempty("Необходимо заполнить email").email("email введен некорректно").default(""),
 });
 
 type resetPasswordSchemaType = z.infer<typeof resetPasswordSchema>;

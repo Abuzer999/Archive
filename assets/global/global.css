@@ -54,12 +54,6 @@ button {
   border: 0;
 }
 
-input {
-  outline: none;
-  background: none;
-  border: 0;
-}
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;

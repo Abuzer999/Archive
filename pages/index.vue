@@ -3,11 +3,9 @@
   <NuxtLink to="/public" class="text-black dark:text-white transition-colors duration-300 ease-in-out">Public</NuxtLink>
   <button @click="signOut" class="text-black dark:text-white transition-colors duration-300 ease-in-out">Выйти</button>
 
-  <button @click="send" class="texts">Dark</button>
-
   <buttonColorMode />
   
-  <TaskList />
+  <ContainerTasks />
 
 </template>
 

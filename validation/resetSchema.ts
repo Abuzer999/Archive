@@ -4,6 +4,7 @@ const resetSchema = z
   .object({
     password: z
       .string()
+      .trim()
       .nonempty("Пароль не может быть пустым")
       .min(8, "Пароль должен быть минимум 8 символов")
       .regex(/[A-Z]/, "Пароль должен содержать заглавную букву")
@@ -13,6 +14,7 @@ const resetSchema = z
       .default(""),
     confirmPassword: z
       .string()
+      .trim()
       .nonempty("Пароль не может быть пустым")
       .default("Пароль не совпадает"),
   })

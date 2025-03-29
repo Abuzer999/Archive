@@ -5,11 +5,13 @@ const registerSchema = z
     name: z
       .string()
       .trim()
+      .trim()
       .nonempty("Имя не может быть пустым")
       .min(3, "Имя может быть минимум из 3 букв")
       .default(""),
     email: z
       .string()
+      .trim()
       .email("Почта пуста или введена некорректно")
       .refine(
         (value) => {
@@ -24,6 +26,7 @@ const registerSchema = z
       .default(""),
     password: z
       .string()
+      .trim()
       .nonempty("Пароль не может быть пустым")
       .min(8, "Пароль должен быть минимум 8 символов")
       .regex(/[A-Z]/, "Пароль должен содержать заглавную букву")
@@ -31,7 +34,7 @@ const registerSchema = z
       .regex(/[0-9]/, "Пароль должен содержать цифру")
       .regex(/[\W_]/, "Пароль должен содержать особый символ")
       .default(""),
-    confirmPassword: z.string().nonempty("Пароль не может быть пустым").default("Passwords do not match"),
+    confirmPassword: z.string().trim().nonempty("Пароль не может быть пустым").default("Passwords do not match"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Пароль не совпадает",

@@ -40,6 +40,10 @@ export default defineNuxtConfig({
     BASE_URL: process.env.BASE_URL,
     JWT_SECRET: process.env.JWT_SECRET,
 
+    session: {
+      maxAge: 60 * 60 * 24 * 7
+    },
+
     oauth: {
       github: {
         clientId: process.env.NUXT_OAUTH_GITHUB_CLIENT_ID,

@@ -12,11 +12,11 @@ export default defineOAuthGitHubEventHandler({
     { user, tokens }: { user: User; tokens: Token }
   ) {
     
-    await useOAuth(user, "github", String(user.id));
+    const dbUser = await useOAuth(user, "github", String(user.id));
 
     await setUserSession(event, {
       user: {
-        id: user.id,
+        id: dbUser.id,
         name: user.name,
         email: user.email,
       },
