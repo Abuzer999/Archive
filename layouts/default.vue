@@ -2,7 +2,6 @@
   
   <div class="wrapper">
     <header>
-      <addTaskInput />
     </header>
 
     <main>
@@ -17,6 +16,3 @@
 const { loggedIn, user, session, fetch, clear, openInPopup } = useUserSession();
 </script>
 
-<style>
-
-</style>

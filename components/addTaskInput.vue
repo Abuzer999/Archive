@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <form class="relative">
     <input
       type="text"
@@ -9,7 +9,6 @@
       <span>{{ maxSymbols }}</span>
       <span>{{ isProject }}</span>
       <div>
-        <!-- иконки ласт юзеров -->
       </div>
       <USelect
         v-model="value"
@@ -28,4 +27,9 @@ import type { SelectItem } from '@nuxt/ui';
 const typesTask = ref([
     { value: 'action', icon: 'ri:action', },
 ])
-</script>
+</script> -->
+
+
+<template>
+  <div></div>
+</template>

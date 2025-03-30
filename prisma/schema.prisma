@@ -42,7 +42,7 @@ model Workspace {
 model Project {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  workspaceId String    @db.ObjectId 
+  workspaceId String    @db.ObjectId
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
   folders     Folder[]
 

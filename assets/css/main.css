@@ -34,7 +34,7 @@
 }
 
 body {
-  @apply bg-[#fbfbfc] dark:bg-[#15191f] font-manrope;
+  @apply bg-[#fbfbfc] dark:bg-[#1c1e22] font-manrope;
 }
 
 
