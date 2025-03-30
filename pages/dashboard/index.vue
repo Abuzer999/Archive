@@ -3,7 +3,10 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+  title: "Dashboard - Archive",
+})
 definePageMeta({
-    layout: "default",
+    layout: "dashboard",
 });
 </script>

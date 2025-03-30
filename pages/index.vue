@@ -7,7 +7,7 @@ useHead({
   title: "Archive",
 })
 definePageMeta({
-  layout: "dashboard",
+  layout: "default",
   middleware: ['auth'],
 });
 

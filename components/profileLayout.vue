@@ -2,11 +2,11 @@
   <div>
     <UButton
       :ui="{
-        base: 'w-full min-h-[40px] flex items-center justify-center bg-[#fcbb43] hover:bg-[none] hover:brightness-110 text-[#fff] rounded-lg transition duration-300 ease-in-out',
+        base: 'w-full overflow-hidden min-h-[40px] flex items-center justify-center bg-[#fcbb43] hover:bg-[none] hover:brightness-110 text-[#fff] rounded-lg transition duration-300 ease-in-out',
         trailingIcon: 'w-[15px] h-[15px]',
       }"
       size="xl"
-      to="/"
+      to="/dashboard"
       :icon="!isOpen ? 'i-carbon:chevron-left' : ''"
     >
       {{ isOpen ? "Назад" : "" }}</UButton
@@ -35,21 +35,25 @@ const items = computed<NavigationMenuItem[]>(() => [
   {
     label: isOpen.value ? "Основные настройки" : "",
     type: "label",
+    class: !isOpen.value ? "justify-center" : 'justify-start'
   },
   {
     label: isOpen.value ? "Профиль" : "",
     icon: "i-carbon:settings-edit",
-    active: route.path === "/",
+    active: route.fullPath === "/dashboard/settings",
+    class: !isOpen.value ? "justify-center" : 'justify-start'
   },
   {
     label: isOpen.value ? "Внешний вид" : "",
     icon: "i-carbon:paint-brush",
-    active: route.path === "/settings/display",
+    active: route.fullPath === "/dashboard/settings/display",
+    class: !isOpen.value ? "justify-center" : 'justify-start'
   },
   {
     label: isOpen.value ? "Безопасность" : "",
     icon: "i-carbon:security",
-    active: route.path === "/settings/security",
+    active: route.fullPath === "/dashboard/settings/security",
+    class: !isOpen.value ? "justify-center" : 'justify-start'
   },
 ]);
 </script>

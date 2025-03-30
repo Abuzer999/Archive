@@ -133,7 +133,7 @@ const items = ref<DropdownMenuItem[][]>([
     {
       label: "Настройки аккаунта",
       icon: "i-carbon:settings",
-      to: "/public",
+      to: "/dashboard/settings",
     },
     {
       label: "Темная тема",
