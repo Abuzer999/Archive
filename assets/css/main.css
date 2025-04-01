@@ -26,6 +26,10 @@
     border: 0;
   }
 
+  .main-dash {
+    padding: 16px;
+  }
+
 }
 
 @theme {

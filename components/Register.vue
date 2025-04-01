@@ -62,11 +62,11 @@ const submitForm = async (
         icon="i-lucide-user"
         placeholder="Имя"
         type="text"
-        variant="soft"
+        variant="none"
         size="xl"
         :ui="{
-          root: 'bg-[#FFFFFF] rounded-lg',
-          base: 'pl-[12px] py-[13px] w-[300px] font-monserrat placeholder:text-[15px]',
+          root: 'rounded-lg',
+          base: 'pl-[12px] bg-[#FFFFFF] py-[13px] w-[300px] font-monserrat placeholder:text-[15px] focus:bg-none hover:bg-none',
           trailingIcon: 'w-[20px] h-[20px]',
         }"
         class="w-[300px]"
@@ -77,11 +77,11 @@ const submitForm = async (
         icon="i-lucide-mail"
         placeholder="Электронная почта"
         type="email"
-        variant="soft"
+        variant="none"
         size="xl"
         :ui="{
-          root: 'bg-[#FFFFFF] rounded-lg',
-          base: 'pl-[12px] py-[13px] w-[300px] font-monserrat placeholder:text-[15px]',
+          root: 'rounded-lg',
+          base: 'pl-[12px] bg-[#FFFFFF] py-[13px] w-[300px] font-monserrat placeholder:text-[15px] focus:bg-none hover:bg-none',
           trailingIcon: 'w-[20px] h-[20px]',
         }"
         class="w-[300px]"
@@ -92,11 +92,11 @@ const submitForm = async (
         icon="i-lucide-lock"
         placeholder="Пароль"
         type="password"
-        variant="soft"
+        variant="none"
         size="xl"
         :ui="{
-          root: 'bg-[#FFFFFF] rounded-lg',
-          base: 'pl-[12px] py-[13px] w-[300px] font-monserrat placeholder:text-[15px]',
+          root: 'rounded-lg',
+          base: 'pl-[12px] bg-[#FFFFFF] py-[13px] w-[300px] font-monserrat placeholder:text-[15px] focus:bg-none hover:bg-none',
           trailingIcon: 'w-[20px] h-[20px]',
         }"
         class="w-[300px]"
@@ -107,11 +107,11 @@ const submitForm = async (
         icon="i-line-md:confirm"
         placeholder="Подтвердите пароль"
         type="password"
-        variant="soft"
+        variant="none"
         size="xl"
         :ui="{
-          root: 'bg-[#FFFFFF] rounded-lg',
-          base: 'pl-[12px] py-[13px] w-[300px] font-monserrat placeholder:text-[15px]',
+          root: 'rounded-lg',
+          base: 'pl-[12px] bg-[#FFFFFF] py-[13px] w-[300px] font-monserrat placeholder:text-[15px] focus:bg-none hover:bg-none',
           trailingIcon: 'w-[20px] h-[20px]',
         }"
         class="w-[300px]"

@@ -127,11 +127,11 @@ onUnmounted(() => {
           icon="i-lucide-mail"
           placeholder="Электронная почта"
           type="email"
-          variant="soft"
+          variant="none"
           size="xl"
           :ui="{
             root: 'bg-[#FFFFFF] rounded-lg',
-            base: 'pl-[12px] py-[13px] w-[300px] font-monserrat placeholder:text-[15px] transition-all duration-100 ease-in-out',
+            base: 'pl-[12px] py-[13px] w-[300px] font-monserrat placeholder:text-[15px] transition-all duration-100 ease-in-out focus:bg-none hover:bg-none',
             trailingIcon: 'w-[20px] h-[20px]',
           }"
           class="w-[300px]"

@@ -28,7 +28,7 @@ const submitForm = async (event: FormSubmitEvent<loginShemaType>) => {
       if (data.isFirstLogin === true) {
         router.push("/welcome");
       } else {
-        router.push("/");
+        router.push("/dashboard");
       }
     }
   } catch (error: unknown) {
@@ -50,7 +50,7 @@ const submitForm = async (event: FormSubmitEvent<loginShemaType>) => {
 
 onUnmounted(() => {
   errorMessage.value = null;
-})
+});
 </script>
 
 <template>
@@ -67,11 +67,11 @@ onUnmounted(() => {
         icon="i-lucide-mail"
         placeholder="Электронная почта"
         type="email"
-        variant="soft"
+        variant="none"
         size="xl"
         :ui="{
-          root: 'bg-[#FFFFFF] rounded-lg',
-          base: 'pl-[12px] py-[13px] w-[300px] font-monserrat placeholder:text-[15px]',
+          root: 'rounded-lg',
+          base: 'pl-[12px] bg-[#FFFFFF] py-[13px] w-[300px] font-monserrat placeholder:text-[15px] focus:bg-none hover:bg-none',
           trailingIcon: 'w-[20px] h-[20px]',
         }"
         class="w-[300px]"
@@ -82,11 +82,11 @@ onUnmounted(() => {
         icon="i-lucide-lock"
         placeholder="Пароль"
         type="password"
-        variant="soft"
+        variant="none"
         size="xl"
         :ui="{
-          root: 'bg-[#FFFFFF] rounded-lg',
-          base: 'pl-[12px] py-[13px] w-[300px] font-monserrat placeholder:text-[15px]',
+          root: 'rounded-lg',
+          base: 'pl-[12px] bg-[#FFFFFF] py-[13px] w-[300px] font-monserrat placeholder:text-[15px] focus:bg-none hover:bg-none',
           trailingIcon: 'w-[20px] h-[20px]',
         }"
         class="w-[300px]"

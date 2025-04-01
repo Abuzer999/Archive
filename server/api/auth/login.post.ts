@@ -59,8 +59,7 @@ export default defineEventHandler(async (event) => {
       loggedInAt: new Date(),
     });
 
-    
-    return { isFirstLogin: user.isFirstLogin };
+    return { succes: true };
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,

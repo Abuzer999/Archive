@@ -1,9 +1,12 @@
 import prisma from "~/lib/prisma";
 import { redis } from "~/lib/redis";
 import bcrypt from "bcrypt";
+import type { UserSession } from "#auth-utils";
 
 export default defineEventHandler(async (event) => {
   try {
+    const session: UserSession = await getUserSession(event);
+    
     const {
       newPassword,
       email,

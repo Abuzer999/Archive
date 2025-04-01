@@ -1,12 +1,16 @@
 <template>
-
-</template>
-
-<script setup lang="ts">
-useHead({
-  title: "Dashboard - Archive",
-})
-definePageMeta({
+    <div>ssss</div>
+  </template>
+  
+  <script setup lang="ts">
+  const { user } = useUserSession();
+  
+  useHead({
+    title: "Dashboard - Archive",
+  });
+  definePageMeta({
     layout: "dashboard",
-});
-</script>
+    middleware: ["auth"],
+  });
+  </script>
+  

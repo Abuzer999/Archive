@@ -35,25 +35,28 @@ const items = computed<NavigationMenuItem[]>(() => [
   {
     label: isOpen.value ? "Основные настройки" : "",
     type: "label",
-    class: !isOpen.value ? "justify-center" : 'justify-start'
+    class: !isOpen.value ? "justify-center" : 'justify-start',
   },
   {
     label: isOpen.value ? "Профиль" : "",
     icon: "i-carbon:settings-edit",
     active: route.fullPath === "/dashboard/settings",
-    class: !isOpen.value ? "justify-center" : 'justify-start'
+    class: !isOpen.value ? "justify-center" : 'justify-start',
+    to: "/dashboard/settings",
   },
   {
     label: isOpen.value ? "Внешний вид" : "",
     icon: "i-carbon:paint-brush",
     active: route.fullPath === "/dashboard/settings/display",
-    class: !isOpen.value ? "justify-center" : 'justify-start'
+    class: !isOpen.value ? "justify-center" : 'justify-start',
+    to: "/dashboard/settings/display",
   },
   {
     label: isOpen.value ? "Безопасность" : "",
     icon: "i-carbon:security",
     active: route.fullPath === "/dashboard/settings/security",
-    class: !isOpen.value ? "justify-center" : 'justify-start'
+    class: !isOpen.value ? "justify-center" : 'justify-start',
+    to: "/dashboard/settings/security",
   },
 ]);
 </script>

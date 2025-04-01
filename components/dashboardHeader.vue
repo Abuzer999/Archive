@@ -88,8 +88,7 @@
         size="lg"
         :items="items"
         :ui="{
-          content:
-            'w-[250px] dark:bg-[#242629] !ring-0 rounded-[8px] p-[8px] ',
+          content: 'w-[250px] dark:bg-[#242629] !ring-0 rounded-[8px] p-[8px] ',
           item: 'flex gap-[5px] !p-[8px_7px]',
           group:
             'w-full !p-[2px] border-[#dbdbdb] dark:border-[#1e1e1e] mb-[5px]',
@@ -116,24 +115,24 @@
 import type { DropdownMenuItem } from "@nuxt/ui";
 const isDropMenu = ref(false);
 
+const route = useRoute();
+
+const router = computed(
+  () =>
+    route.fullPath === "/dashboard/settings" ||
+    route.fullPath === "/dashboard/settings/display" ||
+    route.fullPath === "/dashboard/settings/security"
+);
+
 const { isOpen, toggleDropMenu } = useDropMenu();
 
-
-const items = ref<DropdownMenuItem[][]>([
-  [
-    {
-      label: "Benjamin",
-      avatar: {
-        src: "https://github.com/benjamincanac.png",
-      },
-      type: "label",
-    },
-  ],
+const items = computed<DropdownMenuItem[][]>(() => [
   [
     {
       label: "Настройки аккаунта",
       icon: "i-carbon:settings",
       to: "/dashboard/settings",
+      active: route.path.startsWith("/dashboard/settings"),
     },
     {
       label: "Темная тема",
@@ -142,6 +141,7 @@ const items = ref<DropdownMenuItem[][]>([
       onSelect(e: Event) {
         e.preventDefault();
       },
+      class: "!cursor-default",
     },
     {
       label: "Выйти",
@@ -149,16 +149,15 @@ const items = ref<DropdownMenuItem[][]>([
       onSelect(e: Event) {
         e.preventDefault();
         signOut();
-      }
+      },
     },
   ],
 ]);
 
 const { clear } = useUserSession();
 
-const signOut = async() => {
+const signOut = async () => {
   await clear();
   await navigateTo("/auth");
-}
-
+};
 </script>

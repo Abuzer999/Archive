@@ -8,6 +8,10 @@ const formState = reactive({
   confirmPassword: "",
 });
 
+const router = useRouter();
+
+const { loggedIn } = useUserSession();
+
 const { saveEmail, code } = useStep();
 
 const createPassword = async (
@@ -28,6 +32,7 @@ const createPassword = async (
     if (success) {
       formState.password = "";
       formState.confirmPassword = "";
+      router.push("/auth");
     }
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);
@@ -52,11 +57,11 @@ const isLoading = ref<boolean>(false);
       icon="i-lucide-lock"
       placeholder="Новый пароль"
       type="password"
-      variant="soft"
+      variant="none"
       size="xl"
       :ui="{
         root: 'bg-[#FFFFFF] rounded-lg',
-        base: 'pl-[12px] py-[13px] w-[300px] font-monserrat placeholder:text-[15px]',
+        base: 'pl-[12px] py-[13px] w-[300px] font-monserrat placeholder:text-[15px] focus:bg-none hover:bg-none',
         trailingIcon: 'w-[20px] h-[20px]',
       }"
       class="w-[300px]"
@@ -67,11 +72,11 @@ const isLoading = ref<boolean>(false);
       icon="i-line-md:confirm"
       placeholder="Подтвердите пароль"
       type="password"
-      variant="soft"
+      variant="none"
       size="xl"
       :ui="{
         root: 'bg-[#FFFFFF] rounded-lg',
-        base: 'pl-[12px] py-[13px] w-[300px] font-monserrat placeholder:text-[15px]',
+        base: 'pl-[12px] py-[13px] w-[300px] font-monserrat placeholder:text-[15px] focus:bg-none hover:bg-none',
         trailingIcon: 'w-[20px] h-[20px]',
       }"
       class="w-[300px]"

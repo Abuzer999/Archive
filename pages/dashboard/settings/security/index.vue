@@ -1,12 +1,12 @@
 <template>
   <div class="main-dash">
-    <profileMain />
+    <resetPasswordMain />
   </div>
 </template>
 
 <script setup lang="ts">
 useHead({
-  title: "Настройки - Archive",
+  title: "Безопасность - Archive",
 });
 definePageMeta({
   layout: "dashboard",

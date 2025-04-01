@@ -1,12 +1,12 @@
 <template>
   <div class="main-dash">
-    <profileMain />
+    <displayMain />
   </div>
 </template>
 
 <script setup lang="ts">
 useHead({
-  title: "Настройки - Archive",
+  title: "Внешний вид - Archive",
 });
 definePageMeta({
   layout: "dashboard",
