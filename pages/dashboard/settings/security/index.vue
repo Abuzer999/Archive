@@ -1,7 +1,5 @@
 <template>
-  <div class="main-dash">
-    <resetPasswordMain />
-  </div>
+  <resetPasswordMain />
 </template>
 
 <script setup lang="ts">
@@ -10,5 +8,6 @@ useHead({
 });
 definePageMeta({
   layout: "dashboard",
+  middleware: ["auth"],
 });
 </script>

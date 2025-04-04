@@ -93,18 +93,21 @@
         class="w-[300px]"
       />
 
-      <USelectMenu v-model="value" :items="items" class="w-48" />
+      <USelectMenu v-model="formState.selectItem" :items="items" class="w-48" />
     </UForm>
   </div>
 </template>
 
 <script setup lang="ts">
+
 const formState = reactive({
   name: "",
   familio: "",
   email: "",
+  selectItem: "",
+
 });
 
 const items = ref(["Backlog", "Todo", "In Progress", "Done"]);
-const value = ref("Todo");
+
 </script>

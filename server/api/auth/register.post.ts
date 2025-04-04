@@ -37,6 +37,15 @@ export default defineEventHandler(async (event) => {
         email: email,
         password: hashedPassword,
         isVerified: false,
+        backgrounds: {
+          create: [
+            { name: "По умолчанию", url: "", isDefault: true },
+            { name: "Градиент №1", url: "https://grqasdzxb2wnxxa9.public.blob.vercel-storage.com/Archive/gradient.jpg" },
+            { name: "Градиент №2", url: "https://grqasdzxb2wnxxa9.public.blob.vercel-storage.com/Archive/gradient2.jpg" },
+            { name: "Космос", url: "https://grqasdzxb2wnxxa9.public.blob.vercel-storage.com/Archive/Space.jpg" },
+            { name: "Временные линии", url: "https://grqasdzxb2wnxxa9.public.blob.vercel-storage.com/Archive/timeLines.jpg" },
+          ],
+        },
       },
     });
 

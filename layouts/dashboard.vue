@@ -1,13 +1,44 @@
 <template>
-  <div class="wrapper">
-    <header>
-        <dashboardHeader />
+  <div class="wrapper-dashboard">
+    <header class="h-[65px]">
+      <dashboardHeader />
     </header>
 
     <main class="flex">
       <leftLayout />
-      <slot />
-    </main>
+      <div
+        class="relative scrollbar-thumb-rounded-full scrollbar scrollbar-w-1 h-screen scrollbar-thumb-[#fcbb43] overflow-auto p-[16px] w-screen bg-cover bg-no-repeat"
+        :style="{ backgroundImage: `url(${selectedBackground})` }"
+      >
+        <div class="absolute w-full h-full top-0 left-0 z-[-1]"></div>
+        <div class="pb-[100px]">
+          <slot />
+        </div>
 
+      </div>
+    </main>
   </div>
 </template>
+
+<script setup lang="ts">
+const selectedBackground = ref<string>("");
+const nuxtApp = useNuxtApp();
+
+provide("selectedBackground", selectedBackground);
+
+const { data, refresh } = await useFetch<string>("/api/display/getBackground", {
+  key: "background",
+  getCachedData: (key) => {
+    const cachedData = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
+    return cachedData;
+  },
+});
+
+onMounted(() => {
+  if (data.value) {
+    selectedBackground.value = data.value;
+  } else {
+    refresh();
+  }
+});
+</script>

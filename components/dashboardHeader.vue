@@ -50,7 +50,7 @@
       />
     </div>
     <nav
-      class="w-full px-[20px] py-[10px] flex gap-[20px] justify-end items-center"
+      class="w-full px-[20px] py-[10px] flex gap-[20px] justify-end items-center bg-[#1c1e22]"
     >
       <UButton
         :ui="{

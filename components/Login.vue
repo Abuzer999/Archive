@@ -31,6 +31,7 @@ const submitForm = async (event: FormSubmitEvent<loginShemaType>) => {
         router.push("/dashboard");
       }
     }
+
   } catch (error: unknown) {
     if (error instanceof Error && "statusCode" in error) {
       if (

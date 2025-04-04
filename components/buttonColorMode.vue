@@ -5,8 +5,8 @@
   >
     <div
       ref="iconWrapper"
-      class="absolute flex items-center top-[3px] left-[4px] p-[2px] bg-white dark:bg-gray-700 rounded-full transition-transform duration-300"
-      :class="{ 'translate-x-[24px]': isDark }"
+      class="absolute flex items-center top-[2px] left-[3px] p-[2px] bg-white dark:bg-gray-700 rounded-full transition-transform duration-300"
+      :class="{ 'translate-x-[23px]': isDark }"
     >
       <Icon
         :name="isDark ? 'i-ic:baseline-dark-mode' : 'i-ic:outline-wb-sunny'"

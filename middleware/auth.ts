@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   if (loggedIn.value) {
     if (to.fullPath === "/auth" || to.fullPath === "/reset-password") {
-      return navigateTo("/", { replace: true });
+      return navigateTo("/dashboard", { replace: true });
     }
   } else {
     if (to.fullPath !== "/auth" && to.fullPath !== "/reset-password") {
