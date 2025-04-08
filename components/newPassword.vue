@@ -15,7 +15,7 @@ const { loggedIn } = useUserSession();
 const { saveEmail, code } = useStep();
 
 const createPassword = async (
-  event: FormSubmitEvent<resetSchemaType>
+  event: FormSubmitEvent<resetSchemaType>,
 ): Promise<void> => {
   try {
     isLoading.value = true;

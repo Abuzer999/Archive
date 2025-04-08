@@ -101,29 +101,30 @@
     cursor: pointer;
     border: 0;
   }
+
+  body {
+    @apply bg-[#fbfbfc] dark:bg-[#1c1e22] font-manrope;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .wrapper-dashboard {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100vh;
+  }
 }
 
 @theme {
   --font-manrope: "Manrope", sans-serif;
   --font-monserrat: "Montserrat", sans-serif;
   --color-custom-light: #10b981;
-}
 
-body {
-  @apply bg-[#fbfbfc] dark:bg-[#1c1e22] font-manrope;
-}
-
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  overflow: hidden;
-}
-
-.wrapper-dashboard {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  height: 100vh;
 }

@@ -16,7 +16,7 @@ const formState = reactive<Login>({
 const submitForm = async (event: FormSubmitEvent<loginShemaType>) => {
   try {
     isLoading.value = true;
-    const data: { isFirstLogin: boolean } = await $fetch("/api/auth/login", {
+    const { success }: { success: boolean } = await $fetch("/api/auth/login", {
       method: "POST",
       body: {
         email: formState.email,
@@ -24,14 +24,9 @@ const submitForm = async (event: FormSubmitEvent<loginShemaType>) => {
       },
     });
 
-    if (data) {
-      if (data.isFirstLogin === true) {
-        router.push("/welcome");
-      } else {
-        router.push("/dashboard");
-      }
+    if (success) {
+      router.push("/dashboard");
     }
-
   } catch (error: unknown) {
     if (error instanceof Error && "statusCode" in error) {
       if (

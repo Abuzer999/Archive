@@ -27,6 +27,13 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    if (!user.isVerified) {
+      throw createError({
+        statusCode: 403,
+        statusMessage: "Please verify your email before logging in.",
+      });
+    }
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
@@ -52,6 +59,7 @@ export default defineEventHandler(async (event) => {
         id: user.id,
         name: user.name,
         email: user.email,
+        isCompleted: user.isCompleted
       },
       tokens: {
         accessToken: token,

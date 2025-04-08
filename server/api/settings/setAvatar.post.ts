@@ -1,6 +1,6 @@
 import prisma from "~/lib/prisma";
 import type { UserSession } from "#auth-utils";
-import { put } from "@vercel/blob";
+import { put, del } from "@vercel/blob";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -33,26 +33,36 @@ export default defineEventHandler(async (event) => {
     if (fileSize > MAX_FILE_SIZE) {
       throw createError({
         statusCode: 400,
-        statusMessage: "File size exceeds 2 MB",
+        statusMessage: "File size is too large",
       });
     }
 
+    if (file.type !== "image/jpeg" && file.type !== "image/png") {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "File type is not supported",
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (user?.avatar) {
+      try {
+        await del(user.avatar); 
+      } catch (deleteError) {
+        console.error("Error deleting previous profile image:", deleteError);
+      }
+    }
+
     const blob = await put(
-      `Archive/backgrounds/${userId}/${file.filename}`,
+      `Archive/Avatar/${userId}/${file.filename}`,
       file.data,
       {
         access: "public",
       }
     );
-
-    const newBackground = await prisma.background.create({
-      data: {
-        url: blob.url,
-        userId: userId,
-        name: "Свой вариант",
-        isCustom: true,
-      },
-    });
 
     if (!blob.url) {
       throw createError({
@@ -61,10 +71,14 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    return {
-      success: true,
-      newBackground,
-    };
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        avatar: blob.url,
+      },
+    });
+
+    return { success: true };
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,

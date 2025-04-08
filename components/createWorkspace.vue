@@ -70,7 +70,7 @@ import { workSpaceSchema } from "~/validation/workSpaceSchema";
 import type { workSpaceSchemaType } from "~/validation/workSpaceSchema";
 
 const isLoading = ref<boolean>(false);
-const isCreated = ref<boolean>(true);
+const isCreated = ref<boolean>(false);
 const progress = ref<number>(0);
 const stateSpace = reactive({
   workspace: "",
@@ -89,7 +89,7 @@ const createWorkSpace = async (
       },
     });
 
-    if (success === true) {
+    if (success) {
       isCreated.value = true;
       progress.value = 1;
     }

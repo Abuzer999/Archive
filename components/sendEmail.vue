@@ -1,5 +1,5 @@
 <template>
-  <UForm :state="formState" :validate="validate" @submit="sendPeople">
+  <UForm :state="formState" :validate="validate" @submit="formState.emails.length > 0 ? skip : sendPeople">
     <div>
       <div
         v-for="(item, id) in formState.emails"
@@ -59,9 +59,11 @@
       loading-icon="i-lucide-repeat-2"
       loading-auto
     >
-      {{ isLoading ? "" : "Подтвердить" }}</UButton
+      {{ !isLoading ? "Отправить" : "" }}</UButton
     >
   </UForm>
+
+  <button @click="skip">crbbbbbbbbg</button>
 </template>
 
 <script setup lang="ts">
@@ -140,5 +142,9 @@ const sendPeople = (
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);
   }
+};
+
+const skip = () => {
+  router.push("/dashboard/welcome/user-avatar");
 };
 </script>

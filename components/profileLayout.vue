@@ -45,6 +45,20 @@ const items = computed<NavigationMenuItem[]>(() => [
     to: "/dashboard/settings",
   },
   {
+    label: isOpen.value ? "Рабочее пространство" : "",
+    icon: "i-carbon:workspace",
+    active: route.fullPath === "/dashboard/settings/workspace",
+    class: !isOpen.value ? "justify-center" : 'justify-start',
+    to: "/dashboard/settings/workspace",
+  },
+  {
+    label: isOpen.value ? "Пользователи" : "",
+    icon: "i-carbon:user-profile",
+    active: route.fullPath === "/dashboard/settings/people",
+    class: !isOpen.value ? "justify-center" : 'justify-start',
+    to: "/dashboard/settings/people",
+  },
+  {
     label: isOpen.value ? "Внешний вид" : "",
     icon: "i-carbon:paint-brush",
     active: route.fullPath === "/dashboard/settings/display",
@@ -58,5 +72,6 @@ const items = computed<NavigationMenuItem[]>(() => [
     class: !isOpen.value ? "justify-center" : 'justify-start',
     to: "/dashboard/settings/security",
   },
+  
 ]);
 </script>

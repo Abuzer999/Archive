@@ -4,10 +4,10 @@
       <dashboardHeader />
     </header>
 
-    <main class="flex">
+    <main class="flex h-screen">
       <leftLayout />
       <div
-        class="relative scrollbar-thumb-rounded-full scrollbar scrollbar-w-1 h-screen scrollbar-thumb-[#fcbb43] overflow-auto p-[16px] w-screen bg-cover bg-no-repeat"
+        class="relative scrollbar-thumb-rounded-full scrollbar scrollbar-w-1 scrollbar-thumb-[#fcbb43] overflow-auto p-[16px] w-screen bg-cover bg-center bg-no-repeat"
         :style="{ backgroundImage: `url(${selectedBackground})` }"
       >
         <div class="absolute w-full h-full top-0 left-0 z-[-1]"></div>

@@ -46,6 +46,25 @@ export default defineEventHandler(async (event) => {
       await del(background.url);
     }
 
+    if (background.isDefault) {
+      await prisma.background.updateMany({
+        where: { userId },
+        data: { isDefault: false },
+      });
+
+      const backgrounds = await prisma.background.findMany({
+        where: { userId },
+        orderBy: { createdAt: "asc" },
+      })
+
+      const firstBackground = backgrounds[0];
+
+      await prisma.background.update({
+        where: { id: firstBackground.id },
+        data: { isDefault: true },
+      });
+    }
+
     await prisma.background.delete({
       where: { id: backgroundId },
     });

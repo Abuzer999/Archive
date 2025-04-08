@@ -11,7 +11,7 @@
     </p>
 
     <UButton
-      to="/welcome/create-workspace"
+      to="/dashboard/welcome/create-workspace"
       :ui="{
         base: 'mt-[20px] w-[200px] min-h-[40px] flex items-center justify-center bg-[#6788f3] hover:bg-[none] hover:brightness-110 text-white rounded-lg transition duration-300 ease-in-out',
       }"

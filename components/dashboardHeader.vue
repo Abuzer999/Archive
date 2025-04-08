@@ -5,38 +5,21 @@
     <div
       class="max-w-[280px] w-full flex gap-[10px] justify-between px-[20px] py-[10px] items-center bg-[#fff] dark:bg-[#242629] border-r-[1px] border-solid border-[#EDEDF5] dark:border-[#161616]"
     >
-      <UDropdownMenu
-        size="lg"
-        :content="{
-          align: 'end',
-          side: 'bottom',
-          sideOffset: 13,
-        }"
-        :items="items"
-        :ui="{
-          content:
-            'w-[273px] !dark:bg-[#242629] dark:bg-[#242629] !ring-0 border-[1px] border-solid border-[gray] dark:border-[#161616] rounded-[8px] p-[8px]',
-          item: 'flex gap-[5px] !p-[8px_7px]',
-          group:
-            'w-full !p-[2px] border-[#dbdbdb] dark:border-[#1e1e1e] mb-[5px]',
-        }"
-      >
-        <div class="cursor-pointer flex gap-[10px] items-center">
-          <workspaceAvatar workspace-name="Космос" />
+      <div @click="$router.push('/dashboard/settings/workspace')" class="cursor-pointer flex gap-[10px] items-center">
+        <workspaceAvatar workspace-name="Космос" />
 
-          <div class="max-w-[145px] w-full truncate">
-            <p
-              class="text-[13px] font-[500] text-[#242629] dark:text-[#ddd] leading-[100%]"
-            >
-              Рабочее пространство
-            </p>
-            <span
-              class="text-[16px] font-[600] text-[#242629] dark:text-[#ddd] leading-[100%]"
-              >Космос</span
-            >
-          </div>
+        <div class="max-w-[145px] w-full truncate">
+          <p
+            class="text-[13px] font-[500] text-[#242629] dark:text-[#ddd] leading-[100%]"
+          >
+            Рабочее пространство
+          </p>
+          <span
+            class="text-[16px] font-[600] text-[#242629] dark:text-[#ddd] leading-[100%]"
+            >Космос</span
+          >
         </div>
-      </UDropdownMenu>
+      </div>
 
       <UButton
         @click="toggleDropMenu"
@@ -50,7 +33,7 @@
       />
     </div>
     <nav
-      class="w-full px-[20px] py-[10px] flex gap-[20px] justify-end items-center bg-[#1c1e22]"
+      class="w-full px-[20px] py-[10px] flex gap-[20px] justify-end items-center bg-[#fbfbfc] dark:bg-[#1c1e22]"
     >
       <UButton
         :ui="{
@@ -87,6 +70,11 @@
       <UDropdownMenu
         size="lg"
         :items="items"
+        :content="{
+          align: 'end',
+          side: 'bottom',
+          sideOffset: 8,
+        }"
         :ui="{
           content: 'w-[250px] dark:bg-[#242629] !ring-0 rounded-[8px] p-[8px] ',
           item: 'flex gap-[5px] !p-[8px_7px]',
@@ -94,12 +82,9 @@
             'w-full !p-[2px] border-[#dbdbdb] dark:border-[#1e1e1e] mb-[5px]',
         }"
       >
-        <UAvatar
-          class="cursor-pointer"
-          size="2xl"
-          alt="Benjamin Canac"
-          src="https://github.com/benjamincanac.png"
-        />
+        <div>
+          <Avatar size="2xl" />
+        </div>
 
         <template #theme-trailing>
           <div>
@@ -113,20 +98,24 @@
 
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
-const isDropMenu = ref(false);
 
 const route = useRoute();
-
-const router = computed(
-  () =>
-    route.fullPath === "/dashboard/settings" ||
-    route.fullPath === "/dashboard/settings/display" ||
-    route.fullPath === "/dashboard/settings/security"
-);
+const { clear } = useUserSession();
 
 const { isOpen, toggleDropMenu } = useDropMenu();
+const { previewAvatar } = useFileUpload();
 
 const items = computed<DropdownMenuItem[][]>(() => [
+  [
+    {
+      label: "Benjamin",
+      avatar: {
+        src: previewAvatar.value,
+        alt: "Benjamin Canac",
+      },
+      type: "label",
+    },
+  ],
   [
     {
       label: "Настройки аккаунта",
@@ -153,8 +142,6 @@ const items = computed<DropdownMenuItem[][]>(() => [
     },
   ],
 ]);
-
-const { clear } = useUserSession();
 
 const signOut = async () => {
   await clear();

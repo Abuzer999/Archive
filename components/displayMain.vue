@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col gap-[24px] max-w-[580px] w-full p-[24px] rounded-[12px] bg-[#ffffff] shadow-xl dark:bg-[#383a3f] dark:shadow-none"
+    class="flex flex-col gap-[24px] max-w-[580px] w-full p-[24px] rounded-[12px] bg-[#ffffff] shadow-xl dark:bg-[#242629] dark:shadow-none"
   >
     <h1 class="text-[20px] font-bold leading-[100%]">Фоны</h1>
 
@@ -73,7 +73,7 @@
 
 <script setup lang="ts">
 interface Background {
-  id: number;
+  id: string;
   name: string;
   url: string;
   isDefault: boolean;
@@ -128,13 +128,16 @@ const postCustomBg = async () => {
   } catch (error: unknown) {
     if (error instanceof Error && "statusCode" in error) {
       if (error.statusCode === 400) {
-        toast.add({ title: "Файл не того типа или не найден", color: "error" });
+        toast.add({
+          title: "Файл не того типа или не найден",
+          color: "error",
+        });
       }
     }
   }
 };
 
-const selectBackground = (id: number, imageUrl: string) => {
+const selectBackground = (id: string, imageUrl: string) => {
   const currentBg = previousBackground.value;
 
   if (currentBg && currentBg.id === id) {
@@ -173,19 +176,29 @@ const currentBackground = async () => {
   }
 };
 
-const deleteBackground = async (id: number) => {
-  const backgroundToDelete = backgrounds.value.find((bg: Background) => bg.id === id);
+const deleteBackground = async (id: string) => {
+  const backgroundToDelete = backgrounds.value.find(
+    (bg: Background) => bg.id === id
+  );
 
-  if (backgroundToDelete?.isDefault && previousBackground.value) {
-    backgrounds.value.forEach((bg: Background) => {
-      bg.isDefault = bg.id === previousBackground.value!.id;
-    });
+  if (backgroundToDelete?.isDefault) {
+    const firstAvailableBackground = backgrounds.value.find(
+      (bg: Background) => bg.id !== id
+    );
 
-    selectedBackground.value = previousBackground.value.url;
-    isBackgroundSelected.value = false;
+    if (firstAvailableBackground) {
+      firstAvailableBackground.isDefault = true;
+      selectedBackground.value = firstAvailableBackground.url;
+      previousBackground.value = firstAvailableBackground;
+    } else {
+      selectedBackground.value = "";
+      previousBackground.value = undefined;
+    }
   }
 
-  backgrounds.value = backgrounds.value.filter((bg: Background) => bg.id !== id);
+  backgrounds.value = backgrounds.value.filter(
+    (bg: Background) => bg.id !== id
+  );
 
   try {
     const { success }: { success: boolean } = await $fetch(

@@ -15,6 +15,7 @@ export default defineOAuthGoogleEventHandler({
         id: dbUser.id,
         name: user.name,
         email: user.email,
+        isCompleted: dbUser.isCompleted
       },
       tokens: {
         accessToken: tokens,

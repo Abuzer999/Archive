@@ -28,22 +28,22 @@ const { isLoading } = useLoadingIndicator();
 <style scoped>
 .loading svg polyline {
   fill: none;
-  stroke-width: 6; /* Увеличил толщину в 2 раза */
+  stroke-width: 6; 
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .loading svg polyline#back {
   fill: none;
-  stroke: #6788f333; /* Новый цвет с прозрачностью */
+  stroke: #6788f333; 
 }
 
 .loading svg polyline#front {
   fill: none;
-  stroke: #00aaff; /* Новый цвет */
+  stroke: #00aaff;
   stroke-dasharray: 96, 288;
   stroke-dashoffset: 384;
-  animation: dash_682 1.2s linear infinite; /* Увеличил длительность анимации для плавности */
+  animation: dash_682 1.2s linear infinite;
 }
 
 @keyframes dash_682 {
