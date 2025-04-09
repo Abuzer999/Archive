@@ -5,8 +5,11 @@
     <div
       class="max-w-[280px] w-full flex gap-[10px] justify-between px-[20px] py-[10px] items-center bg-[#fff] dark:bg-[#242629] border-r-[1px] border-solid border-[#EDEDF5] dark:border-[#161616]"
     >
-      <div @click="$router.push('/dashboard/settings/workspace')" class="cursor-pointer flex gap-[10px] items-center">
-        <workspaceAvatar workspace-name="Космос" />
+      <div
+        @click="$router.push('/dashboard/settings/workspace')"
+        class="cursor-pointer flex gap-[10px] items-center"
+      >
+        <Avatar size="lg" fetchUrl="/api/workspace/avatar" stateKey="workspaceAvatar" :ui="{ root: 'h-[40px] w-[40px] rounded-[5px]' }"  /> 
 
         <div class="max-w-[145px] w-full truncate">
           <p
@@ -16,7 +19,7 @@
           </p>
           <span
             class="text-[16px] font-[600] text-[#242629] dark:text-[#ddd] leading-[100%]"
-            >Космос</span
+            >{{ workspaceName }}</span
           >
         </div>
       </div>
@@ -83,7 +86,11 @@
         }"
       >
         <div>
-          <Avatar size="2xl" />
+          <Avatar
+            size="2xl"
+            fetchUrl="/api/settings/avatar"
+            stateKey="avatar"
+          />
         </div>
 
         <template #theme-trailing>
@@ -103,15 +110,17 @@ const route = useRoute();
 const { clear } = useUserSession();
 
 const { isOpen, toggleDropMenu } = useDropMenu();
-const { previewAvatar } = useFileUpload();
+const { preview, name } = useFileUpload("avatar");
+const { name: workspaceName } = useFileUpload("workspaceAvatar");
 
 const items = computed<DropdownMenuItem[][]>(() => [
   [
     {
-      label: "Benjamin",
+      label: name?.value,
       avatar: {
-        src: previewAvatar.value,
-        alt: "Benjamin Canac",
+        src: preview?.value,
+        alt: name?.value,
+        size: "sm",
       },
       type: "label",
     },

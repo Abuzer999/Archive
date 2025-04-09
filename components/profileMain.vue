@@ -18,23 +18,7 @@
       >
     </p>
 
-    <label class="w-fit" for="avatar">
-      <Avatar
-        :ui="{
-          root: 'h-[160px] w-[160px]',
-        }"
-        :url="preview"
-        size="3xl"
-      />
-
-      <input
-        class="hidden"
-        @change="handleFileUpload"
-        accept="image/png, image/jpeg"
-        id="avatar"
-        type="file"
-      />
-    </label>
+    <AvatarSet getFetch="/api/settings/avatar" fetchUrl="/api/settings/setAvatar" stateKey="avatar" />
 
     <UForm>
       <inputForm
@@ -114,40 +98,8 @@ const formState = reactive({
   selectItem: "",
 });
 
-const { file, preview, handleFileInput, MAX_FILE_SIZE, resetFile } =
-  useFileUpload();
 const items = ref(["Backlog", "Todo", "In Progress", "Done"]);
-const toast = useToast();
 
 
-const handleFileUpload = (event: Event) => {
-  handleFileInput(event);
-  if (file.value && file.value.size > MAX_FILE_SIZE) {
-    resetFile();
-    toast.add({ title: "Файл слишком большой", color: "error" });
-    return;
-  }
-  setAvatar();
-};
 
-const setAvatar = async () => {
-  try {
-    const form = new FormData();
-    form.append("file", file.value!);
-    const { success }: { success: boolean } = await $fetch(
-      "/api/settings/setAvatar",
-      {
-        method: "POST",
-        body: form,
-      }
-    );
-
-    if (success) {
-      refreshNuxtData('avatar');
-      toast.add({ title: "Аватар обновлен", color: "success" });
-    }
-  } catch (error: unknown) {
-    toast.add({ title: "Ошибка сервера", color: "error" });
-  }
-};
 </script>

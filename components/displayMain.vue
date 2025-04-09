@@ -86,8 +86,8 @@ const backgrounds = ref<Background[]>([]);
 const isBackgroundSelected = ref(false);
 const previousBackground = ref<Background | undefined>();
 
-const { preview, handleFileInput, file, MAX_FILE_SIZE, resetFile } =
-  useFileUpload();
+const { handleFileInput, file, MAX_FILE_SIZE, resetFile } =
+  useFileUpload('background');
 
 const { data, refresh } = await useFetch<Background[]>(
   "/api/display/backgrounds"

@@ -15,9 +15,12 @@ model User {
   avatar      String?
   isVerified  Boolean      @default(false)
   isCompleted Boolean      @default(false)
-  workspace   Workspace[]
+  workspaces  Workspace[]  @relation("UserWorkspaces")
   providers   Provider[]
   backgrounds Background[]
+
+  activeWorkspaceId String?    @db.ObjectId
+  activeWorkspace   Workspace? @relation("ActiveWorkspace", fields: [activeWorkspaceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -45,11 +48,13 @@ model Background {
 }
 
 model Workspace {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  ownerId  String    @unique @db.ObjectId
-  owner    User      @relation(fields: [ownerId], references: [id])
-  projects Project[]
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  avatar      String?
+  ownerId     String    @unique @db.ObjectId
+  owner       User      @relation("UserWorkspaces", fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  activeUsers User[]    @relation("ActiveWorkspace")
+  projects    Project[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

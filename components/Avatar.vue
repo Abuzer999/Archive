@@ -1,26 +1,30 @@
 <template>
   <UAvatar
     class="cursor-pointer"
-    alt="Benjamin Canac"
+    :alt="name"
     :size="size"
-    :src="previewAvatar === null ? undefined : previewAvatar"
+    :src="preview"
     :ui="ui"
-  ></UAvatar>
+  />
 </template>
 
 <script setup lang="ts">
 interface Avatar {
   size?: "3xl" | "2xl" | "xl" | "lg" | "md" | "sm" | "xs";
   ui?: Record<string, string>;
+  fetchUrl: string;
+  stateKey: string;
 }
 
-const nuxtApp = useNuxtApp();
-const { previewAvatar } = useFileUpload();
+const props = defineProps<Avatar>();
 
-const { data, refresh } = await useFetch<{ avatarUrl: string }>(
-  "/api/settings/avatar",
+const nuxtApp = useNuxtApp();
+const { preview, name } = useFileUpload(props.stateKey);
+
+const { data, refresh } = await useFetch<{ avatarUrl: string, name: string }>(
+  props.fetchUrl,
   {
-    key: "avatar",
+    key: props.stateKey,
     getCachedData: (key) => {
       const cachedData = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
       console.log(cachedData);
@@ -29,14 +33,12 @@ const { data, refresh } = await useFetch<{ avatarUrl: string }>(
   }
 );
 
-
 onMounted(async () => {
   if (data.value) {
-    previewAvatar.value = data.value.avatarUrl;
+    preview.value = data.value.avatarUrl;
+    name.value = data.value.name;
   } else {
     await refresh();
   }
 });
-
-defineProps<Avatar>();
 </script>

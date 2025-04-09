@@ -16,20 +16,19 @@ export default defineEventHandler(async (event) => {
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
+      include: { activeWorkspace: true },
     });
 
-    if (!user) {
+    if (!user || !user.activeWorkspace) {
       throw createError({
         statusCode: 404,
-        statusMessage: "User not found",
+        statusMessage: "Active Workspace not found",
       });
     }
 
-    const avatarUrl = user.avatar;
-    const name = user.name;
+    const workspace = user.activeWorkspace;
 
-
-    return { avatarUrl, name };
+    return { avatarUrl: workspace.avatar, name: workspace.name };
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,
