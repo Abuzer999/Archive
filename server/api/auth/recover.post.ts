@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     if (!email) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Email is required",
+        message: "Email is required",
       });
     }
 
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
     if (!user) {
       throw createError({
         statusCode: 404,
-        statusMessage: "User not found",
+        message: "User not found",
       });
     }
 
@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.message || "Internal Server Error",
+      message: error.message || "Internal Server Error",
     });
   }
 });

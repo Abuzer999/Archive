@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     if (!token) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Token is required",
+        message: "Token is required",
       });
     }
 
@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     if (!userId) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Invalid or expired verification token",
+        message: "Invalid or expired verification token",
       });
     }
 
@@ -28,14 +28,14 @@ export default defineEventHandler(async (event) => {
     if (!user) {
       throw createError({
         statusCode: 404,
-        statusMessage: "User not found",
+        message: "User not found",
       });
     }
 
     if (user.isVerified) {
       throw createError({
         statusCode: 400,
-        statusMessage: "User is already verified",
+        message: "User is already verified",
       });
     }
 
@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.statusMessage || "Internal Server Error",
+      message: error.message || "Internal Server Error",
     })
   }
 });

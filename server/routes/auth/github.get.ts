@@ -1,5 +1,4 @@
 import { User, Token } from "~/lib/auth";
-import { H3Event } from "h3";
 import { useOAuth } from "~/composables/useOAuth";
 
 export default defineOAuthGitHubEventHandler({
@@ -7,11 +6,7 @@ export default defineOAuthGitHubEventHandler({
     emailRequired: true,
   },
 
-  async onSuccess(
-    event: H3Event,
-    { user, tokens }: { user: User; tokens: Token }
-  ) {
-    
+  async onSuccess(event, { user, tokens }: { user: User; tokens: Token }) {
     const dbUser = await useOAuth(user, "github", String(user.id));
 
     await setUserSession(event, {
@@ -19,7 +14,7 @@ export default defineOAuthGitHubEventHandler({
         id: dbUser.id,
         name: user.name,
         email: user.email,
-        isCompleted: dbUser.isCompleted
+        isCompleted: dbUser.isCompleted,
       },
       tokens: {
         accessToken: tokens,
@@ -27,9 +22,9 @@ export default defineOAuthGitHubEventHandler({
       loggedInAt: new Date(),
     });
 
-    return sendRedirect(event, "/");
+    return sendRedirect(event, "/dashboard");
   },
-  onError(event: H3Event, error: unknown) {
+  onError(event, error: unknown) {
     console.error(error);
     return sendRedirect(event, "/auth");
   },

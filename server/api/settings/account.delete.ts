@@ -4,13 +4,12 @@ import type { UserSession } from "#auth-utils";
 export default defineEventHandler(async (event) => {
   try {
     const session: UserSession = await getUserSession(event);
-
     const userId = session?.user?.id;
 
     if (!userId) {
       throw createError({
         statusCode: 401,
-        statusMessage: "Unauthorized",
+        message: "Unauthorized",
       });
     }
 
@@ -19,20 +18,29 @@ export default defineEventHandler(async (event) => {
       include: { activeWorkspace: true },
     });
 
-    if (!user || !user.activeWorkspace) {
+    if (!user) {
       throw createError({
         statusCode: 404,
-        statusMessage: "Active Workspace not found",
+        message: "User not found",
       });
     }
 
-    const workspace = user.activeWorkspace;
+    await prisma.$transaction([
+      prisma.background.deleteMany({ where: { userId } }),
+      prisma.provider.deleteMany({ where: { userId } }),
+      prisma.membership.deleteMany({ where: { userId } }),
 
-    return { avatarUrl: workspace.avatar, name: workspace.name };
+      prisma.workspace.deleteMany({ where: { ownerId: userId } }),
+      prisma.user.delete({ where: { id: userId } }),
+    ]);
+
+    return {
+      success: true,
+    };
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.message || "Internal Server Error",
+      message: error.message || "Internal Server Error",
     });
   }
 });

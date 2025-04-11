@@ -1,7 +1,8 @@
 <template>
   <div
     v-if="isLoading"
-    class="loading fixed bg-[#fbfbfc] dark:bg-[#1c1e22] top-0 left-0 w-full h-full z-50"
+    class="loading bg-[#fbfbfc] dark:bg-[#1c1e22] top-0 left-0 w-full h-full z-50"
+    :class="route.path.startsWith('/dashboard') ? 'absolute' : 'fixed'"
   >
     <svg
       class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
@@ -22,20 +23,20 @@
 
 <script setup lang="ts">
 const { isLoading } = useLoadingIndicator();
-
+const route = useRoute();
 </script>
 
 <style scoped>
 .loading svg polyline {
   fill: none;
-  stroke-width: 6; 
+  stroke-width: 6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .loading svg polyline#back {
   fill: none;
-  stroke: #6788f333; 
+  stroke: #6788f333;
 }
 
 .loading svg polyline#front {

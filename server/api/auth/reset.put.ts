@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     if (!newPassword || !email || !code) {
       throw createError({
         statusCode: 400,
-        statusMessage: "New password, email, and code are required",
+        message: "New password, email, and code are required",
       });
     }
 
@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
     if (!newPassword) {
       throw createError({
         statusCode: 400,
-        statusMessage: "New password is required",
+        message: "New password is required",
       });
     }
 
@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
     if (!user) {
       throw createError({
         statusCode: 404,
-        statusMessage: "User not found",
+        message: "User not found",
       });
     }
 
@@ -60,7 +60,7 @@ export default defineEventHandler(async (event) => {
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.message || "Internal Server Error",
+      message: error.message || "Internal Server Error",
     });
   }
 });

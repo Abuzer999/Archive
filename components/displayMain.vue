@@ -4,7 +4,7 @@
   >
     <h1 class="text-[20px] font-bold leading-[100%]">Фоны</h1>
 
-    <ul class="flex gap-[12px] flex-wrap">
+    <ul v-auto-animate class="flex gap-[12px] flex-wrap">
       <li
         v-for="item in backgrounds"
         :key="item.id"
@@ -80,14 +80,15 @@ interface Background {
   isCustom: boolean;
 }
 
+const isLoading = ref(false);
 const toast = useToast();
 const selectedBackground = inject("selectedBackground", ref(""));
 const backgrounds = ref<Background[]>([]);
 const isBackgroundSelected = ref(false);
 const previousBackground = ref<Background | undefined>();
 
-const { handleFileInput, file, MAX_FILE_SIZE, resetFile } =
-  useFileUpload('background');
+const { preview, handleFileInput, file, MAX_FILE_SIZE, resetFile } =
+  useFileUpload("background");
 
 const { data, refresh } = await useFetch<Background[]>(
   "/api/display/backgrounds"
@@ -124,6 +125,8 @@ const postCustomBg = async () => {
 
     if (success) {
       backgrounds.value.push(newBackground);
+      toast.add({ title: "Файл успешно загружен", color: "success" });
+      resetFile();
     }
   } catch (error: unknown) {
     if (error instanceof Error && "statusCode" in error) {
@@ -154,9 +157,13 @@ const selectBackground = (id: string, imageUrl: string) => {
 };
 
 const currentBackground = async () => {
+  if (isLoading.value) return;
   const currentBg = backgrounds.value.find((bg: Background) => bg.isDefault);
-  if (!currentBg) return;
+  if (!currentBg || previousBackground.value?.id === currentBg.id) {
+    return;
+  }
   try {
+    isLoading.value = true;
     const { success }: { success: boolean } = await $fetch(
       "/api/display/currentBackground",
       {
@@ -166,13 +173,15 @@ const currentBackground = async () => {
     );
 
     if (success) {
-      console.log("Фон обновлен");
+      toast.add({ title: "Профиль обновлен", color: "success" });
       previousBackground.value = currentBg;
       isBackgroundSelected.value = false;
       await refresh();
     }
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);
+  } finally {
+    isLoading.value = false;
   }
 };
 
@@ -190,9 +199,6 @@ const deleteBackground = async (id: string) => {
       firstAvailableBackground.isDefault = true;
       selectedBackground.value = firstAvailableBackground.url;
       previousBackground.value = firstAvailableBackground;
-    } else {
-      selectedBackground.value = "";
-      previousBackground.value = undefined;
     }
   }
 
@@ -211,6 +217,7 @@ const deleteBackground = async (id: string) => {
 
     if (success) {
       await refresh();
+      toast.add({ title: "Фон удален", color: "success" });
     }
   } catch (error: unknown) {
     console.error("Ошибка при удалении фона:", error);
@@ -225,8 +232,6 @@ onMounted(async () => {
     previousBackground.value = data.value.find(
       (bg: Background) => bg.isDefault
     );
-  } else {
-    await refresh();
   }
 });
 

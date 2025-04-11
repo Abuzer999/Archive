@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     if (!userId) {
       throw createError({
         statusCode: 401,
-        statusMessage: "Unauthorized",
+        message: "Unauthorized",
       });
     }
 
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
     if (!file) {
       throw createError({
         statusCode: 400,
-        statusMessage: "File is required",
+        message: "File is required",
       });
     }
 
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
     if (fileSize > MAX_FILE_SIZE) {
       throw createError({
         statusCode: 400,
-        statusMessage: "File size exceeds 2 MB",
+        message: "File size exceeds 2 MB",
       });
     }
 
@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
     if (!blob.url) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Background image URL and name are required",
+        message: "Background image URL and name are required",
       });
     }
 
@@ -68,7 +68,7 @@ export default defineEventHandler(async (event) => {
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.message || "Internal Server Error",
+      message: error.message || "Internal Server Error",
     });
   }
 });

@@ -12,13 +12,13 @@
       Здесь настраивается учетная запись Archive. Профиль для рабочего
       пространства меняется
       <NuxtLink
-        to="/dashboard/settings/people"
+        to="/dashboard/settings/workspace"
         class="underline underline-offset-4 hover:text-[#8fb5ff] transition-color duration-100 ease-in-out"
         >в разделе «Пользователи»</NuxtLink
       >
     </p>
 
-    <AvatarSet getFetch="/api/settings/avatar" fetchUrl="/api/settings/setAvatar" stateKey="avatar" />
+    <AvatarSet target="user" stateKey="avatar" />
 
     <UForm>
       <inputForm

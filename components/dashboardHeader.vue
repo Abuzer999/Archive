@@ -9,7 +9,7 @@
         @click="$router.push('/dashboard/settings/workspace')"
         class="cursor-pointer flex gap-[10px] items-center"
       >
-        <Avatar size="lg" fetchUrl="/api/workspace/avatar" stateKey="workspaceAvatar" :ui="{ root: 'h-[40px] w-[40px] rounded-[5px]' }"  /> 
+        <Avatar size="lg" stateKey="workspaceAvatar" target="workspace" :ui="{ root: 'h-[40px] w-[40px] rounded-[5px]' }"  /> 
 
         <div class="max-w-[145px] w-full truncate">
           <p
@@ -88,7 +88,7 @@
         <div>
           <Avatar
             size="2xl"
-            fetchUrl="/api/settings/avatar"
+            target="user"
             stateKey="avatar"
           />
         </div>

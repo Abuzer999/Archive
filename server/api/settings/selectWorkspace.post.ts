@@ -13,28 +13,27 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: { activeWorkspace: true },
-    });
+    const { workspaceId } = await readBody(event);
 
-    if (!user) {
+    if (!workspaceId) {
       throw createError({
-        statusCode: 404,
-        message: "User not found",
+        statusCode: 400,
+        message: "Workspace ID is required",
       });
     }
 
-    return {
-      user: {
-        avatarUrl: user.avatar,
-        name: user.name
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        activeWorkspace: {
+          connect: {
+            id: workspaceId,
+          },
+        },
       },
-      workspace: {
-        avatarUrl: user.activeWorkspace?.avatar || null,
-        name: user.activeWorkspace?.name || null
-      }
-    };
+    });
+
+    return { success: true };
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,

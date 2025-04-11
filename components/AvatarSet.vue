@@ -1,12 +1,12 @@
 <template>
   <label class="w-fit" for="avatar">
     <Avatar
-      :fetchUrl="props.getFetch"
       :stateKey="props.stateKey"
       :ui="{
         root: props.stateKey === 'workspaceAvatar' ? 'h-[100px] w-[100px] rounded-[5px]' : 'h-[160px] w-[160px]',
       }"
       size="3xl"
+      :target="props.target"
     />
 
     <input
@@ -21,9 +21,8 @@
 
 <script setup lang="ts">
 interface Props {
-  fetchUrl: string;
   stateKey: string;
-  getFetch: string;
+  target: 'user' | 'workspace';
 }
 
 const props = defineProps<Props>();
@@ -47,8 +46,9 @@ const setAvatar = async () => {
   try {
     const form = new FormData();
     form.append("file", file.value!);
+    form.append("target", props.target);
     const { success }: { success: boolean } = await $fetch(
-      props.fetchUrl,
+      "/api/settings/setAvatar",
       {
         method: "POST",
         body: form,
@@ -57,7 +57,7 @@ const setAvatar = async () => {
 
     if (success) {
       refreshNuxtData(props.stateKey);
-      toast.add({ title: "Аватар обновлен", color: "success" });
+      toast.add({ title: props.target === "user" ? "Аватар обновлен" : "Аватар рабочего пространства обновлен", color: "success" });
     }
   } catch (error: unknown) {
     toast.add({ title: "Ошибка сервера", color: "error" });

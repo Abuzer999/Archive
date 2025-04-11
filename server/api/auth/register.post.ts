@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     if (!name || !email || !password) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Name, email, and password are required",
+        message: "Name, email, and password are required",
       });
     }
 
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     if (userExists) {
       throw createError({
         statusCode: 401,
-        statusMessage: "User already exists",
+        message: "User already exists",
       });
     }
 
@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.statusMessage || "Internal Server Error",
+      message: error.message || "Internal Server Error",
     });
   }
 });

@@ -30,6 +30,14 @@ export default defineEventHandler(async (event) => {
       },
     });
 
+    await prisma.membership.create({
+      data: {
+        userId,
+        workspaceId: createdWorkspace.id,
+        role: 'CREATOR', 
+      },
+    });
+
     const createdProject = await prisma.project.create({
       data: {
         name: "Проект",

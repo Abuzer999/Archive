@@ -7,23 +7,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  CREATOR
+  ADMIN
+  USER
+}
+
 model User {
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  email       String       @unique
-  name        String
-  password    String
-  avatar      String?
-  isVerified  Boolean      @default(false)
-  isCompleted Boolean      @default(false)
-  workspaces  Workspace[]  @relation("UserWorkspaces")
-  providers   Provider[]
-  backgrounds Background[]
-
-  activeWorkspaceId String?    @db.ObjectId
-  activeWorkspace   Workspace? @relation("ActiveWorkspace", fields: [activeWorkspaceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String       @id @default(auto()) @map("_id") @db.ObjectId
+  email             String       @unique
+  name              String
+  password          String
+  avatar            String?
+  isVerified        Boolean      @default(false)
+  isCompleted       Boolean      @default(false)
+  ownedWorkspaces   Workspace[]  @relation("UserWorkspaces")
+  memberships       Membership[] @relation("UserMemberships")
+  providers         Provider[]
+  backgrounds       Background[]
+  activeWorkspaceId String?      @db.ObjectId
+  activeWorkspace   Workspace?   @relation("ActiveWorkspace", fields: [activeWorkspaceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 }
 
 model Provider {
@@ -48,16 +53,31 @@ model Background {
 }
 
 model Workspace {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   avatar      String?
-  ownerId     String    @unique @db.ObjectId
-  owner       User      @relation("UserWorkspaces", fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  activeUsers User[]    @relation("ActiveWorkspace")
+  ownerId     String       @unique @db.ObjectId
+  owner       User         @relation("UserWorkspaces", fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  activeUsers User[]       @relation("ActiveWorkspace")
+  memberships Membership[] @relation("WorkspaceMemberships")
   projects    Project[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Membership {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String @db.ObjectId
+  workspaceId String @db.ObjectId
+  role        Role
+
+  user      User      @relation("UserMemberships", fields: [userId], references: [id])
+  workspace Workspace @relation("WorkspaceMemberships", fields: [workspaceId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([userId, workspaceId])
 }
 
 model Project {
@@ -85,7 +105,7 @@ model Folder {
 model Task {
   id       String  @id @default(auto()) @map("_id") @db.ObjectId
   title    String
-  status   String  @default("todo") // Можно сделать Enum
+  status   String  @default("todo")
   folderId String? @db.ObjectId
   folder   Folder? @relation(fields: [folderId], references: [id])
 

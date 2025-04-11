@@ -13,28 +13,47 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    const { name } = await readBody(event);
+
+    if (!name) {
+      throw createError({
+        statusCode: 400,
+        message: "Name is required",
+      });
+    }
+
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { activeWorkspace: true },
     });
 
-    if (!user) {
+    if (!user || !user.activeWorkspace?.id) {
       throw createError({
         statusCode: 404,
-        message: "User not found",
+        message: "Active workspace not found",
       });
     }
 
-    return {
-      user: {
-        avatarUrl: user.avatar,
-        name: user.name
+    const existingWorkspace = await prisma.workspace.findFirst({
+      where: {
+        name,
+        ownerId: userId,
       },
-      workspace: {
-        avatarUrl: user.activeWorkspace?.avatar || null,
-        name: user.activeWorkspace?.name || null
-      }
-    };
+    });
+
+    if (existingWorkspace) {
+      throw createError({
+        statusCode: 403,
+        message: "Workspace with this name already exists",
+      });
+    }
+
+    await prisma.workspace.update({
+      where: { id: user.activeWorkspace.id },
+      data: { name },
+    });
+
+    return { success: true };
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,

@@ -12,8 +12,8 @@
 interface Avatar {
   size?: "3xl" | "2xl" | "xl" | "lg" | "md" | "sm" | "xs";
   ui?: Record<string, string>;
-  fetchUrl: string;
   stateKey: string;
+  target: "user" | "workspace";
 }
 
 const props = defineProps<Avatar>();
@@ -21,24 +21,21 @@ const props = defineProps<Avatar>();
 const nuxtApp = useNuxtApp();
 const { preview, name } = useFileUpload(props.stateKey);
 
-const { data, refresh } = await useFetch<{ avatarUrl: string, name: string }>(
-  props.fetchUrl,
-  {
-    key: props.stateKey,
-    getCachedData: (key) => {
-      const cachedData = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
-      console.log(cachedData);
-      return cachedData;
-    },
-  }
-);
+const { data } = await useFetch<{
+  user: { avatarUrl: string; name: string };
+  workspace: { avatarUrl: string; name: string };
+}>("/api/settings/avatar", {
+  key: props.stateKey,
+  getCachedData: (key) => {
+    const cachedData = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
+    return cachedData;
+  },
+});
 
-onMounted(async () => {
+watchEffect(() => {
   if (data.value) {
-    preview.value = data.value.avatarUrl;
-    name.value = data.value.name;
-  } else {
-    await refresh();
+    preview.value = data.value[props.target].avatarUrl;
+    name.value = data.value[props.target].name;
   }
 });
 </script>

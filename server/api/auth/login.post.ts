@@ -16,21 +16,21 @@ export default defineEventHandler(async (event) => {
     if (!user) {
       throw createError({
         statusCode: 404,
-        statusMessage: "Invalid email or password.",
+        message: "Invalid email or password.",
       });
     }
 
     if (!user.password || user.password === "") {
       throw createError({
         statusCode: 401,
-        statusMessage: "Invalid email or password.",
+        message: "Invalid email or password.",
       });
     }
 
     if (!user.isVerified) {
       throw createError({
         statusCode: 403,
-        statusMessage: "Please verify your email before logging in.",
+        message: "Please verify your email before logging in.",
       });
     }
 
@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
     if (!isPasswordValid) {
       throw createError({
         statusCode: 401,
-        statusMessage: "Invalid email or password.",
+        message: "Invalid email or password.",
       });
     }
 
@@ -67,11 +67,11 @@ export default defineEventHandler(async (event) => {
       loggedInAt: new Date(),
     });
 
-    return { succes: true };
+    return { success: true };
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.message || "Internal Server Error",
+      message: error.message || "Internal Server Error",
     });
   }
 });

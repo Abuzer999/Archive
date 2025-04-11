@@ -1,17 +1,16 @@
 <template>
   <div class="wrapper-dashboard">
-    <header class="h-[65px]">
+    <header>
       <dashboardHeader />
     </header>
 
-    <main class="flex h-screen">
+    <main class="flex flex-1 overflow-hidden">
       <leftLayout />
       <div
         class="relative scrollbar-thumb-rounded-full scrollbar scrollbar-w-1 scrollbar-thumb-[#fcbb43] overflow-auto p-[16px] w-screen bg-cover bg-center bg-no-repeat"
         :style="{ backgroundImage: `url(${selectedBackground})` }"
       >
-        <div class="absolute w-full h-full top-0 left-0 z-[-1]"></div>
-        <div class="pb-[100px]">
+        <div>
           <slot />
         </div>
 

@@ -75,7 +75,8 @@ export default defineAppConfig({
       slots: {
         root: "inline-flex items-center justify-center shrink-0 select-none overflow-hidden rounded-full align-middle bg-(--ui-bg-elevated)",
         image: "h-full w-full rounded-[inherit] object-cover",
-        fallback: "font-medium leading-none text-[#242629] dark:text-white  truncate",
+        fallback:
+          "font-medium leading-none text-[#242629] dark:text-white  truncate",
         icon: "text-(--ui-text-muted) shrink-0",
       },
       variants: {
@@ -112,6 +113,49 @@ export default defineAppConfig({
       defaultVariants: {
         size: "md",
       },
+    },
+    modal: {
+      slots: {
+        overlay: "fixed inset-0 bg-(--ui-bg-elevated)/75",
+        content:
+          "fixed border-[1px] border-solid border-[#fbfbfc] dark:border-[#1c1e22] bg-[#fff] dark:bg-[#242629] flex flex-col focus:outline-none",
+        header: "flex items-center gap-1.5 p-4 sm:px-6 min-h-16 border-none",
+        wrapper: "",
+        body: "flex-1 overflow-y-auto p-4 sm:p-6 border-none",
+        footer: "flex items-center gap-1.5 p-4 sm:px-6",
+        title: "text-(--ui-text-highlighted) font-semibold",
+        description: "mt-1 text-(--ui-text-muted) text-sm",
+        close: "absolute top-4 end-4",
+      },
+      variants: {
+        transition: {
+          true: {
+            overlay:
+              "data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_200ms_ease-in]",
+            content:
+              "data-[state=open]:animate-[scale-in_200ms_ease-out] data-[state=closed]:animate-[scale-out_200ms_ease-in]",
+          },
+        },
+        fullscreen: {
+          true: {
+            content: "inset-0",
+          },
+          false: {
+            content:
+              "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100vw-2rem)] max-w-lg max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] rounded-[calc(var(--ui-radius)*2)] shadow-lg",
+          },
+        },
+      },
+    },
+    button: {
+      compoundVariants: [
+        {
+          color: "primary",
+          variant: "solid",
+          class:
+            "text-white bg-amber-300 hover:bg-amber-400 disabled:text-white",
+        },
+      ],
     },
   },
 });

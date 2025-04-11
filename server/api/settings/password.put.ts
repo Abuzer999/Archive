@@ -1,5 +1,6 @@
 import prisma from "~/lib/prisma";
 import type { UserSession } from "#auth-utils";
+import bcrypt from "bcrypt";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -13,9 +14,17 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    const { oldPassword, newPassword } = await readBody(event);
+
+    if (!oldPassword || !newPassword || oldPassword === "") {
+      throw createError({
+        statusCode: 400,
+        message: "Old password and new password are required",
+      });
+    }
+
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      include: { activeWorkspace: true },
     });
 
     if (!user) {
@@ -25,15 +34,24 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    const passwordMatch = await bcrypt.compare(oldPassword, user.password);
+
+    if (!passwordMatch) {
+      throw createError({
+        statusCode: 401,
+        message: "Invalid old password",
+      });
+    }
+
+    const hashedPassword = bcrypt.hashSync(newPassword, 10);
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+
     return {
-      user: {
-        avatarUrl: user.avatar,
-        name: user.name
-      },
-      workspace: {
-        avatarUrl: user.activeWorkspace?.avatar || null,
-        name: user.activeWorkspace?.name || null
-      }
+      success: true,
     };
   } catch (error: any) {
     throw createError({

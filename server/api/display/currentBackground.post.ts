@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     if (!userId) {
       throw createError({
         statusCode: 401,
-        statusMessage: "Unauthorized",
+        message: "Unauthorized",
       });
     }
 
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     if (!backgroundId) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Background ID is required",
+        message: "Background ID is required",
       });
     }
 
@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
       if (!updatedBackground) {
         throw createError({
           statusCode: 404,
-          statusMessage: "No backgrounds found for this user",
+          message: "No backgrounds found for this user",
         });
       }
     }
@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.message || "Internal Server Error",
+      message: error.message || "Internal Server Error",
     });
   }
 });

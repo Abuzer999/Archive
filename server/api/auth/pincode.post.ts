@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     if (!code) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Code is required",
+        message: "Code is required",
       });
     }
 
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     if (!email) {
       throw createError({
         statusCode: 401,
-        statusMessage: "Invalid or expired code",
+        message: "Invalid or expired code",
       });
     }
 
@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.message || "Internal Server Error",
+      message: error.message || "Internal Server Error",
     });
   }
 });

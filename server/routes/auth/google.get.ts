@@ -1,10 +1,9 @@
 import { User, Token } from "~/lib/auth";
-import { H3Event } from "h3";
 import { useOAuth } from "~/composables/useOAuth";
 
 export default defineOAuthGoogleEventHandler({
   async onSuccess(
-    event: H3Event,
+    event,
     { user, tokens }: { user: User; tokens: Token }
   ) {
 
@@ -22,10 +21,10 @@ export default defineOAuthGoogleEventHandler({
       },
       loggedInAt: new Date(),
     });
-    return sendRedirect(event, "/");
+    return sendRedirect(event, "/dashboard");
   },
 
-  onError(event: H3Event, error: unknown) {
+  onError(event, error: unknown) {
     console.error(error);
     return sendRedirect(event, "/auth");
   },
