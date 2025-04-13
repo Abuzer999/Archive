@@ -99,10 +99,8 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
 
-const { user } = useUserSession();
-
+const { clear, user } = useUserSession();
 const route = useRoute();
-const { clear } = useUserSession();
 
 const { isOpen, toggleDropMenu } = useDropMenu();
 const { preview, name } = useFileUpload("avatar");

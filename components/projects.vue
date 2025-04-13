@@ -20,7 +20,7 @@
       </div>
 
       <UIcon
-        @click.stop="open = true"
+        @click.stop="openCreate"
         v-if="isOpen"
         name="i-lucide:file-plus"
         class="cursor-pointer ml-auto w-[20px] h-[20px] hover:text-amber-300 transition duration-300 ease-in-out"
@@ -29,11 +29,23 @@
 
     <UModal
       v-model:open="open"
-      title="Новый проект"
-      description="Придумайте название проекта"
-      :ui="{ footer: 'justify-end' }"
+      :title="
+        type === 'create'
+          ? 'Создать проект'
+          : type === 'rename'
+            ? 'Переименовать проект'
+            : 'Удалить проект'
+      "
+      :description="
+        type === 'create'
+          ? 'Введите название проекта'
+          : type === 'rename'
+            ? 'Введите новое название'
+            : 'Вы действительно хотите удалить проект?'
+      "
+      :ui="{ overlay: 'z-100', content: 'z-100', footer: 'justify-end' }"
     >
-      <template #body>
+      <template #body v-if="type === 'rename' || type === 'create'">
         <inputForm
           v-model="formState.name"
           inputName="name"
@@ -60,18 +72,32 @@
           }"
         />
         <UButton
-          @click="createProject"
-          label="Создать"
+          @click="
+            type === 'create'
+              ? createProject()
+              : type === 'rename'
+                ? renameProject()
+                : deleteProject(selectedProjectId)
+          "
+          :label="
+            type === 'create'
+              ? 'Создать'
+              : type === 'rename'
+                ? 'Переименовать'
+                : 'Удалить'
+          "
           variant="solid"
           :ui="{ base: 'disabled:bg-transparent' }"
-          :disabled="!formState.name.trim()"
+          :disabled="
+            type === 'delete' ? false : !formState.name.trim() || isLoading
+          "
         />
       </template>
     </UModal>
 
     <ul
-      class="w-full flex-col mt-[5px]"
-      :class="!isDrop ? 'hidden' : 'flex'"
+      class="w-full flex-col mt-[5px] max-h-[290px] relative scrollbar-thumb-rounded-full scrollbar scrollbar-w-1 scrollbar-thumb-[#fcbb43] overflow-y-auto overflow-x-hidden"
+      :class="!isOpen ? 'scrollbar-none' : 'flex'"
       v-if="projects.length > 0"
     >
       <li
@@ -85,11 +111,16 @@
           :name="project?.name"
           :alt="project?.alt"
           :src="project?.src"
+          :onAction="(action) => handleProjectAction(action, project?.id)"
         />
       </li>
     </ul>
 
-    <span @click="open = true" class="w-fit cursor-pointer mx-auto text-[14px] mt-[10px] hover:text-amber-300 transition duration-300 ease-in-out" :class="!isDrop ? 'hidden' : 'flex'" v-if="projects.length <= 0"
+    <span
+      @click="open = true"
+      class="w-fit cursor-pointer mx-auto text-[14px] mt-[10px] hover:text-amber-300 transition duration-300 ease-in-out"
+      :class="!isDrop ? 'hidden' : 'flex'"
+      v-if="projects.length <= 0"
       >Создайте проект</span
     >
   </div>
@@ -100,14 +131,22 @@ import type { Project } from "~/types/project";
 const toast = useToast();
 const { isOpen } = useDropMenu();
 const nuxtApp = useNuxtApp();
-const router = useRouter();
 const open = ref(false);
 const isDrop = ref(false);
 const isLoading = ref(false);
+const selectedProjectId = ref<string>("");
+
+const type = ref<"delete" | "rename" | "create">("delete");
 
 const formState = reactive({
   name: "",
 });
+
+const openCreate = () => {
+  formState.name = "";
+  open.value = true;
+  type.value = "create";
+};
 
 const projects = ref<Project[]>([]);
 
@@ -123,6 +162,13 @@ const { data, refresh } = await useFetch<Project[]>(
     },
   }
 );
+
+const handleProjectAction = (action: "rename" | "delete", id: string) => {
+  formState.name = "";
+  selectedProjectId.value = id;
+  type.value = action;
+  open.value = true;
+};
 
 watchEffect(() => {
   if (data.value) {
@@ -154,6 +200,60 @@ const createProject = async () => {
       open.value = false;
       await refresh();
       toast.add({ title: "Проект создан", color: "success" });
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) console.error(error.message);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const renameProject = async () => {
+  if (!formState.name.trim()) return;
+  isLoading.value = true;
+  try {
+    const { success }: { success: boolean } = await $fetch(
+      "/api/workspace/renameProject",
+      {
+        method: "PUT",
+        body: {
+          projectId: selectedProjectId.value,
+          projectName: formState.name,
+        },
+      }
+    );
+
+    if (success) {
+      formState.name = "";
+      open.value = false;
+      await refresh();
+      toast.add({ title: "Проект переименован", color: "success" });
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) console.error(error.message);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const deleteProject = async (id: string) => {
+  if (isLoading.value) return;
+  isLoading.value = true;
+  try {
+    const { success }: { success: boolean } = await $fetch(
+      "/api/workspace/project",
+      {
+        method: "DELETE",
+        body: {
+          projectId: id,
+        },
+      }
+    );
+
+    if (success) {
+      open.value = false;
+      await refresh();
+      toast.add({ title: "Проект удален", color: "success" });
     }
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);

@@ -10,22 +10,72 @@
         :alt="alt"
         class="rounded-[5px] bg-[#fcbb43]"
       />
-      <h1 v-if="isOpen" class="text-[14px] leading-[100%] font-[500]">
+      <h1
+        class="text-[14px] leading-[100%] font-[500]"
+        :class="!isOpen ? 'hidden' : ''"
+      >
         {{ name }}
       </h1>
     </div>
 
-    <UIcon
-      v-if="isOpen"
-      name="i-carbon:overflow-menu-horizontal"
-      class="cursor-pointer ml-auto w-[25px] h-[25px] hover:text-amber-300 transition duration-300 ease-in-out"
-    />
+    <UDropdownMenu
+      size="lg"
+      :items="items"
+      :content="{
+        align: 'start',
+        side: 'bottom',
+        sideOffset: 1,
+      }"
+      :ui="{
+        content: 'w-[180px] dark:bg-[#242629] !ring-0 rounded-[8px] p-[8px] ',
+        item: 'flex gap-[5px] !p-[8px_7px]',
+        group:
+          'w-full !p-[2px] border-[#dbdbdb] dark:border-[#1e1e1e] mb-[5px]',
+      }"
+    >
+      <UIcon
+        name="i-carbon:overflow-menu-horizontal"
+        class="cursor-pointer ml-auto w-[25px] h-[25px] hover:text-amber-300 transition duration-300 ease-in-out"
+        :class="!isOpen ? 'hidden' : 'flex'"
+      />
+    </UDropdownMenu>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { DropdownMenuItem } from "@nuxt/ui";
 import type { Project } from "~/types/project";
 const { isOpen } = useDropMenu();
 
-defineProps<Project>();
+const props = defineProps<
+  Project & { onAction: (action: "rename" | "delete") => void }
+>();
+
+const items = ref<DropdownMenuItem[]>([
+  {
+    label: "Переименовать",
+    icon: "i-carbon:edit",
+    onSelect: (event: Event) => {
+      event.preventDefault();
+      props.onAction("rename");
+    },
+  },
+  {
+    label: "Избранное",
+    icon: "i-carbon:star",
+    onSelect: (event: Event) => {
+      event.preventDefault();
+    },
+  },
+  {
+    label: "Удалить",
+    icon: "i-carbon:trash-can",
+    onSelect: (event: Event) => {
+      event.preventDefault();
+      props.onAction("delete");
+    },
+  },
+]);
+
+
 </script>

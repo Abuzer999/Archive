@@ -8,6 +8,7 @@ useHead({
 });
 definePageMeta({
   layout: "dashboard",
+  layoutType: "main",
   middleware: ["auth"],
 });
 </script>

@@ -21,9 +21,8 @@
 </template>
 
 <script setup lang="ts">
-const { user } = useUserSession();
 const { isLoading } = useLoadingIndicator();
-const route = useRoute();
+
 </script>
 
 <style scoped>

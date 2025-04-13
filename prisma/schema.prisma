@@ -14,23 +14,24 @@ enum Role {
 }
 
 model User {
-  id                String       @id @default(auto()) @map("_id") @db.ObjectId
-  email             String       @unique
+  id                String            @id @default(auto()) @map("_id") @db.ObjectId
+  email             String            @unique
   name              String
   password          String
   avatar            String?
-  isVerified        Boolean      @default(false)
-  isCompleted       Boolean      @default(false)
-  ownedWorkspaces   Workspace[]  @relation("UserWorkspaces")
-  memberships       Membership[] @relation("UserMemberships")
+  isVerified        Boolean           @default(false)
+  isCompleted       Boolean           @default(false)
+  ownedWorkspaces   Workspace[]       @relation("UserWorkspaces")
+  memberships       Membership[]      @relation("UserMemberships")
   providers         Provider[]
   backgrounds       Background[]
-  activeWorkspaceId String?      @db.ObjectId
-  activeWorkspace   Workspace?   @relation("ActiveWorkspace", fields: [activeWorkspaceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdProjects   Project[]    @relation("UserCreatedProjects")
-  createdTasks      Task[]       @relation("UserCreatedTasks")
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  activeWorkspaceId String?           @db.ObjectId
+  activeWorkspace   Workspace?        @relation("ActiveWorkspace", fields: [activeWorkspaceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdProjects   Project[]         @relation("UserCreatedProjects")
+  createdTasks      Task[]            @relation("UserCreatedTasks")
+  favoriteProjects  FavoriteProject[] @relation("UserFavorites")
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 }
 
 model Provider {
@@ -83,15 +84,29 @@ model Membership {
 }
 
 model Project {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  avatar      String?
-  workspaceId String    @db.ObjectId
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  creatorId   String    @db.ObjectId
-  creator     User      @relation("UserCreatedProjects", fields: [creatorId], references: [id])
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  avatar        String?
+  workspaceId   String            @db.ObjectId
+  workspace     Workspace         @relation(fields: [workspaceId], references: [id])
+  creatorId     String            @db.ObjectId
+  creator       User              @relation("UserCreatedProjects", fields: [creatorId], references: [id])
+  favorites     FavoriteProject[] @relation("ProjectFavorites")
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+model FavoriteProject {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  projectId String   @db.ObjectId
+
+  user      User     @relation("UserFavorites", fields: [userId], references: [id])
+  project   Project  @relation("ProjectFavorites", fields: [projectId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, projectId]) 
 }
 
 model Task {

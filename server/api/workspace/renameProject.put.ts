@@ -13,9 +13,9 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const { projectId } = await readBody(event);
+    const { projectName, projectId } = await readBody(event);
 
-    if (!projectId) {
+    if (!projectName) {
       throw createError({
         statusCode: 400,
         message: "Folder name is required",
@@ -34,8 +34,9 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    await prisma.project.delete({
+    await prisma.project.update({
       where: { id: projectId },
+      data: { name: projectName },
     });
 
     return { success: true };

@@ -102,8 +102,8 @@ const selectedWorkspace = async (id: string) => {
     );
 
     if (success) {
-      await router.push(`/dashboard/${id}/settings/workspace`);
       openTask.value = false;
+      await router.replace(`/dashboard/${id}/settings/workspace`);
       await refresh();
       refreshNuxtData("workspaceAvatar");
       refreshNuxtData("projects");

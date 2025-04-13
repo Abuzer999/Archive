@@ -8,6 +8,7 @@
   });
   definePageMeta({
     layout: "dashboard",
+    layoutType: "settings",
     middleware: ["auth"],
   });
   </script>
