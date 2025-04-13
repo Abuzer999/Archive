@@ -6,7 +6,7 @@
         trailingIcon: 'w-[15px] h-[15px]',
       }"
       size="xl"
-      to="/dashboard"
+      :to="`/dashboard/${workspaceId}/all-tasks`"
       :icon="!isOpen ? 'i-carbon:chevron-left' : ''"
     >
       {{ isOpen ? "Назад" : "" }}</UButton
@@ -28,6 +28,8 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
 
+const { user } = useUserSession();
+const workspaceId = user.value?.activeWorkspaceId;
 const route = useRoute();
 const { isOpen } = useDropMenu();
 
@@ -35,43 +37,42 @@ const items = computed<NavigationMenuItem[]>(() => [
   {
     label: isOpen.value ? "Основные настройки" : "",
     type: "label",
-    class: !isOpen.value ? "justify-center" : 'justify-start',
+    class: !isOpen.value ? "justify-center" : "justify-start",
   },
   {
     label: isOpen.value ? "Профиль" : "",
     icon: "i-carbon:settings-edit",
-    active: route.fullPath === "/dashboard/settings",
-    class: !isOpen.value ? "justify-center" : 'justify-start',
-    to: "/dashboard/settings",
+    active: route.fullPath === `/dashboard/${workspaceId}/settings`,
+    class: !isOpen.value ? "justify-center" : "justify-start",
+    to: `/dashboard/${workspaceId}/settings`,
   },
   {
     label: isOpen.value ? "Рабочее пространство" : "",
     icon: "i-carbon:workspace",
-    active: route.fullPath === "/dashboard/settings/workspace",
-    class: !isOpen.value ? "justify-center" : 'justify-start',
-    to: "/dashboard/settings/workspace",
+    active: route.fullPath === `/dashboard/${workspaceId}/settings/workspace`,
+    class: !isOpen.value ? "justify-center" : "justify-start",
+    to: `/dashboard/${workspaceId}/settings/workspace`,
   },
   {
     label: isOpen.value ? "Пользователи" : "",
     icon: "i-carbon:user-profile",
-    active: route.fullPath === "/dashboard/settings/people",
-    class: !isOpen.value ? "justify-center" : 'justify-start',
-    to: "/dashboard/settings/people",
+    active: route.fullPath === `/dashboard/${workspaceId}/settings/people`,
+    class: !isOpen.value ? "justify-center" : "justify-start",
+    to: `/dashboard/${workspaceId}/settings/people`,
   },
   {
     label: isOpen.value ? "Внешний вид" : "",
     icon: "i-carbon:paint-brush",
-    active: route.fullPath === "/dashboard/settings/display",
-    class: !isOpen.value ? "justify-center" : 'justify-start',
-    to: "/dashboard/settings/display",
+    active: route.fullPath === `/dashboard/${workspaceId}/settings/display`,
+    class: !isOpen.value ? "justify-center" : "justify-start",
+    to: `/dashboard/${workspaceId}/settings/display`,
   },
   {
     label: isOpen.value ? "Безопасность" : "",
     icon: "i-carbon:security",
-    active: route.fullPath === "/dashboard/settings/security",
-    class: !isOpen.value ? "justify-center" : 'justify-start',
-    to: "/dashboard/settings/security",
+    active: route.fullPath === `/dashboard/${workspaceId}/settings/security`,
+    class: !isOpen.value ? "justify-center" : "justify-start",
+    to: `/dashboard/${workspaceId}/settings/security`,
   },
-  
 ]);
 </script>

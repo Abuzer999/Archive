@@ -27,6 +27,8 @@ model User {
   backgrounds       Background[]
   activeWorkspaceId String?      @db.ObjectId
   activeWorkspace   Workspace?   @relation("ActiveWorkspace", fields: [activeWorkspaceId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdProjects   Project[]    @relation("UserCreatedProjects")
+  createdTasks      Task[]       @relation("UserCreatedTasks")
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
 }
@@ -83,23 +85,13 @@ model Membership {
 model Project {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  avatar      String?
   workspaceId String    @db.ObjectId
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  folders     Folder[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Folder {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  projectId String  @db.ObjectId
-  project   Project @relation(fields: [projectId], references: [id])
-  tasks     Task[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  creatorId   String    @db.ObjectId
+  creator     User      @relation("UserCreatedProjects", fields: [creatorId], references: [id])
 }
 
 model Task {
@@ -107,7 +99,9 @@ model Task {
   title    String
   status   String  @default("todo")
   folderId String? @db.ObjectId
-  folder   Folder? @relation(fields: [folderId], references: [id])
+
+  creatorId String @db.ObjectId
+  creator   User   @relation("UserCreatedTasks", fields: [creatorId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

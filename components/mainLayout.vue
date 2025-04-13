@@ -3,7 +3,7 @@
     <UNavigationMenu
       orientation="vertical"
       :items="items"
-      class="data-[orientation=vertical]:w-full"
+      class="data-[orientation=vertical]:w-full relative"
       :ui="{
         label:
           'flex gap-[10px] text-[#242629] dark:text-[#ddd] leading-[100%] mt-[10px] !p-[8px_7px]',
@@ -15,70 +15,40 @@
       }"
       trailing-icon="false"
     />
+
+    <projects />
   </div>
 </template>
 
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
-const menu = ref(true);
 const route = useRoute();
 const { isOpen } = useDropMenu();
+const { user } = useUserSession();
+const workspaceId = user.value?.activeWorkspaceId;
 
-interface Folder {
-  label: string;
-  avatar: {
-    src: string;
-    alt: string;
-    class: string;
-  };
-  active: boolean;
-  to: string;
-}
-
-const folders = ref<Folder[]>([
-  {
-    label: "Folder",
-    avatar: {
-      src: "",
-      alt: 'Folder',
-      class: 'rounded-[5px] bg-[#fcbb43]',
-    },
-    active: false,
-    to: "#",
-  },
-]);
 
 const items = computed<NavigationMenuItem[]>(() => [
   {
     label: isOpen.value ? "Мои задачи" : "",
     icon: "i-carbon:task-star",
-    active: route.fullPath === "/dashboard/settings",
+    active: route.fullPath === "/",
     class: !isOpen.value ? "justify-center" : "justify-start",
-    to: "/dashboard/settings",
+    to: "/",
   },
   {
     label: isOpen.value ? "Все задачи" : "",
     icon: "i-carbon:task",
-    active: route.fullPath === "/dashboard/settings/display",
+    active: route.fullPath === `/dashboard/${workspaceId}/all-tasks`,
     class: !isOpen.value ? "justify-center" : "justify-start",
-    to: "/dashboard/settings/display",
+    to: `/dashboard/${workspaceId}/all-tasks`,
   },
   {
     label: isOpen.value ? "Все проекты" : "",
     icon: "i-carbon:folder",
-    active: route.fullPath === "/dashboard/settings/security",
+    active: route.fullPath === "/",
     class: !isOpen.value ? "justify-center" : "justify-start",
-    to: "/dashboard/settings/security",
-  },
-  {
-    label: isOpen.value ? "Проекты" : "",
-    class: !isOpen.value ? "" : "justify-start",
-    active: menu.value,
-    defaultOpen: true,
-    icon: "i-carbon:intent-request-create",
-    to: "/components",
-    onSelect: () => (menu.value = !menu.value),
-    children: [...folders.value],
+    to: "/",
   },
 ]);
 </script>

@@ -9,7 +9,12 @@
         @click="$router.push('/dashboard/settings/workspace')"
         class="cursor-pointer flex gap-[10px] items-center"
       >
-        <Avatar size="lg" stateKey="workspaceAvatar" target="workspace" :ui="{ root: 'h-[40px] w-[40px] rounded-[5px]' }"  /> 
+        <Avatar
+          size="lg"
+          stateKey="workspaceAvatar"
+          target="workspace"
+          :ui="{ root: 'h-[40px] w-[40px] rounded-[5px]' }"
+        />
 
         <div class="max-w-[145px] w-full truncate">
           <p
@@ -38,15 +43,7 @@
     <nav
       class="w-full px-[20px] py-[10px] flex gap-[20px] justify-end items-center bg-[#fbfbfc] dark:bg-[#1c1e22]"
     >
-      <UButton
-        :ui="{
-          base: 'w-[240px] min-h-[40px] flex items-center justify-center bg-[#fcbb43] hover:bg-[none] hover:brightness-110 text-[#fff] rounded-lg transition duration-300 ease-in-out',
-        }"
-        size="xl"
-        icon="i-carbon:business-processes"
-      >
-        Пригласить команду</UButton
-      >
+      <sendPeople />
 
       <UChip inset color="neutral">
         <UButton
@@ -86,11 +83,7 @@
         }"
       >
         <div>
-          <Avatar
-            size="2xl"
-            target="user"
-            stateKey="avatar"
-          />
+          <Avatar size="3xl" target="user" stateKey="avatar" />
         </div>
 
         <template #theme-trailing>
@@ -106,6 +99,8 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
 
+const { user } = useUserSession();
+
 const route = useRoute();
 const { clear } = useUserSession();
 
@@ -120,7 +115,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
       avatar: {
         src: preview?.value,
         alt: name?.value,
-        size: "sm",
+        size: "lg",
       },
       type: "label",
     },
@@ -129,8 +124,10 @@ const items = computed<DropdownMenuItem[][]>(() => [
     {
       label: "Настройки аккаунта",
       icon: "i-carbon:settings",
-      to: "/dashboard/settings",
-      active: route.path.startsWith("/dashboard/settings"),
+      to: `/dashboard/${user.value?.activeWorkspaceId}/settings`,
+      active: route.path.startsWith(
+        `/dashboard/${user.value?.activeWorkspaceId}/settings`
+      ),
     },
     {
       label: "Темная тема",

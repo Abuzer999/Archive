@@ -44,14 +44,17 @@ export default defineEventHandler(async (event) => {
         role,
         people: workspace.memberships.length,
       }))
-      .filter((workspace) => workspace.id !== user.activeWorkspaceId); // Filter out the active workspace
+      .filter((workspace) => workspace.id !== user.activeWorkspaceId);
 
     const activeWorkspaceDetails = user.activeWorkspace && {
       id: user.activeWorkspace.id,
       name: user.activeWorkspace.name,
       avatar: user.activeWorkspace.avatar,
-      role: memberships.find((m) => m.workspaceId === user.activeWorkspaceId)?.role,
-      people: memberships.find((m) => m.workspaceId === user.activeWorkspaceId)?.workspace.memberships.length || 0,
+      role: memberships.find((m) => m.workspaceId === user.activeWorkspaceId)
+        ?.role,
+      people:
+        memberships.find((m) => m.workspaceId === user.activeWorkspaceId)
+          ?.workspace.memberships.length || 0,
     };
 
     return {

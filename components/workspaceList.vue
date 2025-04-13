@@ -3,6 +3,7 @@ import type { Workspace } from "~/types/workspace";
 const nuxtApp = useNuxtApp();
 const toast = useToast();
 const open = ref(false);
+const router = useRouter();
 const openTask = ref(false);
 const isLoading = ref(false);
 const formState = reactive({
@@ -16,7 +17,7 @@ const { preview } = useFileUpload("workspaceAvatar");
 const { data, refresh } = await useFetch<{
   workspaces: Workspace[];
   activeWorkspace: Workspace;
-}>("/api/settings/workspaces", {
+}>("/api/settings/workspaces?", {
   key: "workspaces",
   getCachedData: (key) => {
     const cachedData = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
@@ -101,9 +102,11 @@ const selectedWorkspace = async (id: string) => {
     );
 
     if (success) {
+      await router.push(`/dashboard/${id}/settings/workspace`);
       openTask.value = false;
       await refresh();
       refreshNuxtData("workspaceAvatar");
+      refreshNuxtData("projects");
       toast.add({ title: "Рабочее пространство выбрано", color: "success" });
     }
   } catch (error: unknown) {
@@ -129,7 +132,6 @@ const selectedWorkspace = async (id: string) => {
         'Выбрать рабочее пространство: ' +
         workspaceList.find((item) => item.id === selectedWorkspaceId)?.name
       "
-      description=""
       :ui="{ footer: 'justify-end' }"
     >
       <template #footer>
@@ -201,7 +203,6 @@ const selectedWorkspace = async (id: string) => {
     <UModal
       v-model:open="open"
       title="Создание рабочего пространства"
-      description=""
       :ui="{ footer: 'justify-end' }"
     >
       <UButton

@@ -12,9 +12,9 @@
       Здесь настраивается учетная запись Archive. Профиль для рабочего
       пространства меняется
       <NuxtLink
-        to="/dashboard/settings/workspace"
+        :to="`/dashboard/${workspaceId}/settings/workspace`"
         class="underline underline-offset-4 hover:text-[#8fb5ff] transition-color duration-100 ease-in-out"
-        >в разделе «Пользователи»</NuxtLink
+        >в этом разделе</NuxtLink
       >
     </p>
 
@@ -91,6 +91,8 @@
 </template>
 
 <script setup lang="ts">
+const { user } = useUserSession();
+const workspaceId = user.value?.activeWorkspaceId;
 const formState = reactive({
   name: "",
   familio: "",

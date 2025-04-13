@@ -9,12 +9,13 @@ export default defineOAuthGitHubEventHandler({
   async onSuccess(event, { user, tokens }: { user: User; tokens: Token }) {
     const dbUser = await useOAuth(user, "github", String(user.id));
 
-    await setUserSession(event, {
+    const session = await setUserSession(event, {
       user: {
         id: dbUser.id,
         name: user.name,
         email: user.email,
         isCompleted: dbUser.isCompleted,
+        activeWorkspaceId: dbUser.activeWorkspaceId ?? undefined,
       },
       tokens: {
         accessToken: tokens,
@@ -22,7 +23,10 @@ export default defineOAuthGitHubEventHandler({
       loggedInAt: new Date(),
     });
 
-    return sendRedirect(event, "/dashboard");
+    return sendRedirect(
+      event,
+      `/dashboard/${session?.user?.activeWorkspaceId}/all-tasks`
+    );
   },
   onError(event, error: unknown) {
     console.error(error);

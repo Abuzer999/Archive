@@ -1,8 +1,7 @@
 <template>
   <div
     v-if="isLoading"
-    class="loading bg-[#fbfbfc] dark:bg-[#1c1e22] top-0 left-0 w-full h-full z-50"
-    :class="route.path.startsWith('/dashboard') ? 'absolute' : 'fixed'"
+    class="fixed loading bg-[#fbfbfc] dark:bg-[#1c1e22] top-0 left-0 w-full h-full z-50"
   >
     <svg
       class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
@@ -22,6 +21,7 @@
 </template>
 
 <script setup lang="ts">
+const { user } = useUserSession();
 const { isLoading } = useLoadingIndicator();
 const route = useRoute();
 </script>

@@ -34,6 +34,8 @@ export default defineEventHandler(async (event) => {
       prisma.user.delete({ where: { id: userId } }),
     ]);
 
+    await clearUserSession(event);
+
     return {
       success: true,
     };

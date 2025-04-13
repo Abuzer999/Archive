@@ -16,7 +16,7 @@ const formState = reactive<Login>({
 const submitForm = async (event: FormSubmitEvent<loginShemaType>) => {
   try {
     isLoading.value = true;
-    const { success }: { success: boolean } = await $fetch("/api/auth/login", {
+    const { success, redirectUrl }: { success: boolean, redirectUrl: string } = await $fetch("/api/auth/login", {
       method: "POST",
       body: {
         email: formState.email,
@@ -25,7 +25,7 @@ const submitForm = async (event: FormSubmitEvent<loginShemaType>) => {
     });
 
     if (success) {
-      router.push("/dashboard");
+      router.push(redirectUrl);
     }
   } catch (error: unknown) {
     if (error instanceof Error && "statusCode" in error) {

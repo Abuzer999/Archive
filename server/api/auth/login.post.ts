@@ -59,7 +59,8 @@ export default defineEventHandler(async (event) => {
         id: user.id,
         name: user.name,
         email: user.email,
-        isCompleted: user.isCompleted
+        isCompleted: user.isCompleted,
+        activeWorkspaceId: user.activeWorkspaceId ?? undefined,
       },
       tokens: {
         accessToken: token,
@@ -67,7 +68,7 @@ export default defineEventHandler(async (event) => {
       loggedInAt: new Date(),
     });
 
-    return { success: true };
+    return { success: true, redirectUrl: `/dashboard/${user.activeWorkspaceId}/all-tasks` };
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,

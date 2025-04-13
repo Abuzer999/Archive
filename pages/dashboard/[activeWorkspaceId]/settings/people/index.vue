@@ -1,5 +1,5 @@
 <template>
-    <resetPasswordMain />
+    <peopleTable />
   </template>
   
   <script setup lang="ts">
