@@ -3,4 +3,5 @@ export interface Project {
   name: string;
   src: string | null;
   alt: string;
+  isFavorite: boolean;
 }

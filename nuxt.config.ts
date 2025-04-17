@@ -25,6 +25,11 @@ export default defineNuxtConfig({
       ],
     },
   },
+  nitro: {
+    experimental: {
+      websocket: true
+    }
+  },
   vite: {
     resolve: {
       alias: {
@@ -34,7 +39,7 @@ export default defineNuxtConfig({
     },
   },
   ui: {
-    colorMode: true
+    colorMode: true,
   },
   runtimeConfig: {
     AUTH_SECRET: process.env.AUTH_SECRET,

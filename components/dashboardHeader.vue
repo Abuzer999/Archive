@@ -6,7 +6,7 @@
       class="max-w-[280px] w-full flex gap-[10px] justify-between px-[20px] py-[10px] items-center bg-[#fff] dark:bg-[#242629] border-r-[1px] border-solid border-[#EDEDF5] dark:border-[#161616]"
     >
       <div
-        @click="$router.push('/dashboard/settings/workspace')"
+        @click="$router.push(`/dashboard/${route.params.activeWorkspaceId}/settings/workspace`)"
         class="cursor-pointer flex gap-[10px] items-center"
       >
         <Avatar
@@ -36,7 +36,7 @@
         class="cursor-pointer"
         :ui="{
           base: 'flex items-center justify-center p-0 bg-0 hover:bg-[none] hover:brightness-110 text-[#fcbb43] rounded-lg',
-          trailingIcon: 'min-w-[30px] min-h-[30px]',
+          leadingIcon: 'min-w-[20px] min-h-[20px] text-[#fcbb43]',
         }"
       />
     </div>
@@ -101,6 +101,7 @@ import type { DropdownMenuItem } from "@nuxt/ui";
 
 const { clear, user } = useUserSession();
 const route = useRoute();
+const nuxtApp = useNuxtApp();
 
 const { isOpen, toggleDropMenu } = useDropMenu();
 const { preview, name } = useFileUpload("avatar");
@@ -149,6 +150,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
 
 const signOut = async () => {
   await clear();
-  await navigateTo("/auth");
+  nuxtApp.payload.data = {};
+  navigateTo("/auth");
 };
 </script>

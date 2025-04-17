@@ -4,7 +4,7 @@
   
   <script setup lang="ts">
   useHead({
-    title: "Безопасность - Archive",
+    title: "Люди - Archive",
   });
   definePageMeta({
     layout: "dashboard",

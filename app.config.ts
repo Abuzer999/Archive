@@ -153,7 +153,7 @@ export default defineAppConfig({
           color: "primary",
           variant: "solid",
           class:
-            "text-white bg-amber-300 hover:bg-amber-400 disabled:text-white",
+            "text-white dark:text-white bg-amber-300 hover:bg-amber-400 disabled:text-black disabled:dark:text-white  disabled:bg-amber-300",
         },
       ],
     },

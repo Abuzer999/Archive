@@ -1,5 +1,6 @@
 import prisma from "~/lib/prisma";
 import type { UserSession } from "#auth-utils";
+import { Project } from "~/types/project";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -10,15 +11,6 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 401,
         message: "Unauthorized",
-      });
-    }
-
-    const { projectId } = await readBody(event);
-
-    if (!projectId) {
-      throw createError({
-        statusCode: 400,
-        message: "Folder name is required",
       });
     }
 
@@ -34,17 +26,36 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    await prisma.favoriteProject.deleteMany({
+    const { workspaceId } = getQuery(event);
+
+    if (!workspaceId || typeof workspaceId !== "string") {
+      throw createError({
+        statusCode: 400,
+        message: "Missing or invalid workspaceId",
+      });
+    }
+
+    const favorites = await prisma.favoriteProject.findMany({
       where: {
-        projectId,
+        userId,
+        project: {
+          workspaceId,
+        },
+      },
+      include: {
+        project: true,
       },
     });
 
-    await prisma.project.delete({
-      where: { id: projectId },
-    });
+    const filterFavorites: Project[] = favorites.map((favorite) => ({
+      id: favorite.project.id,
+      name: favorite.project.name,
+      src: favorite.project.avatar,
+      alt: favorite.project.name,
+      isFavorite: true,
+    }));
 
-    return { success: true };
+    return filterFavorites;
   } catch (error: any) {
     console.error("Error creating folder:", error);
     throw createError({

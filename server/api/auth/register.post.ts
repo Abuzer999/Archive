@@ -61,6 +61,47 @@ export default defineEventHandler(async (event) => {
       },
     });
 
+    const workspace = await prisma.workspace.create({
+      data: {
+        name: `${user.name}'s Workspace`,
+        ownerId: user.id,
+        memberships: {
+          create: {
+            userId: user.id,
+            role: "CREATOR",
+          },
+        },
+      },
+    });
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        activeWorkspaceId: workspace.id,
+      },
+    });
+
+    const pendingInvite = getCookie(event, "pending_invite");
+
+    if (pendingInvite) {
+      const inviteRaw = await redis.get(`invite:${pendingInvite}`);
+
+      if (inviteRaw) {
+        const { workspaceId, role } = JSON.parse(inviteRaw);
+
+        await prisma.membership.create({
+          data: {
+            userId: user.id,
+            workspaceId,
+            role,
+          },
+        });
+
+        await redis.del(`invite:${pendingInvite}`);
+        deleteCookie(event, "pending_invite");
+      }
+    }
+
     const verificationToken = uuidv4();
 
     await redis.set(`verify:${verificationToken}`, user.id, "EX", 60 * 60 * 24);

@@ -28,9 +28,8 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
 
-const { user } = useUserSession();
-const workspaceId = user.value?.activeWorkspaceId;
 const route = useRoute();
+const workspaceId = computed(() => route.params.activeWorkspaceId as string);
 const { isOpen } = useDropMenu();
 
 const items = computed<NavigationMenuItem[]>(() => [
@@ -42,37 +41,37 @@ const items = computed<NavigationMenuItem[]>(() => [
   {
     label: isOpen.value ? "Профиль" : "",
     icon: "i-carbon:settings-edit",
-    active: route.fullPath === `/dashboard/${workspaceId}/settings`,
+    active: route.fullPath === `/dashboard/${workspaceId.value}/settings`,
     class: !isOpen.value ? "justify-center" : "justify-start",
-    to: `/dashboard/${workspaceId}/settings`,
+    to: `/dashboard/${workspaceId.value}/settings`,
   },
   {
     label: isOpen.value ? "Рабочее пространство" : "",
     icon: "i-carbon:workspace",
-    active: route.fullPath === `/dashboard/${workspaceId}/settings/workspace`,
+    active: route.fullPath === `/dashboard/${workspaceId.value}/settings/workspace`,
     class: !isOpen.value ? "justify-center" : "justify-start",
-    to: `/dashboard/${workspaceId}/settings/workspace`,
+    to: `/dashboard/${workspaceId.value}/settings/workspace`,
   },
   {
     label: isOpen.value ? "Пользователи" : "",
     icon: "i-carbon:user-profile",
-    active: route.fullPath === `/dashboard/${workspaceId}/settings/people`,
+    active: route.fullPath === `/dashboard/${workspaceId.value}/settings/people`,
     class: !isOpen.value ? "justify-center" : "justify-start",
-    to: `/dashboard/${workspaceId}/settings/people`,
+    to: `/dashboard/${workspaceId.value}/settings/people`,
   },
   {
     label: isOpen.value ? "Внешний вид" : "",
     icon: "i-carbon:paint-brush",
-    active: route.fullPath === `/dashboard/${workspaceId}/settings/display`,
+    active: route.fullPath === `/dashboard/${workspaceId.value}/settings/display`,
     class: !isOpen.value ? "justify-center" : "justify-start",
-    to: `/dashboard/${workspaceId}/settings/display`,
+    to: `/dashboard/${workspaceId.value}/settings/display`,
   },
   {
     label: isOpen.value ? "Безопасность" : "",
     icon: "i-carbon:security",
-    active: route.fullPath === `/dashboard/${workspaceId}/settings/security`,
+    active: route.fullPath === `/dashboard/${workspaceId.value}/settings/security`,
     class: !isOpen.value ? "justify-center" : "justify-start",
-    to: `/dashboard/${workspaceId}/settings/security`,
+    to: `/dashboard/${workspaceId.value}/settings/security`,
   },
 ]);
 </script>

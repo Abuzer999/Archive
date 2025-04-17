@@ -16,6 +16,8 @@
       trailing-icon="false"
     />
 
+    <Favorites />
+
     <projects />
   </div>
 </template>

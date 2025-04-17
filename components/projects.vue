@@ -20,7 +20,7 @@
       </div>
 
       <UIcon
-        @click.stop="openCreate"
+        @click.stop="open = true"
         v-if="isOpen"
         name="i-lucide:file-plus"
         class="cursor-pointer ml-auto w-[20px] h-[20px] hover:text-amber-300 transition duration-300 ease-in-out"
@@ -29,25 +29,14 @@
 
     <UModal
       v-model:open="open"
-      :title="
-        type === 'create'
-          ? 'Создать проект'
-          : type === 'rename'
-            ? 'Переименовать проект'
-            : 'Удалить проект'
-      "
-      :description="
-        type === 'create'
-          ? 'Введите название проекта'
-          : type === 'rename'
-            ? 'Введите новое название'
-            : 'Вы действительно хотите удалить проект?'
-      "
+      title="Создать проект"
+      description="Введите название проекта"
       :ui="{ overlay: 'z-100', content: 'z-100', footer: 'justify-end' }"
     >
-      <template #body v-if="type === 'rename' || type === 'create'">
+      <template #body>
         <inputForm
           v-model="formState.name"
+          @keydown.enter="createProject"
           inputName="name"
           icon="i-lucide:circle-plus"
           placeholder="Введите название"
@@ -72,57 +61,31 @@
           }"
         />
         <UButton
-          @click="
-            type === 'create'
-              ? createProject()
-              : type === 'rename'
-                ? renameProject()
-                : deleteProject(selectedProjectId)
-          "
-          :label="
-            type === 'create'
-              ? 'Создать'
-              : type === 'rename'
-                ? 'Переименовать'
-                : 'Удалить'
-          "
+          @click="createProject"
+          label="Создать"
           variant="solid"
           :ui="{ base: 'disabled:bg-transparent' }"
-          :disabled="
-            type === 'delete' ? false : !formState.name.trim() || isLoading
-          "
+          :disabled="!formState.name.trim() || isLoading"
         />
       </template>
     </UModal>
 
-    <ul
-      class="w-full flex-col mt-[5px] max-h-[290px] relative scrollbar-thumb-rounded-full scrollbar scrollbar-w-1 scrollbar-thumb-[#fcbb43] overflow-y-auto overflow-x-hidden"
-      :class="!isOpen ? 'scrollbar-none' : 'flex'"
-      v-if="projects.length > 0"
-    >
-      <li
-        v-for="project in projects"
-        :key="project.id"
-        class="flex items-center h-fit cursor-pointer hover:bg-[#f4f4f6] dark:hover:bg-[#1d293d] rounded-[5px] transition duration-300 ease-in-out"
-        :class="!isOpen ? 'justify-center' : 'justify-start'"
-      >
-        <Project
-          :id="project?.id"
-          :name="project?.name"
-          :alt="project?.alt"
-          :src="project?.src"
-          :onAction="(action) => handleProjectAction(action, project?.id)"
-        />
-      </li>
-    </ul>
+    <ProjectList :projects="projects" :isDrop="isDrop" />
 
-    <span
+    <div
       @click="open = true"
-      class="w-fit cursor-pointer mx-auto text-[14px] mt-[10px] hover:text-amber-300 transition duration-300 ease-in-out"
-      :class="!isDrop ? 'hidden' : 'flex'"
       v-if="projects.length <= 0"
-      >Создайте проект</span
+      class="group cursor-pointer w-full mt-[10px] p-[7px_8px] bg-[#f4f4f6] dark:bg-[#2f3033] rounded-[5px]"
+      :class="[
+        !isDrop ? 'hidden' : 'flex',
+        !isOpen ? 'justify-center' : 'justify-start',
+      ]"
     >
+      <UIcon
+        name="i-carbon:add-filled"
+        class="w-[20px] h-[20px] mx-auto text-[14px] group-hover:text-amber-300 transition-all duration-300 ease-in-out"
+      />
+    </div>
   </div>
 </template>
 
@@ -134,22 +97,10 @@ const nuxtApp = useNuxtApp();
 const open = ref(false);
 const isDrop = ref(false);
 const isLoading = ref(false);
-const selectedProjectId = ref<string>("");
-
-const type = ref<"delete" | "rename" | "create">("delete");
-
 const formState = reactive({
   name: "",
 });
-
-const openCreate = () => {
-  formState.name = "";
-  open.value = true;
-  type.value = "create";
-};
-
 const projects = ref<Project[]>([]);
-
 const { user } = useUserSession();
 
 const { data, refresh } = await useFetch<Project[]>(
@@ -163,17 +114,9 @@ const { data, refresh } = await useFetch<Project[]>(
   }
 );
 
-const handleProjectAction = (action: "rename" | "delete", id: string) => {
-  formState.name = "";
-  selectedProjectId.value = id;
-  type.value = action;
-  open.value = true;
-};
-
 watchEffect(() => {
   if (data.value) {
     projects.value = data.value;
-    console.log(projects.value);
   }
 });
 
@@ -200,60 +143,6 @@ const createProject = async () => {
       open.value = false;
       await refresh();
       toast.add({ title: "Проект создан", color: "success" });
-    }
-  } catch (error: unknown) {
-    if (error instanceof Error) console.error(error.message);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-const renameProject = async () => {
-  if (!formState.name.trim()) return;
-  isLoading.value = true;
-  try {
-    const { success }: { success: boolean } = await $fetch(
-      "/api/workspace/renameProject",
-      {
-        method: "PUT",
-        body: {
-          projectId: selectedProjectId.value,
-          projectName: formState.name,
-        },
-      }
-    );
-
-    if (success) {
-      formState.name = "";
-      open.value = false;
-      await refresh();
-      toast.add({ title: "Проект переименован", color: "success" });
-    }
-  } catch (error: unknown) {
-    if (error instanceof Error) console.error(error.message);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-const deleteProject = async (id: string) => {
-  if (isLoading.value) return;
-  isLoading.value = true;
-  try {
-    const { success }: { success: boolean } = await $fetch(
-      "/api/workspace/project",
-      {
-        method: "DELETE",
-        body: {
-          projectId: id,
-        },
-      }
-    );
-
-    if (success) {
-      open.value = false;
-      await refresh();
-      toast.add({ title: "Проект удален", color: "success" });
     }
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);

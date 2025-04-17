@@ -84,37 +84,47 @@ model Membership {
 }
 
 model Project {
-  id            String            @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  avatar        String?
-  workspaceId   String            @db.ObjectId
-  workspace     Workspace         @relation(fields: [workspaceId], references: [id])
-  creatorId     String            @db.ObjectId
-  creator       User              @relation("UserCreatedProjects", fields: [creatorId], references: [id])
-  favorites     FavoriteProject[] @relation("ProjectFavorites")
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
+  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  avatar      String?
+  workspaceId String            @db.ObjectId
+  workspace   Workspace         @relation(fields: [workspaceId], references: [id])
+  creatorId   String            @db.ObjectId
+  creator     User              @relation("UserCreatedProjects", fields: [creatorId], references: [id])
+  favorites   FavoriteProject[] @relation("ProjectFavorites")
+  columns     Column[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model Column {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  order     Int
+  projectId String  @db.ObjectId
+  project   Project @relation(fields: [projectId], references: [id])
+  tasks     Task[]
 }
 
 model FavoriteProject {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String   @db.ObjectId
-  projectId String   @db.ObjectId
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String @db.ObjectId
+  projectId String @db.ObjectId
 
-  user      User     @relation("UserFavorites", fields: [userId], references: [id])
-  project   Project  @relation("ProjectFavorites", fields: [projectId], references: [id])
+  user    User    @relation("UserFavorites", fields: [userId], references: [id])
+  project Project @relation("ProjectFavorites", fields: [projectId], references: [id])
 
   createdAt DateTime @default(now())
 
-  @@unique([userId, projectId]) 
+  @@unique([userId, projectId])
 }
 
 model Task {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  title    String
-  status   String  @default("todo")
-  folderId String? @db.ObjectId
-
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  order     Int
+  columnId  String @db.ObjectId
+  column    Column @relation(fields: [columnId], references: [id])
   creatorId String @db.ObjectId
   creator   User   @relation("UserCreatedTasks", fields: [creatorId], references: [id])
 

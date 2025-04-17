@@ -106,7 +106,6 @@ const selectedWorkspace = async (id: string) => {
       await router.replace(`/dashboard/${id}/settings/workspace`);
       await refresh();
       refreshNuxtData("workspaceAvatar");
-      refreshNuxtData("projects");
       toast.add({ title: "Рабочее пространство выбрано", color: "success" });
     }
   } catch (error: unknown) {
@@ -129,9 +128,9 @@ const selectedWorkspace = async (id: string) => {
     <UModal
       v-model:open="openTask"
       :title="
-        'Выбрать рабочее пространство: ' +
         workspaceList.find((item) => item.id === selectedWorkspaceId)?.name
       "
+      description="Выбрать рабочее пространство"
       :ui="{ footer: 'justify-end' }"
     >
       <template #footer>
@@ -146,6 +145,7 @@ const selectedWorkspace = async (id: string) => {
           @click="selectedWorkspace(selectedWorkspaceId)"
           label="Выбрать"
           variant="solid"
+          :ui="{ base: 'disabled:bg-transparent' }"
           :disabled="isLoading"
         />
       </template>

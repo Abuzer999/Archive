@@ -34,17 +34,26 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    await prisma.favoriteProject.deleteMany({
+    const existing = await prisma.favoriteProject.findFirst({
       where: {
+        userId,
         projectId,
       },
     });
 
-    await prisma.project.delete({
-      where: { id: projectId },
-    });
+    if (existing) {
+      await prisma.favoriteProject.delete({ where: { id: existing.id } });
+      return { success: true, isFavorite: false };
+    } else {
+      await prisma.favoriteProject.create({
+        data: {
+          userId,
+          projectId,
+        },
+      });
+      return { success: true, isFavorite: true };
+    }
 
-    return { success: true };
   } catch (error: any) {
     console.error("Error creating folder:", error);
     throw createError({

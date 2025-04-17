@@ -1,6 +1,5 @@
 import { User, Token } from "~/lib/auth";
 import { useOAuth } from "~/composables/useOAuth";
-import ActiveWorkspaceId from "~/pages/dashboard/[activeWorkspaceId].vue";
 
 export default defineOAuthGoogleEventHandler({
   async onSuccess(
@@ -8,7 +7,7 @@ export default defineOAuthGoogleEventHandler({
     { user, tokens }: { user: User; tokens: Token }
   ) {
 
-    const dbUser = await useOAuth(user, "google", String(user.sub));
+    const dbUser = await useOAuth(event, user, "google", String(user.sub));
 
     const session = await setUserSession(event, {
       user: {
@@ -16,7 +15,7 @@ export default defineOAuthGoogleEventHandler({
         name: user.name,
         email: user.email,
         isCompleted: dbUser.isCompleted,
-        activeWorkspaceId: dbUser.activeWorkspaceId ?? undefined,
+        activeWorkspaceId: dbUser.activeWorkspaceId,
       },
       tokens: {
         accessToken: tokens,

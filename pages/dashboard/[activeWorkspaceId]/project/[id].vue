@@ -1,14 +1,15 @@
 <template>
-  <workspaceMain />
+  <columns />
 </template>
 
 <script setup lang="ts">
 useHead({
-  title: "Пространство - Archive",
+  title: "Проект - Archive",
 });
 definePageMeta({
   layout: "dashboard",
-  layoutType: "settings",
+  layoutType: "main",
   middleware: ["auth"],
 });
+
 </script>

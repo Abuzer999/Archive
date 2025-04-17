@@ -127,7 +127,8 @@ const submitForm = async (
 
     <UButton
       :ui="{
-        base: ' w-full mt-[20px] min-h-[40px] flex items-center justify-center bg-[#6788f3] hover:bg-[none] hover:brightness-110 text-white rounded-lg transition duration-300 ease-in-out',
+        base: ' w-full mt-[20px] min-h-[40px] flex items-center justify-center bg-[#6788f3] hover:bg-[none] hover:brightness-110 text-white rounded-lg transition duration-300 ease-in-outdisabled:bg-[#01d923]',
+        leadingAvatar: 'text-[#fff]',
       }"
       size="xl"
       type="submit"

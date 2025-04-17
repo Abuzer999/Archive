@@ -23,23 +23,41 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    // Проверка, принадлежит ли workspace пользователю (по желанию)
-    const workspace = await prisma.workspace.findFirst({
-      where: {
-        id: workspaceId,
-        ownerId: userId,
-      },
+    const workspace = await prisma.workspace.findUnique({
+      where: { id: workspaceId },
     });
 
     if (!workspace) {
       throw createError({
         statusCode: 404,
-        message: "Workspace not found or not accessible",
+        message: "Workspace not found",
+      });
+    }
+
+    const isMember = await prisma.membership.findUnique({
+      where: {
+        userId_workspaceId: {
+          userId,
+          workspaceId,
+        },
+      },
+    });
+
+    if (!isMember) {
+      throw createError({
+        statusCode: 403,
+        message: "You are not a member of this workspace",
       });
     }
 
     const projects = await prisma.project.findMany({
       where: { workspaceId },
+      include: {
+        favorites: {
+          where: { userId },
+          select: { id: true },
+        },
+      },
     });
 
     const formattedProjects: Project[] = projects.map((project) => ({
@@ -47,6 +65,7 @@ export default defineEventHandler(async (event) => {
       name: project.name,
       src: project.avatar,
       alt: project.name,
+      isFavorite: project.favorites.length > 0,
     }));
 
     return formattedProjects;

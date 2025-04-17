@@ -22,6 +22,30 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    const workspace = await prisma.workspace.findUnique({
+      where: { id: workspaceId },
+    });
+
+    if (!workspace) {
+      throw createError({
+        statusCode: 404,
+        message: "Workspace not found",
+      });
+    }
+
+    const isMember = await prisma.membership.findUnique({
+      where: {
+        userId_workspaceId: { userId, workspaceId },
+      },
+    });
+
+    if (!isMember) {
+      throw createError({
+        statusCode: 403,
+        message: "You are not a member of this workspace",
+      });
+    }
+
     await prisma.user.update({
       where: { id: userId },
       data: {

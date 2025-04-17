@@ -7,7 +7,7 @@ export default defineOAuthGitHubEventHandler({
   },
 
   async onSuccess(event, { user, tokens }: { user: User; tokens: Token }) {
-    const dbUser = await useOAuth(user, "github", String(user.id));
+    const dbUser = await useOAuth(event, user, "github", String(user.id));
 
     const session = await setUserSession(event, {
       user: {
@@ -15,7 +15,7 @@ export default defineOAuthGitHubEventHandler({
         name: user.name,
         email: user.email,
         isCompleted: dbUser.isCompleted,
-        activeWorkspaceId: dbUser.activeWorkspaceId ?? undefined,
+        activeWorkspaceId: dbUser.activeWorkspaceId,
       },
       tokens: {
         accessToken: tokens,
