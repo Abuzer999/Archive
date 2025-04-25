@@ -88,6 +88,8 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const projectsChild = ref(props.projects)
+
 const open = ref(false);
 const { user } = useUserSession();
 const toast = useToast();
@@ -97,6 +99,8 @@ const selectedProjectId = ref<string>("");
 const formState = reactive({
   name: "",
 });
+
+usePusher('project', projectsChild, `workspace-${user.value?.activeWorkspaceId}`)
 
 const handleProjectAction = (
   action: "rename" | "delete" | "favorite",

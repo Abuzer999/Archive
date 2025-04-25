@@ -27,8 +27,8 @@ export default defineNuxtConfig({
   },
   nitro: {
     experimental: {
-      websocket: true
-    }
+      websocket: true,
+    },
   },
   vite: {
     resolve: {
@@ -45,9 +45,11 @@ export default defineNuxtConfig({
     AUTH_SECRET: process.env.AUTH_SECRET,
     BASE_URL: process.env.BASE_URL,
     JWT_SECRET: process.env.JWT_SECRET,
+    PUSHER_APP_ID: process.env.PUSHER_APP_ID,
+    PUSHER_SECRET: process.env.PUSHER_SECRET,
 
     session: {
-      maxAge: 60 * 60 * 24 * 7
+      maxAge: 60 * 60 * 24 * 7,
     },
 
     oauth: {
@@ -60,6 +62,11 @@ export default defineNuxtConfig({
         clientSecret: process.env.NUXT_OAUTH_GOOGLE_CLIENT_SECRET,
       },
     },
+
+    public: {
+      NUXT_PUBLIC_PUSHER_KEY: process.env.NUXT_PUBLIC_PUSHER_KEY,
+      NUXT_PUBLIC_PUSHER_CLUSTER: process.env.NUXT_PUBLIC_PUSHER_CLUSTER,
+    }
   },
   prisma: {
     autoSetupPrisma: true,
@@ -75,10 +82,10 @@ export default defineNuxtConfig({
       pass: process.env.NUXT_NODEMAILER_PASS,
     },
   },
-  css: ['~/assets/css/main.css'],
+  css: ["~/assets/css/main.css"],
   colorMode: {
     classSuffix: "",
-    fallback: 'light',
+    fallback: "light",
     storage: "cookie",
     storageKey: "nuxt-color-mode",
   },

@@ -93,6 +93,7 @@
 import type { Project } from "~/types/project";
 const toast = useToast();
 const { isOpen } = useDropMenu();
+const { user } = useUserSession();
 const nuxtApp = useNuxtApp();
 const open = ref(false);
 const isDrop = ref(false);
@@ -101,7 +102,7 @@ const formState = reactive({
   name: "",
 });
 const projects = ref<Project[]>([]);
-const { user } = useUserSession();
+usePusher("project", projects, `workspace-${user.value?.activeWorkspaceId}`);
 
 const { data, refresh } = await useFetch<Project[]>(
   `/api/workspace/projects?workspaceId=${user.value?.activeWorkspaceId}`,
@@ -113,6 +114,7 @@ const { data, refresh } = await useFetch<Project[]>(
     },
   }
 );
+
 
 watchEffect(() => {
   if (data.value) {

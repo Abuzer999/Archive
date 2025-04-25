@@ -1,6 +1,5 @@
 import prisma from "~/lib/prisma";
 import type { UserSession } from "#auth-utils";
-import { pusher } from "~/lib/pusher";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -15,20 +14,18 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const { columnId }: { columnId: string } = await readBody(event);
+    const { columnId, newName } = await readBody(event);
 
-    if (!columnId) {
+    if (!columnId || !newName) {
       throw createError({
         statusCode: 400,
-        message: "Missing or invalid columnId",
+        message: "Missing or invalid columnId or newName",
       });
     }
 
     const column = await prisma.column.findUnique({
       where: { id: columnId },
     });
-
-    const projectId = column?.projectId;
 
     if (!column) {
       throw createError({
@@ -37,11 +34,12 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    await prisma.column.delete({
+    await prisma.column.update({
       where: { id: columnId },
-    });
+      data: { name: newName },
+    })
 
-    pusher.trigger(`project-${projectId}`, 'delete-column', { id: columnId });
+    return { success: true };
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,

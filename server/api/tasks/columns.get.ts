@@ -23,12 +23,34 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+      select: {
+        id: true,
+        workspaceId: true,
+      },
+    });
+
+    if (!project) {
+      throw createError({
+        statusCode: 404,
+        message: "Project not found",
+      });
+    }
+
     const columns = await prisma.column.findMany({
       where: {
         projectId,
       },
       orderBy: {
         order: "asc",
+      },
+      include: {
+        tasks: {
+          orderBy: {
+            order: "asc",
+          },
+        },
       },
     });
 

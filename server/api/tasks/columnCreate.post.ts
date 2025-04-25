@@ -1,5 +1,6 @@
 import prisma from "~/lib/prisma";
 import type { UserSession } from "#auth-utils";
+import { pusher } from "~/lib/pusher";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -14,7 +15,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const { projectId, columns } = await readBody(event);
+    const { projectId } = await readBody(event);
 
     if (!projectId) {
       throw createError({
@@ -23,16 +24,12 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    if (!columns) {
-      throw createError({
-        statusCode: 400,
-        message: "Missing or invalid columns",
-      });
-    }
-
     const project = await prisma.project.findUnique({
       where: {
         id: projectId,
+      },
+      include: {
+        columns: true,
       },
     });
 
@@ -43,20 +40,25 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    await prisma.$transaction(
-      columns.map((column: { id: string; order: number }) =>
-        prisma.column.update({
-          where: { id: column.id },
-          data: { order: column.order },
-        })
-      )
-    );
+    const order =
+      project.columns.length > 0
+        ? Math.max(...project.columns.map((col) => col.order)) + 1
+        : 0;
 
-    return columns;
+    const newColumn = await prisma.column.create({
+      data: {
+        order: order,
+        projectId: projectId,
+      },
+    });
+
+    pusher.trigger(`project-${projectId}`, 'new-column', newColumn)
+
+    return { success: true };
   } catch (error: any) {
     throw createError({
-      statusCode: 500,
-      message: error.message,
+      statusCode: error.statusCode || 500,
+      message: error.message || "Internal Server Error",
     });
   }
 });

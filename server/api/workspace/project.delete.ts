@@ -1,5 +1,6 @@
 import prisma from "~/lib/prisma";
 import type { UserSession } from "#auth-utils";
+import { pusher } from "~/lib/pusher";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -7,19 +8,13 @@ export default defineEventHandler(async (event) => {
     const userId = session?.user?.id;
 
     if (!userId) {
-      throw createError({
-        statusCode: 401,
-        message: "Unauthorized",
-      });
+      throw createError({ statusCode: 401, message: "Unauthorized" });
     }
 
     const { projectId } = await readBody(event);
 
     if (!projectId) {
-      throw createError({
-        statusCode: 400,
-        message: "Folder name is required",
-      });
+      throw createError({ statusCode: 400, message: "Project ID is required" });
     }
 
     const user = await prisma.user.findUnique({
@@ -34,19 +29,34 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    await prisma.favoriteProject.deleteMany({
-      where: {
-        projectId,
-      },
+    const columns = await prisma.column.findMany({
+      where: { projectId },
+      select: { id: true },
     });
 
-    await prisma.project.delete({
+    const columnIds = columns.map((col) => col.id);
+
+    await prisma.task.deleteMany({
+      where: { columnId: { in: columnIds } },
+    });
+
+    await prisma.column.deleteMany({
+      where: { projectId },
+    });
+
+    await prisma.favoriteProject.deleteMany({
+      where: { projectId },
+    });
+
+    const delProject = await prisma.project.delete({
       where: { id: projectId },
     });
 
+    pusher.trigger(`workspace-${user.activeWorkspace.id}`, 'delete-project', delProject)
+
     return { success: true };
   } catch (error: any) {
-    console.error("Error creating folder:", error);
+    console.error("Error deleting project and its data:", error);
     throw createError({
       statusCode: 500,
       message: "Internal server error",

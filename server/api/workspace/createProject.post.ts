@@ -1,5 +1,6 @@
 import prisma from "~/lib/prisma";
 import type { UserSession } from "#auth-utils";
+import { pusher } from "~/lib/pusher";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -49,6 +50,19 @@ export default defineEventHandler(async (event) => {
         { name: "Готово", order: 2, projectId: newProject.id },
       ],
     });
+
+    const projectWithAlt = {
+      ...newProject,
+      src: newProject.avatar,
+      alt: newProject.name,
+      isFavorite: false,
+    };
+
+    pusher.trigger(
+      `workspace-${user.activeWorkspace.id}`,
+      "new-project",
+      projectWithAlt
+    );
 
     return { success: true };
   } catch (error: any) {

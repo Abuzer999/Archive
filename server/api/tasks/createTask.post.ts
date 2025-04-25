@@ -14,19 +14,19 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const { projectId, columns } = await readBody(event);
+    const { projectId, title, columnId }: { projectId: string; title: string; columnId: string } = await readBody(event);
 
-    if (!projectId) {
+    if (!title) {
       throw createError({
         statusCode: 400,
-        message: "Missing or invalid projectId",
+        message: "Missing or invalid title",
       });
     }
 
-    if (!columns) {
+    if (!columnId) {
       throw createError({
         statusCode: 400,
-        message: "Missing or invalid columns",
+        message: "Missing columnId or creatorId",
       });
     }
 
@@ -43,16 +43,24 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    await prisma.$transaction(
-      columns.map((column: { id: string; order: number }) =>
-        prisma.column.update({
-          where: { id: column.id },
-          data: { order: column.order },
-        })
-      )
-    );
+    const taskCount = await prisma.task.count({
+      where: {
+        columnId,
+      },
+    });
 
-    return columns;
+    await prisma.task.create({
+      data: {
+        title: title,
+        creatorId: userId,
+        columnId: columnId,
+        projectId: projectId,
+        order: taskCount,
+        orderNum: taskCount,
+      },
+    });
+
+    return { success: true };
   } catch (error: any) {
     throw createError({
       statusCode: 500,

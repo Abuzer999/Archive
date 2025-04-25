@@ -23,6 +23,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+
     const workspace = await prisma.workspace.findUnique({
       where: { id: workspaceId },
     });

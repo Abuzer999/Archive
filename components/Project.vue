@@ -40,8 +40,10 @@
         group:
           'w-full !p-[2px] border-[#dbdbdb] dark:border-[#1e1e1e] mb-[5px]',
       }"
+      @click.stop
     >
       <UIcon
+        @click.stop
         name="i-carbon:overflow-menu-horizontal"
         class="cursor-pointer ml-auto w-[25px] h-[25px] hover:text-amber-300 transition duration-300 ease-in-out"
         :class="!isOpen ? 'hidden' : 'flex'"
