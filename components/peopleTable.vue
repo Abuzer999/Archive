@@ -1,52 +1,87 @@
 <script setup lang="ts">
+import type { TableColumn } from "@nuxt/ui";
+const UAvatar = resolveComponent("UAvatar");
+
 interface TableData {
   id: string;
-  status: string;
+  name: string;
+  avatar: {
+    src: string;
+    alt: string;
+  };
   email: string;
   role: "CREATOR" | "ADMIN" | "USER";
-  dateAdded: string;
+  createdAt: string;
 }
-const data = ref<TableData[]>([
+
+const table = useTemplateRef<ComponentPublicInstance>('table')
+const { user } = useUserSession();
+
+const columns: TableColumn<TableData>[] = [
   {
-    id: "4600",
-    dateAdded: "2024-03-11T10:10:00",
-    status: "online",
-    email: "james.anderson@example.com",
-    role: "USER",
+    accessorKey: "id",
+    header: "ID",
   },
   {
-    id: "4599",
-    dateAdded: "2024-03-11T10:10:00",
-    status: "failed",
-    email: "mia.white@example.com",
-    role: "USER",
+    accessorKey: "avatar",
+    header: "Аватар",
+    cell: ({ row }) =>
+      h(UAvatar, {
+        src: row.original.avatar.src,
+        alt: row.original.avatar.alt,
+        size: "sm",
+      }),
   },
   {
-    id: "4598",
-    dateAdded: "2024-03-11T08:50:00",
-    status: "refunded",
-    email: "william.brown@example.com",
-    role: "USER",
+    accessorKey: "name",
+    header: "Имя",
   },
   {
-    id: "4597",
-    dateAdded: "2024-03-10T19:45:00",
-    status: "paid",
-    email: "emma.davis@example.com",
-    role: "USER",
+    accessorKey: "email",
+    header: "Почта",
   },
   {
-    id: "4596",
-    dateAdded: "2024-03-10T15:55:00",
-    status: "paid",
-    email: "ethan.harris@example.com",
-    role: "USER",
+    accessorKey: "role",
+    header: "Роль",
   },
-]);
+  {
+    accessorKey: "createdAt",
+    header: "Регистрация",
+  },
+];
+
+const { data, status } = await useLazyFetch<TableData[]>(
+  "/api/settings/people",
+  {
+    params: {
+      workspaceId: user.value?.activeWorkspaceId,
+    },
+    transform: (data) => {
+      return (
+        data?.map((user) => ({
+          ...user,
+          role:
+            user.role === "CREATOR"
+              ? "Супер Админ"
+              : user.role === "ADMIN"
+                ? "Админ"
+                : "Пользователь",
+        })) || []
+      );
+    },
+  }
+);
 </script>
 
 <template>
-  <div class="settings-block max-w-none">
-    <UTable :data="data" class="flex-1" />
+  <div class="settings-block max-w-full">
+    <UTable
+      ref="table"
+      :data="data"
+      :columns="columns"
+      sticky
+      :loading="status === 'pending'"
+      class="flex-1 max-h-[540px] sm:max-h-[420px] scrollbar-thumb-rounded-full scrollbar scrollbar-w-1 scrollbar-h-[5px] scrollbar-thumb-[#fcbb43] overflow-auto pr-[10px]"
+    />
   </div>
 </template>

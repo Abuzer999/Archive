@@ -1,5 +1,6 @@
 import prisma from "~/lib/prisma";
 import type { UserSession } from "#auth-utils";
+import { pusher } from "~/lib/pusher";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -34,10 +35,12 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    await prisma.project.update({
+   const reProject =  await prisma.project.update({
       where: { id: projectId },
       data: { name: projectName },
     });
+
+    pusher.trigger(`workspace-${user.activeWorkspace.id}`, 'rename-project', reProject);
 
     return { success: true };
   } catch (error: any) {

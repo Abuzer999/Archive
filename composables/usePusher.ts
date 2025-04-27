@@ -1,4 +1,3 @@
-
 interface PusherItem {
   id: string;
 }
@@ -26,15 +25,32 @@ export const usePusher = <T extends PusherItem>(
     }
   };
 
+  const handleRename = (updatedItem: T) => {
+    const index = items.value.findIndex((item) => item.id === updatedItem.id);
+    if (index !== -1) {
+      items.value[index] = {
+        ...items.value[index],
+        ...updatedItem,
+      };
+    }
+  };
+
+  const handleUpdate = (updatedItems: T[]) => {
+    items.value = updatedItems;
+  };
+
   onMounted(() => {
     channel.bind(`new-${eventName}`, handleAdd);
     channel.bind(`delete-${eventName}`, handleDelete);
+    channel.bind(`rename-${eventName}`, handleRename);
+    channel.bind(`update-${eventName}`, handleUpdate);
   });
 
   onBeforeUnmount(() => {
     channel.unbind(`new-${eventName}`, handleAdd);
     channel.unbind(`delete-${eventName}`, handleDelete);
+    channel.unbind(`rename-${eventName}`, handleRename);
+    channel.unbind(`update-${eventName}`, handleUpdate);
     $pusher.unsubscribe(channelId);
   });
-
 };

@@ -1,5 +1,6 @@
 import prisma from "~/lib/prisma";
 import type { UserSession } from "#auth-utils";
+import { pusher } from "~/lib/pusher";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -34,10 +35,16 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    await prisma.column.update({
+    const updatedColumn = await prisma.column.update({
       where: { id: columnId },
       data: { name: newName },
-    })
+    });
+
+    await pusher.trigger(
+      `project-${column.projectId}`,
+      "rename-column",
+      updatedColumn
+    );
 
     return { success: true };
   } catch (error: any) {

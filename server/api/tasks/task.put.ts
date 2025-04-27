@@ -1,6 +1,7 @@
 import prisma from "~/lib/prisma";
 import type { UserSession } from "#auth-utils";
 import { Task } from "~/types/tasks";
+import { pusher } from "~/lib/pusher";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -14,7 +15,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const { tasks } = await readBody(event);
+    const { tasks, projectId }: { tasks: Task[]; projectId: string } = await readBody(event);
 
     if (!tasks || tasks.length === 0) {
       throw createError({
@@ -34,6 +35,7 @@ export default defineEventHandler(async (event) => {
     );
 
     await Promise.all(updatePromises);
+
 
     return { success: true };
   } catch (error: any) {

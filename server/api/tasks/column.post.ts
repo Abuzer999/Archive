@@ -1,5 +1,6 @@
 import prisma from "~/lib/prisma";
 import type { UserSession } from "#auth-utils";
+import { pusher } from "~/lib/pusher";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -51,6 +52,8 @@ export default defineEventHandler(async (event) => {
         })
       )
     );
+
+    pusher.trigger(`project-${projectId}`, 'update-column', columns);
 
     return columns;
   } catch (error: any) {

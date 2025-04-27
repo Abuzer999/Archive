@@ -113,6 +113,7 @@ const loading = ref(false);
 const newTask = ref<Record<string, string>>({});
 const columns = ref<Columns[]>([]);
 usePusher("column", columns, `project-${route.params.id}`);
+usePusher("task", columns, `project-${route.params.id}`);
 
 const { data, refresh } = await useFetch<Columns[]>(
   `/api/tasks/columns?projectId=${route.params.id}`,
@@ -158,9 +159,6 @@ const onDragEnd = async () => {
       },
     });
 
-    if (data.value) {
-      await refresh();
-    }
   } catch (error) {
     console.error("Ошибка при обновлении порядка колонок:", error);
   }
@@ -187,7 +185,6 @@ const onTaskDrop = async (event: any, toColumnId: string) => {
       });
 
       toast.add({ title: "Задача перемещена", color: "success" });
-      await refresh();
     } catch (error: unknown) {
       if (error instanceof Error)
         console.error("Ошибка при перемещении задачи:", error.message);
@@ -204,7 +201,6 @@ const onTaskDrop = async (event: any, toColumnId: string) => {
         await $fetch("/api/tasks/task", {
           method: "PUT",
           body: {
-            columnId: toColumnId,
             tasks: updatedTasks,
             projectId: route.params.id,
           },

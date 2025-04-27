@@ -1,5 +1,6 @@
 import prisma from "~/lib/prisma";
 import type { UserSession } from "#auth-utils";
+import { pusher } from "~/lib/pusher";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -49,7 +50,7 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    await prisma.task.create({
+    const task = await prisma.task.create({
       data: {
         title: title,
         creatorId: userId,
@@ -59,6 +60,8 @@ export default defineEventHandler(async (event) => {
         orderNum: taskCount,
       },
     });
+
+    pusher.trigger(`project-${projectId}`, "new-task", task);
 
     return { success: true };
   } catch (error: any) {
