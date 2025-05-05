@@ -15,6 +15,8 @@
         </div>
 
       </div>
+
+      <rightLayout v-if="layoutType === 'main' && route.query.task" />
     </main>
   </div>
 </template>
@@ -22,6 +24,8 @@
 <script setup lang="ts">
 const selectedBackground = ref<string>("");
 const nuxtApp = useNuxtApp();
+const route = useRoute();
+const layoutType = computed(() => route.meta.layoutType);
 
 provide("selectedBackground", selectedBackground);
 

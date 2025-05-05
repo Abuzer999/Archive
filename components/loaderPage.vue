@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="isLoading"
+    v-if="isLoading && !route.query.task"
     class="fixed loading bg-[#fbfbfc] dark:bg-[#1c1e22] top-0 left-0 w-full h-full z-50"
   >
     <svg
@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 const { isLoading } = useLoadingIndicator();
-
+const route = useRoute()
 </script>
 
 <style scoped>

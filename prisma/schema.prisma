@@ -131,6 +131,7 @@ model FavoriteProject {
 model Task {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
   title       String
+  text        String?
   order       Int
   orderNum    Int
   isCompleted Boolean @default(false)

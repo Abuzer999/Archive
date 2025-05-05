@@ -77,9 +77,10 @@
                 :columnId="column.id"
                 :order="task.order"
                 :orderNum="task.orderNum"
+                :isCompleted="task.isCompleted"
                 :title="task.title"
                 :createdAt="task.createdAt"
-                class="cursor-grab"
+                class="cursor-pointer"
               />
             </template>
           </draggable>
@@ -93,7 +94,7 @@
         @click="addColumn"
         label="Добавить колонку"
         :ui="{
-          base: 'bg-transparent border-1 min-h-[30px] border-dashed border-[#d1d5db] dark:border-[#ffffff] rounded-[8px] hover:border-amber-300 hover:bg-transparent hover:text-amber-300',
+          base: 'bg-transparent border-1 min-h-[30px] text-[#000000] dark:text-[#fff] border-dashed border-[#d1d5db] dark:border-[#ffffff] rounded-[8px] hover:border-amber-300 hover:bg-transparent hover:text-amber-300',
         }"
       />
     </div>
@@ -112,8 +113,6 @@ const loading = ref(false);
 
 const newTask = ref<Record<string, string>>({});
 const columns = ref<Columns[]>([]);
-usePusher("column", columns, `project-${route.params.id}`);
-usePusher("task", columns, `project-${route.params.id}`);
 
 const { data, refresh } = await useFetch<Columns[]>(
   `/api/tasks/columns?projectId=${route.params.id}`,
