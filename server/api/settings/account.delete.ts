@@ -26,10 +26,43 @@ export default defineEventHandler(async (event) => {
     }
 
     await prisma.$transaction([
+      prisma.task.deleteMany({
+        where: {
+          column: {
+            project: {
+              workspace: {
+                ownerId: userId,
+              },
+            },
+          },
+        },
+      }),
+      prisma.column.deleteMany({
+        where: {
+          project: {
+            workspace: {
+              ownerId: userId,
+            },
+          },
+        },
+      }),
+      prisma.favoriteProject.deleteMany({
+        where: {
+          project: {
+            workspace: {
+              ownerId: userId,
+            },
+          },
+        },
+      }),
+      prisma.project.deleteMany({
+        where: { workspace: { ownerId: userId } },
+      }),
+
+      // Потом остальное, что у тебя уже есть
       prisma.background.deleteMany({ where: { userId } }),
       prisma.provider.deleteMany({ where: { userId } }),
       prisma.membership.deleteMany({ where: { userId } }),
-
       prisma.workspace.deleteMany({ where: { ownerId: userId } }),
       prisma.user.delete({ where: { id: userId } }),
     ]);

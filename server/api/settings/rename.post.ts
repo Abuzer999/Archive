@@ -13,29 +13,28 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: { activeWorkspace: true },
-    });
+    const { name } = await readBody(event);
 
-    if (!user) {
+    if (!name) {
       throw createError({
-        statusCode: 404,
-        message: "User not found",
+        statusCode: 400,
+        message: "Name is required",
       });
     }
 
-    return {
-      user: {
-        avatarUrl: user.avatar,
-        name: user.name,
-        email: user.email,
-      },
-      workspace: {
-        avatarUrl: user.activeWorkspace?.avatar || null,
-        name: user.activeWorkspace?.name || null
-      }
-    };
+    if (!name || typeof name !== "string") {
+      throw createError({
+        statusCode: 400,
+        message: "Valid name is required",
+      });
+    }
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { name },
+    });
+
+    return { success: true };
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,

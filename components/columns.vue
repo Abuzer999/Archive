@@ -114,7 +114,7 @@ const loading = ref(false);
 const newTask = ref<Record<string, string>>({});
 const columns = ref<Columns[]>([]);
 
-const { data, refresh } = await useFetch<Columns[]>(
+const { data, refresh, error } = await useFetch<Columns[]>(
   `/api/tasks/columns?projectId=${route.params.id}`,
   {
     key: `columns-${route.params.id}`,

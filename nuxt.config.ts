@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "nuxt-typed-router",
     "nuxt-auth-utils",
     "@nuxt/ui",
+    "@nuxtjs/i18n",
     ["@pinia/nuxt", { autoImports: ["defineStore"] }],
     "pinia-plugin-persistedstate/nuxt",
     "nuxt-nodemailer",
@@ -25,6 +26,7 @@ export default defineNuxtConfig({
       ],
     },
   },
+  css: ["~/assets/css/main.css"],
   nitro: {
     experimental: {
       websocket: true,
@@ -35,6 +37,7 @@ export default defineNuxtConfig({
       alias: {
         ".prisma/client/index-browser":
           "./node_modules/.prisma/client/index-browser.js",
+        punycode: "punycode/",
       },
     },
   },
@@ -66,7 +69,7 @@ export default defineNuxtConfig({
     public: {
       NUXT_PUBLIC_PUSHER_KEY: process.env.NUXT_PUBLIC_PUSHER_KEY,
       NUXT_PUBLIC_PUSHER_CLUSTER: process.env.NUXT_PUBLIC_PUSHER_CLUSTER,
-    }
+    },
   },
   prisma: {
     autoSetupPrisma: true,
@@ -82,11 +85,11 @@ export default defineNuxtConfig({
       pass: process.env.NUXT_NODEMAILER_PASS,
     },
   },
-  css: ["~/assets/css/main.css"],
   colorMode: {
-    classSuffix: "",
+    preference: "light",
     fallback: "light",
-    storage: "cookie",
+    classSuffix: "",
+    storage: "localStorage",
     storageKey: "nuxt-color-mode",
   },
   pinia: {

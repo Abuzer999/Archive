@@ -3,7 +3,6 @@
     <UModal
       title="Пригласить команду"
       description="Здесь можно пригласить команду"
-      
     >
       <UButton
         :ui="{

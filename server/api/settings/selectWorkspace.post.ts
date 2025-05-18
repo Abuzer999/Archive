@@ -58,19 +58,8 @@ export default defineEventHandler(async (event) => {
     });
 
     if (session.user) {
-      await setUserSession(event, {
-        user: {
-          id: session.user.id,
-          name: session.user.name,
-          email: session.user.email,
-          isCompleted: session.user.isCompleted,
-          activeWorkspaceId: workspaceId,
-        },
-        tokens: {
-          accessToken: session.token,
-        },
-        loggedInAt: session.loggedInAt,
-      });
+      session.user.activeWorkspaceId = workspaceId;
+      await replaceUserSession(event, session);
     }
 
     return { success: true };

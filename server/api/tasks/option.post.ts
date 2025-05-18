@@ -13,33 +13,35 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: { activeWorkspace: true },
-    });
+    const { text, taskId }: {text: string, id: string} = await readBody(event);
 
-    if (!user) {
+    if (!text) {
       throw createError({
-        statusCode: 404,
-        message: "User not found",
+        statusCode: 400,
+        message: "Missing or invalid text",
       });
     }
 
-    return {
-      user: {
-        avatarUrl: user.avatar,
-        name: user.name,
-        email: user.email,
-      },
-      workspace: {
-        avatarUrl: user.activeWorkspace?.avatar || null,
-        name: user.activeWorkspace?.name || null
+    const task = await prisma.task.update({
+      where: { id: taskId },
+      data: {
+        text: text
       }
-    };
+    });
+
+    if (!task) {
+      throw createError({
+        statusCode: 404,
+        message: "Task not found",
+      });
+    }
+
+    return { success: true };
   } catch (error: any) {
+    console.error("Error updating task:", error);
     throw createError({
       statusCode: error.statusCode || 500,
-      message: error.message || "Internal Server Error",
+      message: error.message || "Failed to update task status",
     });
   }
 });

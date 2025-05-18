@@ -8,7 +8,6 @@ export const usePusher = <T extends PusherItem>(
   channelId: string
 ) => {
   const { $pusher } = useNuxtApp();
-  const { user } = useUserSession();
   const channel = $pusher.subscribe(channelId);
 
   const handleAdd = (newItem: T) => {

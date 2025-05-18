@@ -43,6 +43,15 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    const isSamePassword = await bcrypt.compare(newPassword, user.password);
+
+    if (isSamePassword) {
+      throw createError({
+        statusCode: 400,
+        message: "New password must be different from the old password",
+      });
+    }
+
     const hashedPassword = bcrypt.hashSync(newPassword, 10);
 
     await prisma.user.update({

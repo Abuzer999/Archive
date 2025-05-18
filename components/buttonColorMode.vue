@@ -1,6 +1,6 @@
 <template>
   <button
-    @click="toggleDarkMode"
+    @click="isDark = !isDark"
     class="relative z-10 w-[50px] h-[25px] px-[6px] py-[3px] text-lg font-bold border-[1px] border-solid border-[#d1d5db] rounded-full bg-gray-200 dark:bg-gray-800 flex items-center transition-all duration-300"
   >
     <div
@@ -18,14 +18,14 @@
 
 <script setup lang="ts">
 const colorMode = useColorMode();
-const isDark = ref<boolean>(false);
 
-watchEffect(() => {
-  isDark.value = colorMode.value === "dark";
-});
 
-const toggleDarkMode = () => {
-  isDark.value = !isDark.value;
-  colorMode.preference = isDark.value ? "dark" : "light";
-};
+const isDark = computed({
+  get() {
+    return colorMode.value === 'dark'
+  },
+  set(_isDark: boolean) {
+    colorMode.preference = _isDark ? 'dark' : 'light'
+  }
+})
 </script>

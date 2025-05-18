@@ -71,6 +71,11 @@ export default defineEventHandler(async (event) => {
 
     await redis.del(`invite:${token}`);
 
+    if(session.user) {
+      session.user.activeWorkspaceId = data.workspaceId;
+      await setUserSession(event, session);
+    }
+
     return sendRedirect(event, `/dashboard/${data.workspaceId}/all-tasks`);
   } catch (error: any) {
     throw createError({

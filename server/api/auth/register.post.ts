@@ -61,26 +61,6 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    const workspace = await prisma.workspace.create({
-      data: {
-        name: `${user.name}'s Workspace`,
-        ownerId: user.id,
-        memberships: {
-          create: {
-            userId: user.id,
-            role: "CREATOR",
-          },
-        },
-      },
-    });
-
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        activeWorkspaceId: workspace.id,
-      },
-    });
-
     const pendingInvite = getCookie(event, "pending_invite");
 
     if (pendingInvite) {

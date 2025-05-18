@@ -1,4 +1,5 @@
-@import "tailwindcss" theme(static);
+@import "tailwindcss";
+@import "@nuxt/ui";
 @plugin 'tailwind-scrollbar' {
   nocompatible: true;
   preferredstrategy: "pseudoelements";
@@ -129,5 +130,4 @@
   --font-manrope: "Manrope", sans-serif;
   --font-monserrat: "Montserrat", sans-serif;
   --color-custom-light: #10b981;
-
 }

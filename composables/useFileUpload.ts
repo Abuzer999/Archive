@@ -5,6 +5,7 @@ export const useFileUpload = (key: string) => {
     () => undefined
   );
   const name = useState<string>(`${key}-name`, () => "");
+  const email = useState<string>(`${key}-email`, () => "");
   const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
   const handleFileInput = (event: Event) => {
@@ -34,6 +35,7 @@ export const useFileUpload = (key: string) => {
     file,
     preview,
     name,
+    email,
     handleFileInput,
     resetFile,
     MAX_FILE_SIZE,

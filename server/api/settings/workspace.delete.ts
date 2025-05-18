@@ -38,13 +38,29 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    // Сброс activeWorkspaceId у всех пользователей
     await prisma.user.updateMany({
       where: { activeWorkspaceId },
       data: { activeWorkspaceId: null },
     });
 
-    // Удалить все избранные проекты в этом workspace
+    await prisma.task.deleteMany({
+      where: {
+        column: {
+          project: {
+            workspaceId: activeWorkspaceId,
+          },
+        },
+      },
+    });
+
+    await prisma.column.deleteMany({
+      where: {
+        project: {
+          workspaceId: activeWorkspaceId,
+        },
+      },
+    });
+
     await prisma.favoriteProject.deleteMany({
       where: {
         project: {
@@ -53,22 +69,18 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    // Удалить все проекты
     await prisma.project.deleteMany({
       where: { workspaceId: activeWorkspaceId },
     });
 
-    // Удалить всех участников workspace
     await prisma.membership.deleteMany({
       where: { workspaceId: activeWorkspaceId },
     });
 
-    // Удалить сам workspace
     await prisma.workspace.delete({
       where: { id: activeWorkspaceId },
     });
 
-    // Назначить новый active workspace (если есть другие)
     const remainingWorkspaces = await prisma.workspace.findMany({
       where: { ownerId: userId },
       orderBy: { createdAt: "desc" },
@@ -83,6 +95,12 @@ export default defineEventHandler(async (event) => {
         activeWorkspaceId: newActiveWorkspaceId,
       },
     });
+
+    if (session.user) {
+      session.user.activeWorkspaceId = newActiveWorkspaceId;
+    }
+
+    await replaceUserSession(event, session);
 
     return { newActiveWorkspaceId };
   } catch (error: any) {

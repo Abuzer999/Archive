@@ -2,11 +2,7 @@ import { User, Token } from "~/lib/auth";
 import { useOAuth } from "~/composables/useOAuth";
 
 export default defineOAuthGoogleEventHandler({
-  async onSuccess(
-    event,
-    { user, tokens }: { user: User; tokens: Token }
-  ) {
-
+  async onSuccess(event, { user, tokens }: { user: User; tokens: Token }) {
     const dbUser = await useOAuth(event, user, "google", String(user.sub));
 
     const session = await setUserSession(event, {
@@ -22,7 +18,7 @@ export default defineOAuthGoogleEventHandler({
       },
       loggedInAt: new Date(),
     });
-    return sendRedirect(event, `/dashboard/${session?.user?.activeWorkspaceId}/all-tasks`);
+    return sendRedirect(event, "/dashboard/welcome");
   },
 
   onError(event, error: unknown) {

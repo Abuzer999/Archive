@@ -1,13 +1,10 @@
 <template>
   <div
     ref="target"
-    class="fixed top-0 w-[500px] h-full bg-[#fff] dark:bg-[#242629] shadow-sm transition-all delay-75 ease-in-out"
+    class="fixed top-0 w-[500px] h-full bg-[#fff] dark:bg-[#242629] shadow-sm transition-[right] delay-75 ease-in-out"
     :class="open ? 'right-0' : '-right-[600px]'"
   >
-    <div
-      v-if="status === 'success' && task"
-      class="relative px-[15px] py-[20px]"
-    >
+    <div v-show="status === 'success'" class="relative px-[15px] py-[20px]">
       <div class="flex items-center justify-between">
         <div class="flex gap-2 items-center mt-[10px]">
           <UAvatar
@@ -30,6 +27,8 @@
       </div>
 
       <textarea
+        @keydown.enter.prevent
+        v-if="task"
         rows="1"
         @input="autoResize"
         maxlength="250"
@@ -39,7 +38,8 @@
 
       <div class="border-y-1 py-[10px] my-[10px]">
         <textarea
-          placeholder="Введите заметку"
+          @keydown.enter.prevent="writeOption"
+          placeholder="Введите описание"
           maxlength="500"
           v-model="text"
           rows="1"
@@ -48,9 +48,9 @@
         />
       </div>
 
-      <childTask />
+      <!-- <childTask /> -->
     </div>
-    <taskLoader v-if="status === 'pending'"></taskLoader>
+    <taskLoader v-show="status === 'pending'"></taskLoader>
   </div>
 </template>
 
@@ -63,11 +63,16 @@ const open = ref<boolean>(false);
 const target = ref(null);
 const task = ref<Task | null>();
 const taskId = computed(() => route.query.task as string | undefined);
-const text = ref<string | null>(task.text);
+const text = ref<string | null>();
+const initialText = ref<string | null>();
+const toast = useToast();
+const lastTaskId = ref<string | null>(null);
 
-const { data, status, refresh } = useLazyFetch(
-  () => `/api/tasks/info?taskId=${taskId.value}`
+const { data, status, refresh, error } = useLazyFetch<Task>(
+  () => `/api/tasks/info?taskId=${taskId.value || lastTaskId.value}`
 );
+
+
 
 watchEffect(async () => {
   if (!taskId.value) {
@@ -78,22 +83,18 @@ watchEffect(async () => {
 
   open.value = true;
   task.value = null;
-  await refresh();
+  lastTaskId.value = taskId.value;
 
   if (data.value) {
     task.value = data.value;
+    text.value = task.value.text;
+    initialText.value = task.value.text;
+  } else {
+    await refresh();
   }
-
-  nextTick(() => {
-    document
-      .querySelectorAll("textarea")
-      .forEach((el) => autoResize({ target: el } as Event));
-  });
 });
 
 onClickOutside(target, (event: PointerEvent) => {
-  const taskLink = (event.target as HTMLElement).closest("a[data-task-link]");
-  if (taskLink) return;
   closePanel();
 });
 
@@ -124,4 +125,31 @@ const formattedCreatedAt = computed(() => {
     minute: "2-digit",
   }).format(new Date(rawDate));
 });
+
+const writeOption = async () => {
+  try {
+    if ((text.value ?? "").trim() === (initialText.value ?? "").trim()) return;
+
+    const taskId = task.value!.id;
+    const taskText = text.value!.trim();
+
+    const { success }: { success: boolean } = await $fetch(
+      "/api/tasks/option",
+      {
+        method: "POST",
+        body: {
+          text: taskText,
+          taskId: taskId,
+        },
+      }
+    );
+
+    if (success) {
+      toast.add({ title: "текст изменен", color: "success" });
+      initialText.value = taskText;
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) console.error(error);
+  }
+};
 </script>

@@ -2,6 +2,7 @@
 const toast = useToast();
 const open = ref(false);
 const isLoading = ref(false);
+const router = useRouter();
 const deleteWorkspace = async () => {
   try {
     isLoading.value = true;
@@ -13,10 +14,12 @@ const deleteWorkspace = async () => {
     if (newActiveWorkspaceId) {
       refreshNuxtData("workspaceAvatar");
       refreshNuxtData("workspaces");
+      await router.replace(`/dashboard/${newActiveWorkspaceId}/settings/workspace`);
       toast.add({ title: "Рабочее пространство удалено", color: "success" });
-      if (newActiveWorkspaceId === "null") {
-        //новое создать
-      }
+      open.value = false;
+    } else if(newActiveWorkspaceId === null) {
+      await router.replace(`/dashboard/welcome/create-workspace`);
+      toast.add({ title: "Рабочее пространство удалено", color: "success" });
       open.value = false;
     }
   } catch (error: unknown) {

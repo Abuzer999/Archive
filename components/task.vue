@@ -1,7 +1,7 @@
 <template>
   <div
     data-task-link
-    @click.prevent="navigate(props.id)"
+    @click="navigate(props.id)"
     class="px-[15px] py-[10px] shadow-sm dark:shadow-none rounded-[8px] transition-colors border-1"
     :class="[
       check
@@ -23,7 +23,7 @@
       {{ title }}
     </p>
 
-    <div class="flex w-fit mt-2 ml-auto" @click.prevent>
+    <div class="flex w-fit mt-2 ml-auto" @click.stop>
       <UCheckbox v-model="check" @change="isCompleted" />
     </div>
   </div>

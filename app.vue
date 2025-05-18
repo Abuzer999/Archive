@@ -1,10 +1,12 @@
 <template>
   <ColorScheme>
-    <NuxtLayout>
-      <loaderPage />
-      <UApp>
+    <UApp>
+      <NuxtLayout>
+        <loaderPage />
         <NuxtPage />
-      </UApp>
-    </NuxtLayout>
+      </NuxtLayout>
+    </UApp>
   </ColorScheme>
 </template>
+
+

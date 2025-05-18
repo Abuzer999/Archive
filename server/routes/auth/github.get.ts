@@ -23,10 +23,7 @@ export default defineOAuthGitHubEventHandler({
       loggedInAt: new Date(),
     });
 
-    return sendRedirect(
-      event,
-      `/dashboard/${session?.user?.activeWorkspaceId}/all-tasks`
-    );
+    return sendRedirect(event, "/dashboard/welcome");
   },
   onError(event, error: unknown) {
     console.error(error);

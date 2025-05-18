@@ -47,9 +47,31 @@ export default defineEventHandler(async (event) => {
       data: {
         userId,
         workspaceId: workspace.id,
-        role: 'CREATOR', 
+        role: "CREATOR",
       },
     });
+
+    const membershipCount = await prisma.membership.count({
+      where: { userId },
+    });
+
+    if (membershipCount === 1) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          activeWorkspace: {
+            connect: {
+              id: workspace.id,
+            },
+          },
+        },
+      });
+
+      if (session.user) {
+        session.user.activeWorkspaceId = workspace.id;
+        await replaceUserSession(event, session);
+      }
+    }
 
     return { success: true };
   } catch (error: any) {

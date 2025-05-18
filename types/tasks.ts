@@ -5,7 +5,7 @@ export interface Task {
   columnId: string;
   isCompleted: boolean;
   title: string;
-  text: string | null;
+  text?: string | null;
   createdAt: string;
   creator?: Creator;
 }

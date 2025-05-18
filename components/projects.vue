@@ -116,6 +116,7 @@ const { data, refresh } = await useFetch<Project[]>(
 );
 
 
+
 watchEffect(() => {
   if (data.value) {
     projects.value = data.value;

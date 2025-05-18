@@ -117,28 +117,6 @@ export const useOAuth = async (
         },
       },
     });
-
-    const workspace = await prisma.workspace.create({
-      data: {
-        name: "Пространство",
-        ownerId: dbUser.id,
-      },
-    });
-
-    await prisma.membership.create({
-      data: {
-        workspaceId: workspace.id,
-        userId: dbUser.id,
-        role: "CREATOR",
-      },
-    });
-
-    dbUser = await prisma.user.update({
-      where: { id: dbUser.id },
-      data: {
-        activeWorkspaceId: workspace.id,
-      },
-    });
   }
 
   return dbUser;

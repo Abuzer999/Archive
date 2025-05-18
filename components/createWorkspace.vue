@@ -1,31 +1,23 @@
 <template>
   <div
-    class="max-w-[500px] w-full flex flex-col justify-center mx-auto h-screen"
+    class="max-w-[500px] w-full flex flex-col justify-center items-center mx-auto h-screen"
   >
-    <h1 class="text-4xl text-left font-[600] leading-[100%] text-[#000000]">
+    <h1 class="text-4xl font-[600] leading-[100%] text-[#000000] text-center">
       Настрой свою работу
     </h1>
-    <UProgress
-      class="max-w-[500px] w-full mt-[30px] text-[#000000]"
-      v-model="progress"
-      color="info"
-      :max="2"
-    />
 
-    <p class="w-full mt-[20px] text-[16px] font-[500] leading-[120%]">
-      {{
-        !isCreated
-          ? "Создай первое рабочее пространство — место, где соберёшь все свои проекты, задачи и документы."
-          : "Пригласи команду в рабочее пространство и вместе протестируйте Archive"
-      }}
+    <p
+      class="w-full mt-[20px] text-[16px] font-[500] leading-[120%] text-center"
+    >
+      "Создай первое рабочее пространство — место, где соберёшь все свои
+      проекты, задачи и документы."
     </p>
 
     <UForm
-      v-if="!isCreated"
       :state="stateSpace"
       :schema="workSpaceSchema"
       @submit="createWorkSpace"
-      class="flex flex-col items-center justify-center mt-[20px]"
+      class="flex flex-col items-center justify-center"
     >
       <h2 class="text-xl mt-[20px] font-[700] leading-[100%] text-[#000000]">
         Название рабочего пространства
@@ -49,18 +41,17 @@
 
       <UButton
         :ui="{
-          base: 'mt-[20px] max-w-[350px] w-full min-h-[40px] flex items-center justify-center bg-[#6788f3] hover:bg-[none] hover:brightness-110 text-white rounded-lg transition duration-300 ease-in-out',
+          base: ' w-full mt-[20px] min-h-[40px] flex items-center justify-center bg-[#6788f3] hover:bg-[none] hover:brightness-110 text-white rounded-lg transition duration-300 ease-in-out disabled:bg-[#01d923]',
         }"
         size="xl"
         type="submit"
         loading-icon="i-lucide-repeat-2"
         loading-auto
+        :disabled="isLoading"
       >
         {{ isLoading ? "" : "Создать рабочее пространство" }}</UButton
       >
     </UForm>
-
-    <sendEmail v-else />
   </div>
 </template>
 
@@ -68,13 +59,11 @@
 import type { FormSubmitEvent } from "@nuxt/ui";
 import { workSpaceSchema } from "~/validation/workSpaceSchema";
 import type { workSpaceSchemaType } from "~/validation/workSpaceSchema";
-
 const isLoading = ref<boolean>(false);
-const isCreated = ref<boolean>(false);
-const progress = ref<number>(0);
 const stateSpace = reactive({
   workspace: "",
 });
+const {user} = useUserSession();
 
 const createWorkSpace = async (
   event: FormSubmitEvent<workSpaceSchemaType>
@@ -82,19 +71,21 @@ const createWorkSpace = async (
   try {
     isLoading.value = true;
 
-    const { success }: { success: boolean } = await $fetch("/api/workspace/create", {
-      method: "POST",
-      body: {
-        workspace: stateSpace.workspace,
-      },
-    });
+    const { success }: { success: boolean } = await $fetch(
+      "/api/settings/createWorkspace",
+      {
+        method: "POST",
+        body: {
+          name: stateSpace.workspace,
+        },
+      }
+    );
 
     if (success) {
-      isCreated.value = true;
-      progress.value = 1;
+      await navigateTo(`/dashboard/${user.value?.activeWorkspaceId}/all-tasks`);
     }
-  } catch (error) {
-    console.log(error);
+  } catch (error: unknown) {
+    if (error instanceof Error) console.error(error.message);
   } finally {
     isLoading.value = false;
   }
