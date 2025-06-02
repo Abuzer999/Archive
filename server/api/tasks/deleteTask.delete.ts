@@ -1,9 +1,18 @@
 import prisma from "~/lib/prisma";
 import type { UserSession } from "#auth-utils";
+import { pusher } from "~/lib/pusher";
 
 export default defineEventHandler(async (event) => {
   try {
     const session: UserSession = await getUserSession(event);
+
+    if (!session) {
+      throw createError({
+        statusCode: 401,
+        message: "Unauthorized",
+      });
+    }
+
     const userId = session?.user?.id;
 
     if (!userId) {
@@ -13,27 +22,29 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: { activeWorkspace: true },
-    });
+    const { taskId }: { taskId: string } = await readBody(event);
 
-    if (!user) {
+    if (!taskId) {
       throw createError({
-        statusCode: 404,
-        message: "User not found",
+        statusCode: 400,
+        message: "Missing or invalid taskId",
       });
     }
 
-    // сделать удаление всего
+    const delTask = await prisma.task.delete({
+      where: { id: taskId },
+    });
 
-    await clearUserSession(event);
+    pusher.trigger(
+      `project-${delTask.projectId}`,
+      "delete-task",
+      delTask
+    );
 
     return {
       success: true,
     };
   } catch (error: any) {
-    console.error("DELETE /api/settings/account error:", error);
     throw createError({
       statusCode: error.statusCode || 500,
       message: error.message || "Internal Server Error",

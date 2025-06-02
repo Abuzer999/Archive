@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <analytics />
 </template>
 
 <script setup lang="ts">

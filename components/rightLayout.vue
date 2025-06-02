@@ -48,7 +48,17 @@
         />
       </div>
 
+      <DeleteTask :id="task?.id" :item="task.value" />
+
       <!-- <childTask /> -->
+
+      <USelect
+        v-model="value"
+        :items="items"
+        value-key="value"
+        :avatar="avatar"
+        class="w-48"
+      />
     </div>
     <taskLoader v-show="status === 'pending'"></taskLoader>
   </div>
@@ -71,8 +81,6 @@ const lastTaskId = ref<string | null>(null);
 const { data, status, refresh, error } = useLazyFetch<Task>(
   () => `/api/tasks/info?taskId=${taskId.value || lastTaskId.value}`
 );
-
-
 
 watchEffect(async () => {
   if (!taskId.value) {
@@ -152,4 +160,5 @@ const writeOption = async () => {
     if (error instanceof Error) console.error(error);
   }
 };
+
 </script>

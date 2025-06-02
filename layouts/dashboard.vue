@@ -17,6 +17,7 @@
       </div>
 
       <rightLayout v-if="layoutType === 'main' && route.query.task" />
+      <lay :count="1" />
     </main>
   </div>
 </template>
@@ -44,4 +45,5 @@ onMounted(() => {
     refresh();
   }
 });
+
 </script>

@@ -43,6 +43,7 @@ export const usePusher = <T extends PusherItem>(
     channel.bind(`delete-${eventName}`, handleDelete);
     channel.bind(`rename-${eventName}`, handleRename);
     channel.bind(`update-${eventName}`, handleUpdate);
+
   });
 
   onBeforeUnmount(() => {

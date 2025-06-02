@@ -18,7 +18,7 @@
             backgroundPosition: 'center',
             border: item.isDefault ? '2px solid #fcbb43' : '',
           }"
-          class="cursor-pointer h-[100px] w-[169px] bg-white/30 dark:bg-black/30 overflow-hidden rounded-[8px] border-[2px] border-[none] hover:border-amber-300 transition duration-200 ease-in-out"
+          class="cursor-pointer h-[100px] w-[169px] bg-white/30 dark:bg-black/30 overflow-hidden rounded-[8px] border-[2px] hover:border-amber-300 transition duration-200 ease-in-out"
         ></div>
 
         <h2 class="ml-[4px] text-[16px]">{{ item.name }}</h2>
@@ -149,9 +149,10 @@ const selectBackground = (id: string, imageUrl: string) => {
     isBackgroundSelected.value = true;
   }
 
-  backgrounds.value.forEach((bg: Background) => {
-    bg.isDefault = bg.id === id;
-  });
+  backgrounds.value = backgrounds.value.map((bg: Background) => ({
+    ...bg,
+    isDefault: bg.id === id,
+  }));
 
   selectedBackground.value = imageUrl;
 };

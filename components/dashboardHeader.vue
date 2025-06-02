@@ -6,7 +6,11 @@
       class="max-w-[280px] w-full flex gap-[10px] justify-between px-[20px] py-[10px] items-center bg-[#fff] dark:bg-[#242629] border-r-[1px] border-solid border-[#EDEDF5] dark:border-[#161616]"
     >
       <div
-        @click="$router.push(`/dashboard/${route.params.activeWorkspaceId}/settings/workspace`)"
+        @click="
+          $router.push(
+            `/dashboard/${route.params.activeWorkspaceId}/settings/workspace`
+          )
+        "
         class="cursor-pointer flex gap-[10px] items-center"
       >
         <Avatar
@@ -45,7 +49,7 @@
     >
       <sendPeople />
 
-      <UChip inset color="neutral">
+      <!-- <UChip inset color="neutral">
         <UButton
           icon="i-carbon:notification"
           i-carbon:search
@@ -65,7 +69,7 @@
           base: 'flex items-center justify-center border-0 p-0 bg-0 hover:bg-[none] hover:text-[#fcbb43] hover:brightness-110 text-[#bbb] dark:text-[#fff]',
           trailingIcon: 'size-5 min-w-[30px] min-h-[30px]',
         }"
-      />
+      /> -->
 
       <UDropdownMenu
         size="lg"

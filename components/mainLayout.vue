@@ -31,26 +31,14 @@ const workspaceId = user.value?.activeWorkspaceId;
 
 
 const items = computed<NavigationMenuItem[]>(() => [
+
   {
-    label: isOpen.value ? "Мои задачи" : "",
-    icon: "i-carbon:task-star",
-    active: route.fullPath === "/",
-    class: !isOpen.value ? "justify-center" : "justify-start",
-    to: "/",
-  },
-  {
-    label: isOpen.value ? "Все задачи" : "",
+    label: isOpen.value ? "Аналитика" : "",
     icon: "i-carbon:task",
-    active: route.fullPath === `/dashboard/${workspaceId}/all-tasks`,
+    active: route.fullPath === `/dashboard/${workspaceId}/analytics`,
     class: !isOpen.value ? "justify-center" : "justify-start",
-    to: `/dashboard/${workspaceId}/all-tasks`,
+    to: `/dashboard/${workspaceId}/analytics`,
   },
-  {
-    label: isOpen.value ? "Все проекты" : "",
-    icon: "i-carbon:folder",
-    active: route.fullPath === "/",
-    class: !isOpen.value ? "justify-center" : "justify-start",
-    to: "/",
-  },
+
 ]);
 </script>

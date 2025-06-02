@@ -16,7 +16,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
     if (!to.fullPath.startsWith(`/dashboard/${activeWorkspaceId}`)) {
-      return navigateTo(`/dashboard/${activeWorkspaceId}/all-tasks`, {
+      return navigateTo(`/dashboard/${activeWorkspaceId}/analytics`, {
         replace: true,
       });
     }

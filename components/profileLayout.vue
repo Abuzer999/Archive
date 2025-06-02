@@ -6,7 +6,7 @@
         trailingIcon: 'w-[15px] h-[15px]',
       }"
       size="xl"
-      :to="`/dashboard/${workspaceId}/all-tasks`"
+      :to="`/dashboard/${workspaceId}/analytics`"
       :icon="!isOpen ? 'i-carbon:chevron-left' : ''"
     >
       {{ isOpen ? "Назад" : "" }}</UButton

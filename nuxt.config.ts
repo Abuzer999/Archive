@@ -10,11 +10,11 @@ export default defineNuxtConfig({
     "nuxt-typed-router",
     "nuxt-auth-utils",
     "@nuxt/ui",
-    "@nuxtjs/i18n",
     ["@pinia/nuxt", { autoImports: ["defineStore"] }],
     "pinia-plugin-persistedstate/nuxt",
     "nuxt-nodemailer",
     "@formkit/auto-animate",
+    "nuxt-charts",
   ],
   app: {
     head: {
