@@ -2,6 +2,8 @@ import { v4 as uuidv4 } from "uuid";
 import { redis } from "~/lib/redis";
 import { z } from "zod";
 
+const runtimeConfig = useRuntimeConfig();
+
 const bodySchema = z.object({
   workspaceId: z.string(),
   role: z.enum(["USER", "ADMIN", "CREATOR"]).default("USER"),
@@ -21,5 +23,5 @@ export default defineEventHandler(async (event) => {
     ttl
   );
 
-  return { token, link: `http://localhost:3000/api/invite/${token}` };
+  return { token, link: `${runtimeConfig.BASE_URL}/api/invite/${token}` };
 });

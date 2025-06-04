@@ -163,7 +163,7 @@ const deleteProject = async () => {
       open.value = false;
       refreshNuxtData(`favorites-${user.value?.activeWorkspaceId}`);
       refreshNuxtData(`projects-${user.value?.activeWorkspaceId}`);
-      navigateTo(`/dashboard/${user.value?.activeWorkspaceId}/all-tasks`);
+      navigateTo(`/dashboard/${user.value?.activeWorkspaceId}/analytics`);
       toast.add({ title: "Проект удален", color: "success" });
     }
   } catch (error: unknown) {
@@ -174,7 +174,7 @@ const deleteProject = async () => {
 };
 
 const toggleFavorite = async () => {
-  const project = props.projects.find((p) => p.id === selectedProjectId.value);
+  const project = props.projects.find((p: Project) => p.id === selectedProjectId.value);
   if (!project) return;
   try {
     const { success }: { success: boolean } = await $fetch(

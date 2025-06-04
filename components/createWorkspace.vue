@@ -82,7 +82,7 @@ const createWorkSpace = async (
     );
 
     if (success) {
-      await navigateTo(`/dashboard/${user.value?.activeWorkspaceId}/all-tasks`);
+      await navigateTo(`/dashboard/${user.value?.activeWorkspaceId}/analytics`);
     }
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);

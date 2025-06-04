@@ -10,8 +10,6 @@ const formState = reactive({
 
 const router = useRouter();
 
-const { loggedIn } = useUserSession();
-
 const { saveEmail, code } = useStep();
 
 const createPassword = async (
