@@ -142,6 +142,7 @@ const createProject = async () => {
     );
 
     if (success) {
+      await refreshNuxtData(`analytics-${user.value?.activeWorkspaceId}`);
       formState.name = "";
       open.value = false;
       await refresh();

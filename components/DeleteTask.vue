@@ -1,10 +1,11 @@
 <template>
   <UModal
     title="Удалить задачу"
+    v-model:open="openTask"
     description="Вы действительно хотите удалить задачу?"
     :ui="{ footer: 'justify-end' }"
   >
-    <UButton label="Удалить" color="error" :ui="{ base: 'text-[#fff]' }" />
+    <UButton label="Удалить задачу" color="error" :ui="{ base: 'text-[#fff]' }" />
     <template #footer>
       <UButton
         label="нет"
@@ -29,7 +30,7 @@ import type { Task } from '~/types/tasks';
 
 interface Props {
     id: string | undefined;
-    item: Task;
+    item?: Task | null;
 
 }
 const props = defineProps<Props>();
@@ -37,6 +38,7 @@ const isLoading = ref(false);
 const openTask = ref(false);
 const route = useRoute();
 const task = ref<Task>(props.item);
+const { leftLayout } = useDropMenu();
 
 
 const deleteTask = async() => {
@@ -51,6 +53,7 @@ const deleteTask = async() => {
 
     if (success) {
       await refreshNuxtData(`columns-${route.params.id}`);
+      leftLayout.value = false;
     }
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);

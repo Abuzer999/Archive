@@ -161,8 +161,9 @@ const deleteProject = async () => {
 
     if (success) {
       open.value = false;
-      refreshNuxtData(`favorites-${user.value?.activeWorkspaceId}`);
-      refreshNuxtData(`projects-${user.value?.activeWorkspaceId}`);
+      await refreshNuxtData(`analytics-${user.value?.activeWorkspaceId}`);
+      await refreshNuxtData(`favorites-${user.value?.activeWorkspaceId}`);
+      await refreshNuxtData(`projects-${user.value?.activeWorkspaceId}`);
       navigateTo(`/dashboard/${user.value?.activeWorkspaceId}/analytics`);
       toast.add({ title: "Проект удален", color: "success" });
     }

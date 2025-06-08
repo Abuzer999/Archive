@@ -73,7 +73,7 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    return { success: true };
+    return { success: true, workspaceId: workspace.id };
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,

@@ -105,7 +105,7 @@ const selectedWorkspace = async (id: string) => {
       openTask.value = false;
       await router.replace(`/dashboard/${id}/settings/workspace`);
       await refresh();
-      refreshNuxtData("workspaceAvatar");
+      await refreshNuxtData("workspaceAvatar");
       toast.add({ title: "Рабочее пространство выбрано", color: "success" });
     }
   } catch (error: unknown) {

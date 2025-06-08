@@ -1,5 +1,7 @@
 <template>
-  <div class="gap-[20px] grid grid-cols-2">
+  <div
+    class="gap-[20px] grid grid-cols-2"
+  >
     <div class="bg-[#f4f4f6] dark:bg-[#2f3033] p-[10px] rounded-[10px]">
       <LineChart
         class="text-[red]"
@@ -21,7 +23,7 @@
       >
         <div class="absolute text-center">
           <div class="font-semibold">
-            Задач в пространстве: {{ analytics?.totalTasks }}
+            Задач в пространстве: {{ totalTasks }}
           </div>
         </div>
       </DonutChart>
@@ -31,7 +33,7 @@
     >
       <BarChart
         :data="RevenueData"
-        :height="400"
+        :height="390"
         :categories="RevenueCategoriesMultple"
         :y-axis="['total', 'completed']"
         :group-padding="0"
@@ -50,13 +52,16 @@
 type AnalyticsResponse = {
   totalTasks: number;
   prioritiesArray: number[];
-  projectAnalytics: RevenueDataItem[]; 
+  projectAnalytics: RevenueDataItem[];
 };
 type RevenueDataItem = {
   name: string;
   total: number;
   completed: number;
 };
+
+const nuxtApp = useNuxtApp();
+const totalTasks = ref<number>();
 
 const { user } = useUserSession();
 
@@ -99,12 +104,23 @@ const donutData = ref<number[]>([]);
 const xBarFormatter = (i: number): string => `${RevenueData.value[i]?.name}`;
 const yBarFormatter = (i: number) => i;
 
-const { data: analytics } = await useFetch<AnalyticsResponse>(`/api/analytics/analytic?workspaceId=${user.value?.activeWorkspaceId}`);
+const { data: analytics, } = await useFetch<AnalyticsResponse>(
+  `/api/analytics/analytic?workspaceId=${user.value?.activeWorkspaceId}`, {
+    key: `analytics-${user.value?.activeWorkspaceId}`,
+    getCachedData: (key) => {
+      const cachedData = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
+      return cachedData;
+    }
+  }
+);
 
 watchEffect(() => {
-  if (analytics.value) {
-    donutData.value = analytics.value.prioritiesArray;
+  if (analytics.value && Array.isArray(analytics.value.projectAnalytics)) {
     RevenueData.value = analytics.value.projectAnalytics;
+    totalTasks.value = analytics.value.totalTasks;
+    donutData.value = analytics.value.prioritiesArray;
+  } else {
+    RevenueData.value = [];
   }
 });
 </script>

@@ -30,7 +30,7 @@ const { user } = useUserSession();
 const workspaceId = user.value?.activeWorkspaceId;
 
 
-const items = computed<NavigationMenuItem[]>(() => [
+const items = computed<NavigationMenuItem[]>(() =>[
 
   {
     label: isOpen.value ? "Аналитика" : "",

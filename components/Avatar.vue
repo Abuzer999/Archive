@@ -21,8 +21,8 @@ const props = defineProps<Avatar>();
 const nuxtApp = useNuxtApp();
 const { preview, name, email } = useFileUpload(props.stateKey);
 
-const { data } = await useFetch<{
-  user: { avatarUrl: string; name: string, email: string };
+const { data, refresh } = await useFetch<{
+  user: { avatarUrl: string; name: string; email: string };
   workspace: { avatarUrl: string; name: string };
 }>("/api/settings/avatar", {
   key: props.stateKey,
@@ -32,11 +32,12 @@ const { data } = await useFetch<{
   },
 });
 
-watchEffect(() => {
+watchEffect(async () => {
   if (data.value) {
     preview.value = data.value[props.target].avatarUrl;
     name.value = data.value[props.target].name;
     email.value = data.value.user.email;
   }
 });
+
 </script>

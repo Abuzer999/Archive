@@ -76,6 +76,7 @@
                 :id="task.id"
                 :columnId="column.id"
                 :order="task.order"
+                :priority="task.priority"
                 :orderNum="task.orderNum"
                 :isCompleted="task.isCompleted"
                 :title="task.title"

@@ -12,12 +12,14 @@ const deleteWorkspace = async () => {
       });
 
     if (newActiveWorkspaceId) {
-      refreshNuxtData("workspaceAvatar");
-      refreshNuxtData("workspaces");
+      await refreshNuxtData("workspaceAvatar");
+      await refreshNuxtData("workspaces");
       await router.replace(`/dashboard/${newActiveWorkspaceId}/settings/workspace`);
       toast.add({ title: "Рабочее пространство удалено", color: "success" });
       open.value = false;
     } else if(newActiveWorkspaceId === null) {
+      await refreshNuxtData("workspaceAvatar");
+      await refreshNuxtData("workspaces");
       await router.replace(`/dashboard/welcome/create-workspace`);
       toast.add({ title: "Рабочее пространство удалено", color: "success" });
       open.value = false;

@@ -57,21 +57,20 @@
 
 <script setup lang="ts">
 import type { FormSubmitEvent } from "@nuxt/ui";
+import { routerKey } from "vue-router";
 import { workSpaceSchema } from "~/validation/workSpaceSchema";
 import type { workSpaceSchemaType } from "~/validation/workSpaceSchema";
 const isLoading = ref<boolean>(false);
 const stateSpace = reactive({
   workspace: "",
 });
-const {user} = useUserSession();
-
 const createWorkSpace = async (
   event: FormSubmitEvent<workSpaceSchemaType>
 ): Promise<void> => {
   try {
     isLoading.value = true;
 
-    const { success }: { success: boolean } = await $fetch(
+    const { success, workspaceId  }: { success: boolean, workspaceId: string } = await $fetch(
       "/api/settings/createWorkspace",
       {
         method: "POST",
@@ -81,8 +80,8 @@ const createWorkSpace = async (
       }
     );
 
-    if (success) {
-      await navigateTo(`/dashboard/${user.value?.activeWorkspaceId}/analytics`);
+    if (success && workspaceId) { 
+      navigateTo(`/dashboard/${workspaceId}/analytics`);
     }
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);

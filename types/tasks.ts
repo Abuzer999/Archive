@@ -3,6 +3,7 @@ export interface Task {
   order: number;
   orderNum: number;
   columnId: string;
+  priority: Priority;
   isCompleted: boolean;
   title: string;
   text?: string | null;
@@ -15,3 +16,6 @@ interface Creator {
   avatar: string | null;
   createdAt: string;
 }
+
+type Priority = "none" | "low" | "medium" | "high";
+
