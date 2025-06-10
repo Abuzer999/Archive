@@ -51,6 +51,11 @@
         />
       </div>
 
+      <div class="flex flex-col gap-[10px] mt-[10px]" v-if="status === 'success'">
+        <span>Участник отвечающий за задачу</span>
+        <addUser :task="task" />
+      </div>
+
       <DeleteTask
         class="mt-[10px]"
         v-if="status === 'success'"

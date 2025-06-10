@@ -7,7 +7,7 @@
     <main class="flex flex-1 overflow-hidden">
       <leftLayout />
       <div
-        class="relative scrollbar-thumb-rounded-full scrollbar scrollbar-w-1 scrollbar-h-[5px] scrollbar-thumb-[#fcbb43] overflow-auto p-[16px] w-screen bg-cover bg-center bg-no-repeat"
+        class="scrollbar-thumb-rounded-full scrollbar scrollbar-w-1 scrollbar-h-[5px] scrollbar-thumb-[#fcbb43] overflow-auto p-[16px] w-full bg-cover bg-center"
         :style="{ backgroundImage: `url(${selectedBackground})` }"
       >
         <div>

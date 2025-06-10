@@ -13,7 +13,7 @@
         yLabel="Amount"
       />
     </div>
-    <div class="bg-[#f4f4f6] dark:bg-[#2f3033] p-[10px] rounded-[10px]">
+    <div class="relative bg-[#f4f4f6] dark:bg-[#2f3033] p-[10px] rounded-[10px]">
       <DonutChart
         :data="donutData"
         :height="275"
@@ -106,11 +106,7 @@ const yBarFormatter = (i: number) => i;
 
 const { data: analytics, } = await useFetch<AnalyticsResponse>(
   `/api/analytics/analytic?workspaceId=${user.value?.activeWorkspaceId}`, {
-    key: `analytics-${user.value?.activeWorkspaceId}`,
-    getCachedData: (key) => {
-      const cachedData = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
-      return cachedData;
-    }
+    key: `analytics-${user.value?.activeWorkspaceId}`
   }
 );
 

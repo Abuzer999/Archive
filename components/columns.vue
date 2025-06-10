@@ -158,7 +158,6 @@ const onDragEnd = async () => {
         projectId: route.params.id,
       },
     });
-
   } catch (error) {
     console.error("Ошибка при обновлении порядка колонок:", error);
   }
@@ -229,6 +228,7 @@ const deleteColumn = async (columnId: string) => {
 
     if (data.value) {
       toast.add({ title: "Колонка удалена", color: "success" });
+      await refreshNuxtData(`analytics-${route.params.activeWorkspaceId}`);
     }
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);
@@ -308,6 +308,7 @@ const addTask = async (columnId: string) => {
 
     if (success) {
       newTask.value[columnId] = "";
+      await refreshNuxtData(`analytics-${route.params.activeWorkspaceId}`);
       await refresh();
       toast.add({ title: "Задача создана", color: "success" });
     }
@@ -319,4 +320,8 @@ const addTask = async (columnId: string) => {
     loading.value = false;
   }
 };
+
+onUnmounted(async () => {
+  await refresh();
+});
 </script>

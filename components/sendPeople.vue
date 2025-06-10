@@ -15,6 +15,7 @@
       >
       <template #body>
         <UButton
+          @click="generateInviteLink"
           :label="copied || linkSend ? 'Ссылка скопирована' : 'Создать ссылку'"
           :trailing-icon="copied ? 'i-lucide-copy-check' : 'i-lucide-copy'"
           :ui="{
@@ -22,7 +23,6 @@
             leadingAvatar: 'text-[#fff]',
           }"
           size="xl"
-          @click="generateInviteLink"
         />
       </template>
     </UModal>
