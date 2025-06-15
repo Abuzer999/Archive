@@ -19,9 +19,8 @@ export default defineEventHandler(async (event) => {
   await redis.set(
     `invite:${token}`,
     JSON.stringify({ workspaceId, role }),
-    "EX",
-    ttl
+    { ex: ttl }
   );
 
-  return { token, link: `${runtimeConfig.BASE_URL}/api/invite/${token}` };
+  return { token, link: `${runtimeConfig.BASE_URL}/invite/${token}` };
 });

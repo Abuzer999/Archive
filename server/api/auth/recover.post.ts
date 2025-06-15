@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
     const code = uuidv4().replace(/\D/g, "").slice(0, 6);
 
-    await redis.set(`reset:${code}`, email, "EX", 300);
+    await redis.set(`reset:${code}`, email, { ex: 300 });
 
     await sendMail({
       to: email,

@@ -1,42 +1,66 @@
-import prisma from "~/lib/prisma";
-import type { UserSession } from "#auth-utils";
+// import prisma from "~/lib/prisma";
+// import type { UserSession } from "#auth-utils";
 
-export default defineEventHandler(async (event) => {
-  try {
-    const session: UserSession = await getUserSession(event);
-    const userId = session?.user?.id;
+// export default defineEventHandler(async (event) => {
+//   try {
+//     const session: UserSession = await getUserSession(event);
+//     const userId = session?.user?.id;
 
-    if (!userId) {
-      throw createError({
-        statusCode: 401,
-        message: "Unauthorized",
-      });
-    }
+//     if (!userId) {
+//       throw createError({
+//         statusCode: 401,
+//         message: "Unauthorized",
+//       });
+//     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: { activeWorkspace: true },
-    });
+//     // Получаем список workspace, которыми владеет пользователь
+//     const ownedWorkspaces = await prisma.workspace.findMany({
+//       where: { ownerId: userId },
+//       select: { id: true },
+//     });
 
-    if (!user) {
-      throw createError({
-        statusCode: 404,
-        message: "User not found",
-      });
-    }
+//     const ownedWorkspaceIds = ownedWorkspaces.map((ws) => ws.id);
 
-    // сделать удаление всего
+//     // Выполняем всё атомарно
+//     await prisma.$transaction([
+//       // Обнуляем activeWorkspaceId у всех пользователей, если он указывает на удаляемые воркспейсы
+//       prisma.user.updateMany({
+//         where: {
+//           activeWorkspaceId: { in: ownedWorkspaceIds },
+//         },
+//         data: {
+//           activeWorkspaceId: null,
+//         },
+//       }),
 
-    await clearUserSession(event);
+//       // Удаляем данные, связанные с пользователем
+//       prisma.favoriteProject.deleteMany({ where: { userId } }),
+//       prisma.membership.deleteMany({ where: { userId } }),
+//       prisma.background.deleteMany({ where: { userId } }),
+//       prisma.provider.deleteMany({ where: { userId } }),
 
-    return {
-      success: true,
-    };
-  } catch (error: any) {
-    console.error("DELETE /api/settings/account error:", error);
-    throw createError({
-      statusCode: error.statusCode || 500,
-      message: error.message || "Internal Server Error",
-    });
-  }
-});
+//       // Удаляем задачи, проекты, колонки по workspace
+//       prisma.task.deleteMany({ where: { creatorId: userId } }),
+//       prisma.project.deleteMany({ where: { creatorId: userId } }),
+
+//       // Удаляем все workspace, которыми владеет пользователь
+//       prisma.workspace.deleteMany({
+//         where: { id: { in: ownedWorkspaceIds } },
+//       }),
+
+//       // Удаляем пользователя
+//       prisma.user.delete({ where: { id: userId } }),
+//     ]);
+
+//     // Завершаем сессию
+//     await clearUserSession(event);
+
+//     return { success: true };
+//   } catch (error: any) {
+//     console.error("[DELETE /api/settings/account] Ошибка:", error);
+//     throw createError({
+//       statusCode: error.statusCode || 500,
+//       message: error.message || "Internal Server Error",
+//     });
+//   }
+// });

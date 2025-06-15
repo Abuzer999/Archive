@@ -29,6 +29,7 @@
         <textarea
           ref="titleTextarea"
           @keydown.enter.prevent="writeOption"
+          @blur="writeOption"
           placeholder="Введите описание"
           maxlength="500"
           v-model="text"
@@ -41,6 +42,10 @@
       <div class="flex flex-col gap-[10px]" v-if="status === 'success'">
         <span>Приоритет задачи</span>
         <USelect
+          :ui="{
+            base: 'bg-[#fbfbfc] shadow-sm dark:bg-[#1c1e22] dark:shadow-none',
+            content: 'bg-[#fbfbfc] dark:bg-[#1c1e22] dark:shadow-none ',
+          }"
           ref="textTextarea"
           @change="setPriority"
           v-model="value"
@@ -51,9 +56,19 @@
         />
       </div>
 
-      <div class="flex flex-col gap-[10px] mt-[10px]" v-if="status === 'success'">
+      <div
+        class="flex flex-col gap-[10px] mt-[10px]"
+        v-if="status === 'success'"
+      >
         <span>Участник отвечающий за задачу</span>
-        <addUser :task="task" />
+        <addUser
+        v-if="task"
+          :ui="{
+            base: 'bg-[#fbfbfc] shadow-sm dark:bg-[#1c1e22] dark:shadow-none',
+            content: 'bg-[#fbfbfc] dark:bg-[#1c1e22] dark:shadow-none ',
+          }"
+          :task="task"
+        />
       </div>
 
       <DeleteTask

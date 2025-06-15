@@ -67,7 +67,7 @@ export default defineEventHandler(async (event) => {
       const inviteRaw = await redis.get(`invite:${pendingInvite}`);
 
       if (inviteRaw) {
-        const { workspaceId, role } = JSON.parse(inviteRaw);
+        const { workspaceId, role } = JSON.parse(inviteRaw as string);
 
         await prisma.membership.create({
           data: {
@@ -84,7 +84,7 @@ export default defineEventHandler(async (event) => {
 
     const verificationToken = uuidv4();
 
-    await redis.set(`verify:${verificationToken}`, user.id, "EX", 60 * 60 * 24);
+    await redis.set(`verify:${verificationToken}`, user.id, { ex: 86400 });
 
     await sendVerificationEmail(email, verificationToken);
 

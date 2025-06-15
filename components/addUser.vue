@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { Task } from "~/types/tasks";
 const props = defineProps<{
-  task: Task;
+  task?: Task;
 }>();
 import type { AvatarProps } from "@nuxt/ui";
 const route = useRoute();
+
+const toast = useToast();
 
 const { data: users, status } = await useFetch("/api/tasks/users", {
   key: `users-${route.params?.activeWorkspaceId}`,
@@ -44,7 +46,7 @@ const setAssignee = async () => {
     :items="users"
     :loading="status === 'pending'"
     icon="i-carbon:user"
-    placeholder="Выбрать пользователя"
+    placeholder="Пользователи"
     class="w-48"
     @change="setAssignee"
   >

@@ -1,19 +1,19 @@
 <template>
-  <div
-    class="gap-[20px] grid grid-cols-2"
-  >
+  <div class="gap-[20px] grid grid-cols-2">
     <div class="bg-[#f4f4f6] dark:bg-[#2f3033] p-[10px] rounded-[10px]">
       <LineChart
         class="text-[red]"
-        :data="data"
-        :categories="categories"
+        :data="projectTimeline"
+        :categories="projectTimelineCategories"
         :height="300"
-        :xFormatter="xFormatter"
+        :xFormatter="(i) => projectTimeline[i]?.name"
         xLabel="Month"
-        yLabel="Amount"
+        yLabel="Projects"
       />
     </div>
-    <div class="relative bg-[#f4f4f6] dark:bg-[#2f3033] p-[10px] rounded-[10px]">
+    <div
+      class="relative bg-[#f4f4f6] dark:bg-[#2f3033] p-[10px] rounded-[10px]"
+    >
       <DonutChart
         :data="donutData"
         :height="275"
@@ -53,6 +53,7 @@ type AnalyticsResponse = {
   totalTasks: number;
   prioritiesArray: number[];
   projectAnalytics: RevenueDataItem[];
+  userAnalytics: ProjectTimelineItem[];
 };
 type RevenueDataItem = {
   name: string;
@@ -60,18 +61,17 @@ type RevenueDataItem = {
   completed: number;
 };
 
+type ProjectTimelineItem = {
+  name: string;
+  count: number;
+};
+
 const nuxtApp = useNuxtApp();
 const totalTasks = ref<number>();
 
 const { user } = useUserSession();
 
-const data = [
-  { month: "Jan", sales: 100, profit: 50 },
-  { month: "Feb", sales: 120, profit: 55 },
-  { month: "Mar", sales: 180, profit: 80 },
-  { month: "Apr", sales: 110, profit: 40 },
-  { month: "May", sales: 90, profit: 30 },
-];
+const projectTimeline = ref<ProjectTimelineItem[]>([]);
 
 const marketShareLabels = ref([
   { name: "LOW", color: "#14b8a6" },
@@ -80,14 +80,10 @@ const marketShareLabels = ref([
   { name: "NONE", color: "#3b82f6" },
 ]);
 
-const categories = {
-  sales: {
-    name: "Sales",
-    color: "#3b82f6",
-  },
-  profit: {
-    name: "Profit",
-    color: "#10b981",
+const projectTimelineCategories = {
+  count: {
+    name: "Создано проектов",
+    color: "#8b5cf6",
   },
 };
 
@@ -98,15 +94,15 @@ const RevenueCategoriesMultple = {
   completed: { name: "Выполненные задачи" },
 };
 
-const xFormatter = (i: number) => data[i].month;
 const donutData = ref<number[]>([]);
 
 const xBarFormatter = (i: number): string => `${RevenueData.value[i]?.name}`;
 const yBarFormatter = (i: number) => i;
 
-const { data: analytics, } = await useFetch<AnalyticsResponse>(
-  `/api/analytics/analytic?workspaceId=${user.value?.activeWorkspaceId}`, {
-    key: `analytics-${user.value?.activeWorkspaceId}`
+const { data: analytics } = await useFetch<AnalyticsResponse>(
+  `/api/analytics/analytic?workspaceId=${user.value?.activeWorkspaceId}`,
+  {
+    key: `analytics-${user.value?.activeWorkspaceId}`,
   }
 );
 
@@ -115,8 +111,12 @@ watchEffect(() => {
     RevenueData.value = analytics.value.projectAnalytics;
     totalTasks.value = analytics.value.totalTasks;
     donutData.value = analytics.value.prioritiesArray;
+    projectTimeline.value = analytics.value.projectTimeline ?? [];
   } else {
     RevenueData.value = [];
+    totalTasks.value = 0;
+    donutData.value = [];
+    projectTimeline.value = [];
   }
 });
 </script>

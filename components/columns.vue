@@ -42,7 +42,7 @@
           </UInput>
 
           <UInput
-            @keydown.enter="addTask(column.id)"
+            @keyup.enter="addTask(column.id)"
             v-model="newTask[column.id]"
             placeholder="Добавить задачу"
             type="text"

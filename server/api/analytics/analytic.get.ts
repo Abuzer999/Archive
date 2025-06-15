@@ -1,5 +1,6 @@
 import prisma from "~/lib/prisma";
 import type { UserSession } from "#auth-utils";
+import { startOfMonth, format } from "date-fns";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -50,7 +51,7 @@ export default defineEventHandler(async (event) => {
     if (projectIds.length === 0) {
       return {
         totalTasks: 0,
-        prioritiesArray: [0, 0, 0, 0], // [LOW, MEDIUM, HIGH, NONE]
+        prioritiesArray: [0, 0, 0, 0],
       };
     }
 
@@ -117,10 +118,35 @@ export default defineEventHandler(async (event) => {
       };
     });
 
+    const allProjects = await prisma.project.findMany({
+      where: {
+        workspaceId: activeWorkspaceId,
+      },
+      select: {
+        createdAt: true,
+      },
+    });
+
+    // Группируем по месяцу
+    const projectMonthMap: Record<string, number> = {};
+
+    for (const project of allProjects) {
+      const month = format(startOfMonth(project.createdAt), "yyyy-MM");
+      projectMonthMap[month] = (projectMonthMap[month] || 0) + 1;
+    }
+
+    const projectTimeline = Object.entries(projectMonthMap)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([month, count]) => ({
+        name: month,
+        count,
+      }));
+
     return {
       totalTasks,
       prioritiesArray,
       projectAnalytics,
+      projectTimeline,
     };
   } catch (error: any) {
     throw createError({

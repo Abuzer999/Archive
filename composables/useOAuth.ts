@@ -47,7 +47,7 @@ export const useOAuth = async (
     if (inviteToken) {
       const raw = await redis.get(`invite:${inviteToken}`);
       if (raw) {
-        const data = JSON.parse(raw) as {
+        const data = raw as {
           workspaceId: string;
           role: "USER" | "ADMIN" | "CREATOR";
         };

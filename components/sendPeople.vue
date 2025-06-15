@@ -31,25 +31,26 @@
 
 <script setup lang="ts">
 const { user } = useUserSession();
+const toast = useToast(); 
+
 const copied = ref(false);
 const linkSend = ref("");
+const loading = ref(false); 
 
 const copy = (link: string) => {
-  if (copied.value) return;
+  if (!link) return;
   navigator.clipboard.writeText(link);
   copied.value = true;
-  linkSend.value = link;
+  toast.add({ title: "Ссылка скопирована!" });
 
   setTimeout(() => {
     copied.value = false;
-  }, 3000);
+  }, 2000);
 };
 
 const generateInviteLink = async () => {
-  if (linkSend.value) {
-    copy(linkSend.value);
-    return;
-  }
+  loading.value = true;
+  copied.value = false; 
   try {
     const res: { link: string } = await $fetch("/api/invite/create", {
       method: "POST",
@@ -60,11 +61,14 @@ const generateInviteLink = async () => {
       },
     });
 
-    if (res) {
-      copy(res.link);
+    if (res && res.link) {
+      linkSend.value = res.link; 
+      copy(res.link); 
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Ошибка при создании приглашения:", error);
+  } finally {
+    loading.value = false; 
   }
 };
 </script>
