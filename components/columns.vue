@@ -220,6 +220,10 @@ const deleteColumn = async (columnId: string) => {
   if (loading.value) return;
   loading.value = true;
   columns.value = columns.value.filter((col: Columns) => col.id !== columnId);
+
+  if (data.value) {
+    data.value = data.value.filter((col: Columns) => col.id !== columnId);
+  }
   try {
     await $fetch("/api/tasks/columnDel", {
       method: "DELETE",
@@ -231,7 +235,6 @@ const deleteColumn = async (columnId: string) => {
     if (data.value) {
       toast.add({ title: "Колонка удалена", color: "success" });
       await refreshNuxtData(`analytics-${route.params.activeWorkspaceId}`);
-      await refreshNuxtData(`columns-${route.params.id}`);
     }
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);
