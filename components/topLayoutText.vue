@@ -37,6 +37,7 @@ const formattedCreatedAt = computed(() => {
   if (!rawDate) return "";
 
   return new Intl.DateTimeFormat("ru-RU", {
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     day: "2-digit",
     month: "long",
     year: "numeric",
