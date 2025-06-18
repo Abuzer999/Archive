@@ -79,6 +79,8 @@
                 :priority="task.priority"
                 :orderNum="task.orderNum"
                 :isCompleted="task.isCompleted"
+                :isArchived="task.isArchived"
+                :dueDate="task.dueDate"
                 :title="task.title"
                 :createdAt="task.createdAt"
                 class="cursor-pointer"

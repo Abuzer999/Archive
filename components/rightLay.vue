@@ -56,19 +56,44 @@
         />
       </div>
 
-      <div
+      <!-- <div
         class="flex flex-col gap-[10px] mt-[10px]"
         v-if="status === 'success'"
       >
         <span>Участник отвечающий за задачу</span>
         <addUser
-        v-if="task"
+          v-if="task"
           :ui="{
             base: 'bg-[#fbfbfc] shadow-sm dark:bg-[#1c1e22] dark:shadow-none',
             content: 'bg-[#fbfbfc] dark:bg-[#1c1e22] dark:shadow-none ',
           }"
           :task="task"
         />
+      </div> -->
+
+      <div
+        class="flex flex-col gap-[10px] mt-[10px] items-start"
+        v-if="status === 'success'"
+      >
+        <span>Дедлайн</span>
+
+        <UPopover>
+          <UButton color="neutral" variant="subtle" icon="i-lucide-calendar">
+            {{
+              modelValue
+                ? df.format(modelValue.toDate(getLocalTimeZone()))
+                : "Select a date"
+            }}
+          </UButton>
+
+          <template #content>
+            <UCalendar
+              v-model="modelValue"
+              class="p-2"
+              @update:modelValue="setDeadline"
+            />
+          </template>
+        </UPopover>
       </div>
 
       <DeleteTask
@@ -87,10 +112,20 @@
 </template>
 
 <script setup lang="ts">
+import {
+  CalendarDate,
+  DateFormatter,
+  getLocalTimeZone,
+  parseDate,
+} from "@internationalized/date";
 import type { Task } from "~/types/tasks";
 
 const route = useRoute();
 const router = useRouter();
+
+const df = new DateFormatter("ru-RU", {
+  dateStyle: "medium",
+});
 
 const { leftLayout } = useDropMenu();
 const task = ref<Task | null>();
@@ -99,6 +134,8 @@ const text = ref<string | null>();
 const initialText = ref<string | null>();
 const toast = useToast();
 const lastTaskId = ref<string | null>(null);
+
+const modelValue = ref<CalendarDate | null>(null);
 
 const titleTextarea = ref<HTMLTextAreaElement | null>(null);
 
@@ -138,6 +175,17 @@ watchEffect(async () => {
     text.value = task.value.text;
     initialText.value = task.value.text;
     value.value = task.value.priority;
+
+    if (task.value.dueDate) {
+      const date = new Date(task.value.dueDate);
+      modelValue.value = new CalendarDate(
+        date.getUTCFullYear(),
+        date.getUTCMonth() + 1,
+        date.getUTCDate()
+      );
+    } else {
+      modelValue.value = null;
+    }
   }
 
   await nextTick(() => {
@@ -193,6 +241,27 @@ const setPriority = async () => {
     if (success) {
       toast.add({ title: "приоритет изменен", color: "success" });
       await refreshNuxtData(`columns-${route.params.id}`);
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) console.error(error);
+  }
+};
+
+const setDeadline = async () => {
+  try {
+    const { success }: { success: boolean } = await $fetch(
+      "/api/tasks/dueDate",
+      {
+        method: "PUT",
+        body: {
+          dueDate: modelValue.value?.toString() ?? null,
+          taskId: task.value!.id,
+        },
+      }
+    );
+
+    if (success) {
+      toast.add({ title: "дедлайн изменен", color: "success" });
     }
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error);

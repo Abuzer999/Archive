@@ -128,17 +128,17 @@ export default defineEventHandler(async (event) => {
     });
 
     // Группируем по месяцу
-    const projectMonthMap: Record<string, number> = {};
+    const projectDayMap: Record<string, number> = {};
 
     for (const project of allProjects) {
-      const month = format(startOfMonth(project.createdAt), "yyyy-MM");
-      projectMonthMap[month] = (projectMonthMap[month] || 0) + 1;
+      const day = format(project.createdAt, "yyyy-MM-dd");
+      projectDayMap[day] = (projectDayMap[day] || 0) + 1;
     }
 
-    const projectTimeline = Object.entries(projectMonthMap)
+    const projectTimeline = Object.entries(projectDayMap)
       .sort(([a], [b]) => a.localeCompare(b))
-      .map(([month, count]) => ({
-        name: month,
+      .map(([day, count]) => ({
+        name: day,
         count,
       }));
 

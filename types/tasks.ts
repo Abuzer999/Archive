@@ -5,6 +5,7 @@ export interface Task {
   columnId: string;
   priority: Priority;
   isCompleted: boolean;
+  dueDate: string | null;
   title: string;
   text?: string | null;
   createdAt: string;

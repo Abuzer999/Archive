@@ -136,6 +136,8 @@ model Task {
   orderNum    Int
   isCompleted Boolean @default(false)
 
+  dueDate DateTime?
+
   columnId String @db.ObjectId
   column   Column @relation(fields: [columnId], references: [id], onDelete: Cascade)
 
