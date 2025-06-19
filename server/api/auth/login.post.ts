@@ -107,7 +107,7 @@ export default defineEventHandler(async (event) => {
     return {
       success: true,
       redirectUrl: activeWorkspaceId
-        ? `/dashboard/${activeWorkspaceId}/all-tasks`
+        ? `/dashboard/${activeWorkspaceId}/analytics`
         : `/dashboard/welcome`,
     };
   } catch (error: any) {
